@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="sac_empdata" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" singleton="false" server_name="localhost" start_url="/sac_empdata">
+    <method v="2" />
+  </configuration>
+</component>
