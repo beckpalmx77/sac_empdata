@@ -159,6 +159,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <span class="help-block"></span>
                                                             </div>
 
+                                                            <div class=”form-group”>
+                                                                <label for="role" class="control-label">ROLE การ Approve</label>
+                                                                <select id="role" name="role"
+                                                                        class="form-control" data-live-search="true"
+                                                                        title="Please select">
+                                                                    <option value="EMPLOYEE">EMPLOYEE</option>
+                                                                    <option value="SUPERVISOR">SUPERVISOR</option>
+                                                                    <option value="HR">HR</option>
+                                                                    <option value="ADMIN">ADMIN</option>
+                                                                </select>
+                                                            </div>
+
                                                             <div class="form-group">
                                                                 <label for="approve_permission" class="control-label">สิทธิ์อนุมัติเอกสาร</label>
                                                                 <select id="approve_permission" name="approve_permission"

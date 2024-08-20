@@ -5,6 +5,8 @@ $curr_date = date("d-m-Y");
 
 $start_work_date = $_SESSION['start_work_date'];
 
+$role = $_SESSION['role'];
+
 $l_kij_max = $_SESSION['L1'];
 $l_pak_ron_max = $_SESSION['L3'];
 $l_holiday_max = $_SESSION['H3'];

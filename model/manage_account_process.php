@@ -37,6 +37,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "permission_detail" => $result['permission_detail'],
             "approve_permission" => $result['approve_permission'],
             "document_dept_cond" => $result['document_dept_cond'],
+            "role" => $result['role'],
             "status" => $result['status']);
     }
 
@@ -61,6 +62,7 @@ if ($_POST["action"] === 'ADD') {
         $picture = $account_type == 'admin' ? "img/icon/admin-001.png" : "img/icon/user-001.png";
         $approve_permission = $_POST["approve_permission"];
         $document_dept_cond = $_POST["document_dept_cond"];
+        $role = $_POST["role"];
         $status = "Active";
 
         $sql_find = "SELECT * FROM ims_user WHERE user_id = '" . $user_id . "'";
@@ -69,8 +71,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo 2;
         } else {
-            $sql = "INSERT INTO ims_user(user_id,email,password,first_name,last_name,account_type,picture,department_id,approve_permission,document_dept_cond,status)
-            VALUES (:user_id,:email,:password,:first_name,:last_name,:account_type,:picture,:department_id,:approve_permission,:document_dept_cond,:status)";
+            $sql = "INSERT INTO ims_user(user_id,email,password,first_name,last_name,account_type,picture,department_id,approve_permission,document_dept_cond,status,role)
+            VALUES (:user_id,:email,:password,:first_name,:last_name,:account_type,:picture,:department_id,:approve_permission,:document_dept_cond,:status,:role)";
 /*
             $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
             fwrite($myfile, $sql);
@@ -88,6 +90,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':department_id', $department_id, PDO::PARAM_STR);
             $query->bindParam(':approve_permission', $approve_permission, PDO::PARAM_STR);
             $query->bindParam(':document_dept_cond', $document_dept_cond, PDO::PARAM_STR);
+            $query->bindParam(':role', $role, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
 
@@ -118,12 +121,13 @@ if ($_POST["action"] === 'UPDATE') {
         $picture = $account_type === 'admin' ? "img/icon/admin-001.png" : "img/icon/user-001.png";
         $approve_permission = $_POST["approve_permission"];
         $document_dept_cond = $_POST["document_dept_cond"];
+        $role = $_POST["role"];
         $sql_find = "SELECT * FROM ims_user WHERE id = '" . $id . "'";
 
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE ims_user SET first_name=:first_name,last_name=:last_name,status=:status,account_type=:account_type
-            ,picture=:picture,department_id=:department_id,email=:email,approve_permission=:approve_permission,document_dept_cond=:document_dept_cond
+            ,picture=:picture,department_id=:department_id,email=:email,approve_permission=:approve_permission,document_dept_cond=:document_dept_cond,role=:role
             WHERE id = :id";
 
             $query = $conn->prepare($sql_update);
@@ -136,6 +140,7 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':email', $email, PDO::PARAM_STR);
             $query->bindParam(':approve_permission', $approve_permission, PDO::PARAM_STR);
             $query->bindParam(':document_dept_cond', $document_dept_cond, PDO::PARAM_STR);
+            $query->bindParam(':role', $role, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;
@@ -226,12 +231,14 @@ if ($_POST["action"] === 'GET_ACCOUNT') {
     if ($searchValue != '') {
         $searchQuery = " AND (user_id LIKE :user_id or 
         first_name LIKE :first_name OR
-        last_name LIKE :last_name OR         
+        last_name LIKE :last_name OR
+        role LIKE :role OR
         status LIKE :status ) ";
         $searchArray = array(
             'user_id' => "%$searchValue%",
             'first_name' => "%$searchValue%",
             'last_name' => "%$searchValue%",
+            'role' => "%$searchValue%",
             'status' => "%$searchValue%"
         );
     }
@@ -271,6 +278,7 @@ if ($_POST["action"] === 'GET_ACCOUNT') {
             "user_id" => $row['user_id'],
             "first_name" => $row['first_name'],
             "last_name" => $row['last_name'],
+            "role" => $row['role'],
             "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
             "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
             "picture" => "<img src = '" . $row['picture'] . "'  width='32' height='32' title='" . $row['account_type'] . "'>",

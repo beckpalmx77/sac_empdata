@@ -75,7 +75,8 @@ if ($_POST["action"] === 'ADD') {
 
     if ($_POST["doc_date"] !== '' && $_POST["emp_id"] !== '' && $_POST["leave_type_id"] !== '') {
 
-        $table = "dleave_event";
+        //$table = "dleave_event";
+        $table = "v_dleave_event";
         $dept_id = $_POST["department"];
         $doc_date = $_POST["doc_date"];
         $doc_year = substr($_POST["date_leave_start"], 6);
@@ -104,11 +105,11 @@ if ($_POST["action"] === 'ADD') {
 
         $leave_type_desc = $_POST["leave_type_detail"];
 
-        $condition = " WHERE doc_year = '" . $doc_year . "' AND doc_month = '" . $doc_month . "' AND dept_id = '" . $_SESSION['department_id'] . "'";
+        $condition = " WHERE doc_year = '" . $doc_year . "' AND doc_month = '" . $doc_month . "' AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "'";
 
         $last_number = LAST_DOCUMENT_NUMBER($conn, $filed, $table, $condition);
 
-        $doc_id = "L-" . $_SESSION['department_id'] . "-" . substr($doc_date, 3) . "-" . sprintf('%04s', $last_number);
+        $doc_id = "L-" . $_SESSION['dept_id_approve'] . "-" . substr($doc_date, 3) . "-" . sprintf('%04s', $last_number);
 
         /*
         $myfile = fopen("emp-param.txt", "w") or die("Unable to open file!");
@@ -129,8 +130,6 @@ if ($_POST["action"] === 'ADD') {
         $sql_get_max = "SELECT day_max AS data FROM mleave_type WHERE leave_type_id ='" . $leave_type_id . "'";
 
         $day_max = GET_VALUE($conn, $sql_get_max);
-
-        $table = "v_dleave_event";
 
         $cnt_day = "";
         $sql_cnt = "SELECT SUM(leave_day) AS days FROM " . $table
@@ -173,7 +172,7 @@ if ($_POST["action"] === 'ADD') {
                 $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
                 $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
                 $query->bindParam(':doc_month', $doc_month, PDO::PARAM_STR);
-                $query->bindParam(':dept_id', $_SESSION['department_id'], PDO::PARAM_STR);
+                $query->bindParam(':dept_id', $_SESSION['dept_id_approve'], PDO::PARAM_STR);
                 $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
                 $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
                 $query->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
@@ -194,7 +193,7 @@ if ($_POST["action"] === 'ADD') {
                         . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
 
                     echo $sMessage;
-                    sendLineNotify($sMessage, $sToken);
+                    //sendLineNotify($sMessage, $sToken);
                     echo $save_success;
                 } else {
                     echo $error;
@@ -339,8 +338,16 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 
     $searchArray = array();
 
+/*
     if ($_SESSION['document_dept_cond'] !== "A") {
         $searchQuery = " AND dept_id = '" . $_SESSION['department_id'] . "' ";
+    }
+*/
+
+    if ($_SESSION['role'] === "SUPERVISOR") {
+        $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
+    } else if ($_SESSION['role'] !== "SUPERVISOR") {
+        $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
     }
 
     if ($searchValue != '') {
@@ -371,12 +378,12 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
-    /*
-            $txt = $sql_count_record ;
+/*
+            $txt = $sql_count_record  . " | " . $searchQuery . " | " . $_SESSION['role'] ;
             $my_file = fopen("leave_select_count.txt", "w") or die("Unable to open file!");
             fwrite($my_file, $searchValue . " | " . $txt);
             fclose($my_file);
-    */
+*/
 
 
 ## Fetch records
@@ -388,12 +395,12 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
             LEFT JOIN mstatus ms on ms.status_doctype = 'LEAVE' AND ms.status_doc_id = dl.status              
             WHERE 1 " . $searchQuery . " ORDER BY id desc , " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
-    /*
+/*
                 $txt = $sql_get_leave ;
                 $my_file = fopen("leave_select.txt", "w") or die("Unable to open file!");
                 fwrite($my_file, $searchValue. " | " .  $txt);
                 fclose($my_file);
-    */
+*/
 
     $stmt = $conn->prepare($sql_get_leave);
 

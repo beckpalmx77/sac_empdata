@@ -84,9 +84,15 @@ if ($_POST["action"] === 'ADD') {
         $sql_get_dept_desc = "SELECT mp.department_desc AS data FROM memployee em LEFT JOIN mdepartment mp ON mp.department_id = em.dept_id WHERE em.emp_id = '" . $_POST["emp_id"] . "'";
         $dept_desc = GET_VALUE($conn, $sql_get_dept_desc);
 
-        $doc_id = "H-" . $_SESSION['department_id'] . "-" . substr($doc_date, 6) . "-" . sprintf('%04s', LAST_ID($conn, "dholiday_event", 'id'));
+        if ($_SESSION['role'] === "SUPERVISOR") {
+            $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
+        } else if ($_SESSION['role'] !== "SUPERVISOR") {
+            $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
+        }
 
-        $day_max = GET_VALUE($conn, "select day_max as data from mleave_type where leave_type_id ='H2' ");
+        $doc_id = "H-" . $_SESSION['dept_id_approve'] . "-" . substr($doc_date, 6) . "-" . sprintf('%04s', LAST_ID($conn, "dholiday_event", 'id'));
+
+        $day_max = GET_VALUE($conn, "select day_max as data from mleave_type where leave_type_id ='H3' ");
 
         $cnt_day = "";
         $sql_cnt = "SELECT COUNT(*) as days FROM vdholiday_event WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
@@ -130,7 +136,7 @@ if ($_POST["action"] === 'ADD') {
                         . "\n\r" . "ผู้ขอ : " . $full_name  . " " .  $dept_desc;
 
                     echo $sMessage ;
-                    sendLineNotify($sMessage,$sToken);
+                    //sendLineNotify($sMessage,$sToken);
                     echo $save_success;
 
                 } else {
@@ -163,7 +169,6 @@ if ($_POST["action"] === 'UPDATE') {
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
 
-            //if ($_POST["page_manage"] === "ADMIN") {
             if ($_SESSION['document_dept_cond']=="A") {
                 $sql_update = "UPDATE dholiday_event SET status=:status
                                WHERE id = :id";
@@ -226,8 +231,16 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $searchArray = array();
 
 ## Search
+/*
     if ($_SESSION['document_dept_cond']!=="A") {
         $searchQuery = " AND dept_id = '" . $_SESSION['department_id'] . "' ";
+    }
+*/
+
+    if ($_SESSION['role'] === "SUPERVISOR") {
+        $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
+    } else if ($_SESSION['role'] !== "SUPERVISOR") {
+        $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
     }
 
 /*

@@ -55,6 +55,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ชื่อ</th>
                                                     <th>นามสกุล</th>
                                                     <th>Type</th>
+                                                    <th>Role</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -67,6 +68,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ชื่อ</th>
                                                     <th>นามสกุล</th>
                                                     <th>Type</th>
+                                                    <th>Role</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -193,6 +195,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                      aria-hidden="true"></i>
                                                                         </a>
                                                                     </div>
+                                                                </div>
+
+                                                                <div class=”form-group”>
+                                                                    <label for="role" class="control-label">ROLE การ Approve</label>
+                                                                    <select id="role" name="role"
+                                                                            class="form-control" data-live-search="true"
+                                                                            title="Please select">
+                                                                        <option value="SUPERVISOR">SUPERVISOR</option>
+                                                                        <option value="EMPLOYEE">EMPLOYEE</option>
+                                                                        <option value="HR">HR</option>
+                                                                        <option value="ADMIN">ADMIN</option>
+                                                                    </select>
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -424,6 +438,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'first_name'},
                     {data: 'last_name'},
                     {data: 'picture'},
+                    {data: 'role'},
                     {data: 'status'},
                     {data: 'update'},
                     {data: 'delete'}
@@ -478,6 +493,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let department_desc = response[i].department_desc;
                         let approve_permission = response[i].approve_permission;
                         let document_dept_cond = response[i].document_dept_cond;
+                        let role = response[i].role;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
@@ -493,6 +509,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#department_desc').val(department_desc);
                         $('#approve_permission').val(approve_permission);
                         $('#document_dept_cond').val(document_dept_cond);
+                        $('#role').val(role);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
@@ -533,6 +550,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let department_desc = response[i].department_desc;
                         let approve_permission = response[i].approve_permission;
                         let document_dept_cond = response[i].document_dept_cond;
+                        let role = response[i].role;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
@@ -548,6 +566,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#department_desc').val(department_desc);
                         $('#approve_permission').val(approve_permission);
                         $('#document_dept_cond').val(document_dept_cond);
+                        $('#role').val(role);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');

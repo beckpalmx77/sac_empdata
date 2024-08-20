@@ -84,13 +84,20 @@ if ($query->rowCount() == 1) {
             $_SESSION['break_time_stop'] = $result->break_time_stop;
             $_SESSION['approve_permission'] = $result->approve_permission;
             $_SESSION['document_dept_cond'] = $result->document_dept_cond;
+            $_SESSION['dept_id_approve'] = $result->dept_id_approve;
+            $_SESSION['role'] = $result->role;
 
-            /*
-                        $txt =  $_SESSION['work_time_start'] . " | " . $_SESSION['work_time_stop'] . " | " . $_SESSION['dashboard_page'] . " | " . $_SESSION['dept_id'];
-                        $my_file = fopen("time.txt", "w") or die("Unable to open file!");
+/*
+                        $txt =  $_SESSION['work_time_start'] . " | "
+                            . $_SESSION['work_time_stop'] . " | "
+                            . $_SESSION['dashboard_page'] . " | "
+                            . $_SESSION['department_id'] . " | "
+                            . $_SESSION['dept_id'];
+                        $my_file = fopen("dept_a.txt", "w") or die("Unable to open file!");
                         fwrite($my_file, $txt);
                         fclose($my_file);
-            */
+*/
+
 
 
             if ($remember == "on") { // ถ้าติ๊กถูก Login ตลอดไป ให้ทำการสร้าง cookie

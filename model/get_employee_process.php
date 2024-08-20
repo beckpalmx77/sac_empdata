@@ -185,11 +185,24 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
 
     $searchQuery = " ";
 
-
+/*
     if ($_SESSION['document_dept_cond']!=="A") {
         $searchQuery = " AND dept_id in (" . $_SESSION['document_dept_cond'] . ") ";
     }
+*/
 
+    if ($_SESSION['role'] === "SUPERVISOR") {
+        $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
+    } else if ($_SESSION['role'] !== "SUPERVISOR") {
+        $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
+    }
+
+/*
+    $txt = $searchQuery ;
+    $my_file = fopen("leave_select_count.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $searchValue . " | " . $txt);
+    fclose($my_file);
+*/
 
     if ($searchValue != '') {
         $searchQuery = " AND (emp_id LIKE :emp_id or
@@ -216,11 +229,12 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $stmt = $conn->prepare("SELECT * FROM memployee WHERE status = 'Y' " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+    $sql_get = "SELECT * FROM memployee WHERE status = 'Y' " . $searchQuery
+        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
+    $stmt = $conn->prepare($sql_get);
 /*
-        $txt = $_POST["action"] . " | "  . $_POST["sub_action"] . " | " . $_POST["action_for"] . " | " . $columnName . " | " . $columnSortOrder ;
+        $txt = $_POST["action"] . " | "  . $_POST["sub_action"] . " | " . $_POST["action_for"] . " | " . $columnName . " | " . $columnSortOrder . " | " . $sql_get;
         $my_file = fopen("emp_leave_a.txt", "w") or die("Unable to open file!");
         fwrite($my_file, $txt);
         fclose($my_file);
