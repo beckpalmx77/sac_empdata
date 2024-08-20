@@ -33,6 +33,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "work_time_detail" => $result['work_time_detail'],
             "prefix" => $result['prefix'],
             "nick_name" => $result['nick_name'],
+            "dept_id_approve" => $result['dept_id_approve'],
             "remark" => $result['remark'],
             "position" => $result['position'],
             "week_holiday" => $result['week_holiday'],
@@ -200,24 +201,27 @@ if ($_POST["action"] === 'UPDATE') {
         $nick_name = $_POST["nick_name"];
         $position = $_POST["position"];
         $week_holiday = $_POST["week_holiday"];
+        $dept_id_approve = $_POST["dept_id_approve"];
 
         $sql_find = "SELECT * FROM memployee WHERE emp_id = '" . $emp_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
 
-            $sql_update = "UPDATE memployee SET week_holiday=:week_holiday              
+            $sql_update = "UPDATE memployee SET week_holiday=:week_holiday,dept_id_approve=:dept_id_approve             
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':week_holiday', $week_holiday, PDO::PARAM_STR);
+            $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
 
-            $sql_user = "UPDATE ims_user SET first_name=:f_name,last_name=:l_name,department_id=:dept_id       
+            $sql_user = "UPDATE ims_user SET first_name=:f_name,last_name=:l_name,department_id=:dept_id,dept_id_approve=:dept_id_approve       
             WHERE emp_id = :emp_id";
             $query_user = $conn->prepare($sql_user);
             $query_user->bindParam(':f_name', $f_name, PDO::PARAM_STR);
             $query_user->bindParam(':l_name', $l_name, PDO::PARAM_STR);
             $query_user->bindParam(':dept_id', $dept_id, PDO::PARAM_STR);
+            $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
             $query_user->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
             $query_user->execute();
 
@@ -274,12 +278,13 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
 
     if ($searchValue != '') {
         $searchQuery = " AND (emp_id LIKE :emp_id or l_name LIKE :l_name or
-        f_name LIKE :f_name or nick_name LIKE :nick_name) ";
+        f_name LIKE :f_name or nick_name LIKE :nick_name or dept_id_approve LIKE :dept_id_approve) ";
         $searchArray = array(
             'emp_id' => "%$searchValue%",
             'l_name' => "%$searchValue%",
             'f_name' => "%$searchValue%",
-            'nick_name' => "%$searchValue%"
+            'nick_name' => "%$searchValue%",
+            'dept_id_approve' => "%$searchValue%"
         );
     }
 
@@ -343,6 +348,7 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
                 "work_time_detail" => $row['work_time_detail'],
                 "start_work_date" => $row['start_work_date'],
                 "week_holiday" => $row['week_holiday'],
+                "dept_id_approve" => $row['dept_id_approve'],
                 "detail" => "<button type='button' name='detail' emp_id='" . $row['emp_id'] . "' class='btn btn-info btn-xs detail' data-toggle='tooltip' title='Detail'>Detail</button>",
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "approve" => "<button type='button' name='approve' id='" . $row['id'] . "' class='btn btn-success btn-xs approve' data-toggle='tooltip' title='Approve'>Approve</button>",

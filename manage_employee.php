@@ -62,6 +62,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>หน่วยงาน</th>
                                                     <th>ชื่อเล่น</th>
                                                     <th>วันเริ่มงาน</th>
+                                                    <th>dept_id_approve</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -73,6 +74,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>หน่วยงาน</th>
                                                     <th>ชื่อเล่น</th>
                                                     <th>วันเริ่มงาน</th>
+                                                    <th>dept_id_approve</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -260,6 +262,17 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="form-group row">
+                                                                    <div class="col-sm-4">
+                                                                        <label for="dept_id_approve"
+                                                                               class="control-label">dept_id_approve</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="dept_id_approve"
+                                                                               name="dept_id_approve"
+                                                                               placeholder="">
+                                                                    </div>
+                                                                </div>
+
                                                                 <div class="form-group">
                                                                     <label for="remark"
                                                                            class="control-label">หมายเหตุ</label>
@@ -268,8 +281,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                               name="remark"
                                                                               rows="1"></textarea>
                                                                 </div>
-
-
 
                                                             </div>
                                                         </div>
@@ -482,6 +493,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'department_id'},
                     {data: 'nick_name'},
                     {data: 'start_work_date'},
+                    {data: 'dept_id_approve'},
                     {data: 'status'},
                     {data: 'update'},
                 ]
@@ -564,6 +576,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let position = response[i].position;
                         let remark = response[i].remark;
                         let week_holiday = response[i].week_holiday;
+                        let dept_id_approve = response[i].dept_id_approve;
 
                         //let work_age = 0 ;
                         // let start_w_date = start_work_date.substr(3,2) + "/" + start_work_date.substr(0,2) + "/" + start_work_date.substr(6,10);
@@ -587,7 +600,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#position').val(position);
                         $('#remark').val(remark);
                         $('#week_holiday').val(week_holiday);
-
+                        $('#dept_id_approve').val(dept_id_approve);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
