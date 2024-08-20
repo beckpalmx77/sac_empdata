@@ -1,7 +1,7 @@
 <?php
 #return echo value
 $company = 'SAC';
-$system_name = "ระบบจัดการข้อมูลภายใน สงวนออโต้คาร์";
+$system_name = "ระบบจัดการการลาพนักงาน สงวนออโต้คาร์";
 $save_success = "Complete : บันทึกข้อมูลเรียบร้อยแล้ว";
 $del_success = "Complete : ลบข้อมูลเรียบร้อยแล้ว";
 $error = "Error : มีความผิดพลาดในระบบ  กรุณาตรวจสอบ";
