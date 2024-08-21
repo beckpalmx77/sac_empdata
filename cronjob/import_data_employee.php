@@ -9,7 +9,7 @@ include("../util/record_util.php");
 
 $previous_year = date("Y") - 2;
 
-$previous_year = "2000";
+$previous_year = "2019";
 
 $sql_sqlsvr = "SELECT EMP_KEY,EMP_INTL,EMPFILE.EMP_NAME,EMPFILE.EMP_SURNME,EMPFILE.EMP_GENDER,EMPFILE.EMP_EMAIL
 ,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
@@ -213,10 +213,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
-
-        if ($result_sqlsvr["PRS_NO"]==='81055') {
-            echo "Update ims_user Row = " . $result_sqlsvr["PRS_NO"] . " | " . $status_u . " > " . $dept_id_approve.  "\n\r";
-        }
 
         $sql_update = "UPDATE ims_user SET status=:status, dept_id_approve=:dept_id_approve WHERE user_id=:user_id";
         $query_update = $conn->prepare($sql_update);
