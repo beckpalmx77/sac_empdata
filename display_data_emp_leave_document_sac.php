@@ -233,7 +233,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     width: '100%', // กำหนดความกว้างของ select2
                 });
             });
-            
+
             function fetchEmployees() {
                 let document_dept_cond = $('#document_dept_cond').val();
                 let dept_id_approve = $('#dept_id_approve').val();

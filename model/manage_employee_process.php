@@ -64,7 +64,7 @@ if ($_POST["action"] === 'GET_SELECT_EMP_BY_DEPT') {
     $dept_id_approve = isset($_POST['dept_id_approve']) ? $_POST['dept_id_approve'] : '';
     $emp_id = isset($_POST['emp_id']) ? $_POST['emp_id'] : '';
 
-    $query = "SELECT emp_id, CONCAT(f_name, '-', l_name) AS fullname FROM memployee WHERE status = 'Y' ";
+    $query = "SELECT emp_id, CONCAT(f_name, '   ', l_name) AS fullname FROM memployee WHERE status = 'Y' ";
 
     if ($document_dept_cond === 'A') {
         $con_query = $query . " AND dept_id_approve = :dept_id_approve";

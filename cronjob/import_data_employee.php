@@ -134,7 +134,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     }
 
     if ($result_sqlsvr["PRS_NO"]==='81352') {
-        $dept_id_approve = 'IT';
+        $dept_id_approve = 'ITD';
     }
 
     echo "Check UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
