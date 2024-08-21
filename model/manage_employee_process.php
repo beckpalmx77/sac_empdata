@@ -64,23 +64,30 @@ if ($_POST["action"] === 'GET_SELECT_EMP_BY_DEPT') {
     $dept_id_approve = isset($_POST['dept_id_approve']) ? $_POST['dept_id_approve'] : '';
     $emp_id = isset($_POST['emp_id']) ? $_POST['emp_id'] : '';
 
-    $query = "SELECT emp_id, CONCAT(f_name, '-', l_name) AS fullname FROM memployee WHERE 1 ";
+    $query = "SELECT emp_id, CONCAT(f_name, '-', l_name) AS fullname FROM memployee WHERE status = 'Y' ";
 
     if ($document_dept_cond === 'A') {
-        $query .= " AND dept_id_approve = :dept_id_approve";
-        $stmt = $conn->prepare($query);
+        $con_query = $query . " AND dept_id_approve = :dept_id_approve";
+        $stmt = $conn->prepare($con_query);
         $stmt->bindParam(':dept_id_approve', $dept_id_approve);
     } else {
-        $query .= " AND emp_id = :emp_id";
-        $stmt = $conn->prepare($query);
+        $con_query = $query . " AND emp_id = :emp_id";
+        $stmt = $conn->prepare($con_query);
         $stmt->bindParam(':emp_id', $_SESSION['emp_id']);
     }
+
+    if ($_SESSION['role'] === 'ADMIN' || $_SESSION['role'] === 'HR') {
+        $con_query = $query;
+        $stmt = $conn->prepare($con_query);
+    }
+
 /*
-    $txt = $document_dept_cond . " | " . $dept_id_approve . " | " . $emp_id . " | " . $query;
+    $txt = $document_dept_cond . " | " . $dept_id_approve . " | " . $emp_id . " | " . $con_query;
     $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
     fwrite($my_file, $txt);
     fclose($my_file);
 */
+
     $stmt->execute();
     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($employees as $row) {
