@@ -224,33 +224,41 @@ if (strlen($_SESSION['alogin']) == "") {
         <script>
             $(document).ready(function() {
                 fetchEmployees();
-            });
 
+                // Initialize Select2 for the employee select element
+                $('#employee').select2({
+                    placeholder: 'กรุณาเลือกพนักงาน',
+                    allowClear: true,
+                    minimumInputLength: 2, // ค้นหาเมื่อผู้ใช้พิมพ์อย่างน้อย 2 ตัวอักษร
+                    width: '100%', // กำหนดความกว้างของ select2
+                });
+            });
+            
             function fetchEmployees() {
-                // Assuming you have these hidden input fields to hold the values
                 let document_dept_cond = $('#document_dept_cond').val();
                 let dept_id_approve = $('#dept_id_approve').val();
                 let emp_id = $('#emp_id').val();
-
-                //alert(document_dept_cond + " | "  + dept_id_approve + " | " + " | " + emp_id);
 
                 $.ajax({
                     url: 'model/manage_employee_process.php',
                     method: 'POST',
                     data: {
-                        action: 'GET_SELECT_EMP_BY_DEPT', // Action parameter
-                        document_dept_cond: document_dept_cond, // Document condition parameter
-                        dept_id_approve: dept_id_approve, // Department ID for approval
-                        emp_id: emp_id // Department ID for approval
+                        action: 'GET_SELECT_EMP_BY_DEPT',
+                        document_dept_cond: document_dept_cond,
+                        dept_id_approve: dept_id_approve,
+                        emp_id: emp_id
                     },
                     success: function(data) {
                         let employeeSelect = $('#employee');
-                        // Clear existing options
                         employeeSelect.empty();
                         employeeSelect.append('<option value="">กรุณาเลือกพนักงาน</option>');
-
-                        // Populate the select with the employee options
                         employeeSelect.append(data);
+
+                        // Re-initialize Select2 after options are updated
+                        employeeSelect.select2({
+                            placeholder: 'กรุณาเลือกพนักงาน',
+                            allowClear: true
+                        });
                     },
                     error: function() {
                         console.error('Error fetching employees.');

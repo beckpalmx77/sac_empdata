@@ -1,5 +1,4 @@
 <?php
-// Include your header and authentication check
 include('includes/Header.php');
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index");
@@ -116,29 +115,23 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <?php } ?>
                                                                     </select>
 
-                                                                    <?php
-                                                                    if ($_SESSION['document_dept_cond'] !== "A") { ?>
-                                                                        <input type="hidden" name="branch" id="branch"
-                                                                               value="<?php echo $_SESSION['department_id'] ?>">
-                                                                    <?php } else { ?>
+                                                                    <input type="hidden" id="document_dept_cond" name="document_dept_cond"
+                                                                           value="<?php echo $_SESSION['document_dept_cond']; ?>">
+                                                                    <input type="hidden" id="dept_id_approve" name="dept_id_approve"
+                                                                           value="<?php echo $_SESSION['dept_id_approve']; ?>">
+                                                                    <input type="hidden" id="emp_id" name="emp_id"
+                                                                           value="<?php echo $_SESSION['emp_id']; ?>">
 
-                                                                        <label for="branch">เลือกสาขา :</label>
-                                                                        <select name="branch" id="branch"
-                                                                                class="form-control select2" required>
-                                                                            <?php foreach ($BranchRecords as $row) { ?>
-                                                                                <option value="<?php echo $row["branch"]; ?>"><?php echo $row["branch_name"]; ?></option>
-                                                                            <?php } ?>
-                                                                        </select>
-
-                                                                    <?php } ?>
+                                                                    <label for="employee">เลือกพนักงาน :</label>
+                                                                    <select name="employee" id="employee" class="form-control" required>
+                                                                        <option value="">กรุณาเลือกพนักงาน</option>
+                                                                    </select>
 
                                                                     <br>
                                                                     <div class="row">
-                                                                        <input type="hidden" id="form_type"
-                                                                               name="form_type" value="branch">
-                                                                        <input type="hidden" id="employee"
-                                                                               name="employee" value="">
                                                                         <div class="col-sm-12">
+                                                                            <input type="hidden" id="form_type"
+                                                                                   name="form_type" value="employee">
                                                                             <button type="submit" id="BtnData"
                                                                                     name="BtnData"
                                                                                     class="btn btn-primary mb-3">
@@ -148,6 +141,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                 </div>
                                                             </div>
+
                                                         </form>
                                                     </div>
                                                 </div>
@@ -172,7 +166,6 @@ if (strlen($_SESSION['alogin']) == "") {
             <i class="fas fa-angle-up"></i>
         </a>
 
-        <!-- Include JS files -->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -185,14 +178,18 @@ if (strlen($_SESSION['alogin']) == "") {
         <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
         <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
-        <!-- Initialize Select2 -->
         <script>
-            $(document).ready(function () {
-                $('.select2').select2({
-                    placeholder: "ค้นหาพนักงาน...",
-                    allowClear: true
-                });
+            function validateMonths() {
+                const startMonth = parseInt($('#month_start').val());
+                const endMonth = parseInt($('#month_to').val());
 
+                if (endMonth < startMonth) {
+                    alertify.alert("เดือนสิ้นสุดไม่ควรอยู่ก่อนเดือนเริ่มต้น");
+                    $('#month_to').val(startMonth);
+                }
+            }
+
+            $(document).ready(function () {
                 $('#myform').on('submit', function (e) {
                     e.preventDefault(); // Prevent the form from submitting normally
 
@@ -213,7 +210,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     // Perform the AJAX request
                     $.ajax({
                         type: 'POST',
-                        url: 'show_data_leave_document.php',
+                        url: 'show_data_leave_document_sac.php',
                         data: formData,
                         success: function (response) {
                             // Write the response to the new window
@@ -222,20 +219,47 @@ if (strlen($_SESSION['alogin']) == "") {
                     });
                 });
             });
+        </script>
 
-            function validateMonths() {
-                const startMonth = parseInt($('#month_start').val());
-                const endMonth = parseInt($('#month_to').val());
+        <script>
+            $(document).ready(function() {
+                fetchEmployees();
+            });
 
-                if (endMonth < startMonth) {
-                    alertify.alert("เดือนสิ้นสุดไม่ควรอยู่ก่อนเดือนเริ่มต้น");
-                    return false;
-                }
+            function fetchEmployees() {
+                // Assuming you have these hidden input fields to hold the values
+                let document_dept_cond = $('#document_dept_cond').val();
+                let dept_id_approve = $('#dept_id_approve').val();
+                let emp_id = $('#emp_id').val();
+
+                //alert(document_dept_cond + " | "  + dept_id_approve + " | " + " | " + emp_id);
+
+                $.ajax({
+                    url: 'model/manage_employee_process.php',
+                    method: 'POST',
+                    data: {
+                        action: 'GET_SELECT_EMP_BY_DEPT', // Action parameter
+                        document_dept_cond: document_dept_cond, // Document condition parameter
+                        dept_id_approve: dept_id_approve, // Department ID for approval
+                        emp_id: emp_id // Department ID for approval
+                    },
+                    success: function(data) {
+                        let employeeSelect = $('#employee');
+                        // Clear existing options
+                        employeeSelect.empty();
+                        employeeSelect.append('<option value="">กรุณาเลือกพนักงาน</option>');
+
+                        // Populate the select with the employee options
+                        employeeSelect.append(data);
+                    },
+                    error: function() {
+                        console.error('Error fetching employees.');
+                    }
+                });
             }
         </script>
+
     </body>
     </html>
 
-    <?php
-}
-?>
+<?php } ?>
