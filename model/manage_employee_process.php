@@ -80,14 +80,12 @@ if ($_POST["action"] === 'GET_SELECT_EMP_BY_DEPT') {
         $con_query = $query . " AND dept_id <> 'XXX'";
         $stmt = $conn->prepare($con_query);
     }
-
-
+/*
     $txt = $document_dept_cond . " | " . $dept_id_approve . " | " . $emp_id . " | " . $con_query;
     $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
     fwrite($my_file, $txt);
     fclose($my_file);
-
-
+*/
     $stmt->execute();
     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($employees as $row) {
