@@ -77,7 +77,7 @@ if ($_POST["action"] === 'GET_SELECT_EMP_BY_DEPT') {
     }
 
     if ($_SESSION['role'] === 'ADMIN' || $_SESSION['role'] === 'HR') {
-        $con_query = $query . " AND branch <> 'XXX'";
+        $con_query = $query . " AND (branch <> 'XXX' AND branch NOT LIKE 'CP%') " ;
         $stmt = $conn->prepare($con_query);
     }
 /*
