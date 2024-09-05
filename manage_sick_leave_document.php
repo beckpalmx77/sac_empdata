@@ -202,7 +202,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     <input type="hidden" class="form-control"
                                                                            id="leave_type_id"
                                                                            required="required"
-                                                                           name="leave_type_id">
+                                                                           name="leave_type_id"
+                                                                           value="'L2">
                                                                     <div class="col-sm-8">
                                                                         <label for="leave_type_detail"
                                                                                class="control-label">ประเภทการลา</label>
@@ -211,10 +212,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                name="leave_type_detail"
                                                                                required="required"
                                                                                readonly="true"
-                                                                               placeholder="">
+                                                                               value="ลาป่วย"
+                                                                               placeholder="ลาป่วย">
                                                                     </div>
 
-                                                                    <div class="col-sm-2">
+                                                                    <!--div class="col-sm-2">
                                                                         <label for="leave_type_id"
                                                                                class="control-label">เลือก</label>
                                                                         <a data-toggle="modal"
@@ -223,7 +225,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                             Click <i class="fa fa-search"
                                                                                      aria-hidden="true"></i>
                                                                         </a>
-                                                                    </div>
+                                                                    </div-->
                                                                     <div class="col-sm-2">
                                                                         <label for="search_data"
                                                                                class="control-label">ข้อมูลการลา</label>
@@ -506,7 +508,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src="js/myadmin.min.js"></script>
 
     <script src="js/modal/show_employee_modal.js"></script>
-    <script src="js/modal/show_leave_type_modal_sick.js"></script>
+    <script src="js/modal/show_leave_type_modal.js"></script>
 
     <!--script src="js/modal/show_data_leave_modal.js"></script-->
 
@@ -606,7 +608,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     echo "'scrollX': true,";
                 }?>
                 'ajax': {
-                    'url': 'model/manage_leave_document_process.php',
+                    'url': 'model/manage_sick_leave_document_process.php',
                     'data': formData
                 },
                 'columns': [
@@ -653,7 +655,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         // alert(formData);
 
                         $.ajax({
-                            url: 'model/manage_leave_document_process.php',
+                            url: 'model/manage_sick_leave_document_process.php',
                             method: "POST",
                             data: formData,
                             success: function (data) {
@@ -689,20 +691,20 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         $(document).ready(function () {
 
             $("#btnAdd").click(function () {
-
+                
                 //alert(<?php echo $_SESSION['work_time_start']?>);
                 let today = new Date();
                 let day = String(today.getDate()).padStart(2, '0');
                 let month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
                 let year = today.getFullYear();
                 let formattedDate = day + '-' + month + '-' + year;
-
+                
                 $('#recordModal').modal('show');
                 $('#id').val("");
                 $('#doc_id').val("");
                 $('#doc_date').val(formattedDate);
-                $('#leave_type_id').val("");
-                $('#leave_type_detail').val("");
+                $('#leave_type_id').val("L2");
+                $('#leave_type_detail').val("ลาป่วย");
                 $('#date_leave_start').val("");
                 $('#date_leave_to').val("");
                 $('#leave_day').val("1");
@@ -724,7 +726,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_leave_document_process.php',
+                url: 'model/manage_sick_leave_document_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
@@ -786,7 +788,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_leave_document_process.php',
+                url: 'model/manage_sick_leave_document_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
@@ -844,9 +846,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let today = new Date(); // Get today's date
             $('#date_leave_start').datepicker({
-                startDate: today,
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
@@ -894,9 +894,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let today = new Date(); // Get today's date
             $('#date_leave_to').datepicker({
-                startDate: today,
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
@@ -982,6 +980,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             }
         }
     </script>
+
+
 
     </body>
     </html>

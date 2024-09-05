@@ -616,7 +616,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
+            let today = new Date(); // Get today's date
             $('#date_leave_start').datepicker({
+                startDate: today,
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
@@ -627,7 +629,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
+            let today = new Date(); // Get today's date
             $('#date_leave_to').datepicker({
+                startDate: today,
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",

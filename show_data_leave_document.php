@@ -230,6 +230,59 @@ if ($form_type === 'employee') {
         </table>
     </div>
 
+    <?php
+    if ($form_type === 'employee') {
+        echo '<div class="container-fluid" id="container-wrapper">';
+        //echo '<th><b>' . 'ชื่อพนักงาน : ' . $f_name . ' ' . $l_name . '</b></th>';
+        echo '<table id="leaveTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>ประเภทการลา</th>';
+        echo '<th>จำนวนวันที่ใช้การลา (วัน)</th>';
+        echo '<th>จำนวนวันที่ลาได้สูงสุด (วัน)</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+
+        for ($loop = 2; $loop <= 2; $loop++) {
+            $leave_type_id = "H" . $loop;
+            $sql_leave_count = "SELECT vdholiday_event.leave_type_detail, SUM(vdholiday_event.leave_day) AS leave_day, mleave_type.day_max, mleave_type.color
+                            FROM vdholiday_event 
+                            LEFT JOIN mleave_type ON mleave_type.leave_type_id = vdholiday_event.leave_type_id
+                            WHERE vdholiday_event.doc_year = :year 
+                            AND vdholiday_event.f_name = :f_name 
+                            AND vdholiday_event.l_name = :l_name 
+                            AND vdholiday_event.leave_type_id = :leave_type_id 
+                            AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to 
+                            GROUP BY vdholiday_event.leave_type_detail, mleave_type.day_max , mleave_type.color";
+
+            $statement_leave = $conn->prepare($sql_leave_count);
+            $statement_leave->bindParam(':year', $year);
+            $statement_leave->bindParam(':f_name', $f_name);
+            $statement_leave->bindParam(':l_name', $l_name);
+            $statement_leave->bindParam(':leave_type_id', $leave_type_id);
+            $statement_leave->bindParam(':month_id_start', $month_id_start);
+            $statement_leave->bindParam(':month_id_to', $month_id_to);
+            $statement_leave->execute();
+            $results_leave = $statement_leave->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($results_leave as $row_leave) {
+                $leave_type_detail = '<td><span style="color: ' . $row_leave['color'] . ';">' . $row_leave['leave_type_detail'] . '</span></td>';
+                echo '<tr>';
+                echo $leave_type_detail;
+                //echo '<td>' . $row_leave['leave_type_detail'] . '</td>';
+                echo '<td>' . $row_leave['leave_day'] . '</td>';
+                echo '<td>' . $row_leave['day_max'] . '</td>';
+                echo '</tr>';
+            }
+        }
+
+        echo '</tbody>';
+        echo '</table>';
+        echo '</div>';
+    }
+    ?>
+
     <div class="card-body">
         <h4><span class="badge bg-info">แสดงข้อมูลการใช้วันหยุด (นักขัตฤกษ์-ประจำปี) พนักงาน</span></h4>
         <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
