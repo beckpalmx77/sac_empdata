@@ -339,10 +339,18 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 
     $searchArray = array();
 
-    if ($_SESSION['document_dept_cond'] !== "A") {
-        $searchQuery = " AND dept_id = '" . $_SESSION['department_id'] . "' ";
-    }
+## Search
+    /*
+        if ($_SESSION['document_dept_cond']!=="A") {
+            $searchQuery = " AND dept_id = '" . $_SESSION['department_id'] . "' ";
+        }
+    */
 
+    if ($_SESSION['role'] === "SUPERVISOR") {
+        $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
+    } else if ($_SESSION['role'] !== "SUPERVISOR") {
+        $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
+    }
     if ($searchValue != '') {
         $searchQuery = " AND (dl.f_name LIKE :f_name 
         or dl.l_name LIKE :l_name 

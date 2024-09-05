@@ -13,18 +13,6 @@ $sql_leave_addition2 = "";
 
 $emp_id = $_POST["employee"];
 
-$sql_emp = "SELECT * FROM memployee WHERE emp_id = :emp_id";
-$stmt_emp = $conn->prepare($sql_emp);
-$stmt_emp->bindParam(':emp_id', $emp_id);
-$stmt_emp->execute();
-$EmpRows = $stmt_emp->fetchAll();
-foreach ($EmpRows as $EmpRow) {
-    $f_name = $EmpRow["f_name"];
-    $l_name = $EmpRow["l_name"];
-}
-
-
-
 $month_name_start = "";
 $month_name_to = "";
 
@@ -52,6 +40,8 @@ $date = date("d/m/Y");
 $total = 0;
 $total_payment = 0;
 $sql_leave_addition = "";
+
+$txt = "";
 
 ?>
 <!DOCTYPE html>
@@ -99,60 +89,6 @@ $sql_leave_addition = "";
 <input type="hidden" class="form-control" id="f_name" name="f_name" value="">
 <input type="hidden" class="form-control" id="form_type" name="form_type" value="<?php echo $form_type ?>">
 
-<?php
-if ($form_type === 'employee') {
-    echo '<div class="container-fluid" id="container-wrapper">';
-    echo '<th><b>' . 'ชื่อพนักงาน : ' . $f_name . ' ' . $l_name . '</b></th>';
-    echo '<table id="leaveTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">';
-    echo '<thead>';
-    echo '<tr>';
-    echo '<th>ประเภทการลา</th>';
-    echo '<th>จำนวนวันที่ใช้การลา (วัน)</th>';
-    echo '<th>จำนวนวันที่ลาได้สูงสุด (วัน)</th>';
-    echo '</tr>';
-    echo '</thead>';
-    echo '<tbody>';
-
-    for ($loop = 1; $loop <= 5; $loop++) {
-        $leave_type_id = "L" . $loop;
-        $sql_leave_count = "SELECT v_dleave_event.leave_type_detail, SUM(v_dleave_event.leave_day) AS leave_day, mleave_type.day_max, mleave_type.color
-                            FROM v_dleave_event 
-                            LEFT JOIN mleave_type ON mleave_type.leave_type_id = v_dleave_event.leave_type_id
-                            WHERE v_dleave_event.doc_year = :year 
-                            AND v_dleave_event.f_name = :f_name 
-                            AND v_dleave_event.l_name = :l_name 
-                            AND v_dleave_event.leave_type_id = :leave_type_id 
-                            AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to 
-                            GROUP BY v_dleave_event.leave_type_detail, mleave_type.day_max , mleave_type.color";
-
-        $statement_leave = $conn->prepare($sql_leave_count);
-        $statement_leave->bindParam(':year', $year);
-        $statement_leave->bindParam(':f_name', $f_name);
-        $statement_leave->bindParam(':l_name', $l_name);
-        $statement_leave->bindParam(':leave_type_id', $leave_type_id);
-        $statement_leave->bindParam(':month_id_start', $month_id_start);
-        $statement_leave->bindParam(':month_id_to', $month_id_to);
-        $statement_leave->execute();
-        $results_leave = $statement_leave->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($results_leave as $row_leave) {
-            $leave_type_detail = '<td><span style="color: ' . $row_leave['color'] . ';">' . $row_leave['leave_type_detail'] . '</span></td>';
-            echo '<tr>';
-            echo $leave_type_detail;
-            //echo '<td>' . $row_leave['leave_type_detail'] . '</td>';
-            echo '<td>' . $row_leave['leave_day'] . '</td>';
-            echo '<td>' . $row_leave['day_max'] . '</td>';
-            echo '</tr>';
-        }
-    }
-
-    echo '</tbody>';
-    echo '</table>';
-    echo '</div>';
-}
-?>
-
-
 <div class="container-fluid" id="container-wrapper">
     <div class="card-body">
         <h4><span class="badge bg-success">แสดงข้อมูลการลา พนักงาน</span></h4>
@@ -178,35 +114,32 @@ if ($form_type === 'employee') {
             $sql_leave = " SELECT v_dleave_event.* , em.status FROM v_dleave_event 
                        LEFT JOIN memployee em on em.emp_id = v_dleave_event.emp_id
                        WHERE v_dleave_event.doc_year = :year
-                       AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to
-                       AND v_dleave_event.dept_id = :branch   
+                       AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to                       
                        ";
 
-            if (!empty($f_name)) {
-                $sql_leave_addition1 = " AND v_dleave_event.f_name = :f_name";
-            }
-
-            if (!empty($l_name)) {
-                $sql_leave_addition2 = " AND v_dleave_event.l_name = :l_name";
+            if (!empty($emp_id)) {
+                $sql_leave_addition1 = " AND v_dleave_event.emp_id = :emp_id";
             }
 
             $sql_oder = " ORDER BY v_dleave_event.f_name,v_dleave_event.doc_date ";
-            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_leave_addition2 . $sql_oder;
+
+            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_oder;
 
             $statement_leave = $conn->prepare($sql_leave);
             $statement_leave->bindParam(':year', $year);
             $statement_leave->bindParam(':month_id_start', $month_id_start);
             $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->bindParam(':branch', $branch);
 
-            if (!empty($f_name)) {
-                $statement_leave->bindParam(':f_name', $f_name);
+            if (!empty($emp_id)) {
+                $statement_leave->bindParam(':emp_id', $emp_id);
             }
 
-            if (!empty($l_name)) {
-                $statement_leave->bindParam(':l_name', $l_name);
-            }
-
+/*
+            $txt = $sql_leave . " | " . $emp_id . " | " . $month_id_to . " | " . $month_id_start . " | " . $year ;
+            $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
+            fwrite($my_file, $txt);
+            fclose($my_file);
+*/
             $statement_leave->execute();
             $results_leave = $statement_leave->fetchAll(PDO::FETCH_ASSOC);
             $line_no = 0;
@@ -232,59 +165,6 @@ if ($form_type === 'employee') {
         </table>
     </div>
 
-    <?php
-    if ($form_type === 'employee') {
-        echo '<div class="container-fluid" id="container-wrapper">';
-        //echo '<th><b>' . 'ชื่อพนักงาน : ' . $f_name . ' ' . $l_name . '</b></th>';
-        echo '<table id="leaveTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th>ประเภทการลา</th>';
-        echo '<th>จำนวนวันที่ใช้การลา (วัน)</th>';
-        echo '<th>จำนวนวันที่ลาได้สูงสุด (วัน)</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-
-        for ($loop = 2; $loop <= 2; $loop++) {
-            $leave_type_id = "H" . $loop;
-            $sql_leave_count = "SELECT vdholiday_event.leave_type_detail, SUM(vdholiday_event.leave_day) AS leave_day, mleave_type.day_max, mleave_type.color
-                            FROM vdholiday_event 
-                            LEFT JOIN mleave_type ON mleave_type.leave_type_id = vdholiday_event.leave_type_id
-                            WHERE vdholiday_event.doc_year = :year 
-                            AND vdholiday_event.f_name = :f_name 
-                            AND vdholiday_event.l_name = :l_name 
-                            AND vdholiday_event.leave_type_id = :leave_type_id 
-                            AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to 
-                            GROUP BY vdholiday_event.leave_type_detail, mleave_type.day_max , mleave_type.color";
-
-            $statement_leave = $conn->prepare($sql_leave_count);
-            $statement_leave->bindParam(':year', $year);
-            $statement_leave->bindParam(':f_name', $f_name);
-            $statement_leave->bindParam(':l_name', $l_name);
-            $statement_leave->bindParam(':leave_type_id', $leave_type_id);
-            $statement_leave->bindParam(':month_id_start', $month_id_start);
-            $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->execute();
-            $results_leave = $statement_leave->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($results_leave as $row_leave) {
-                $leave_type_detail = '<td><span style="color: ' . $row_leave['color'] . ';">' . $row_leave['leave_type_detail'] . '</span></td>';
-                echo '<tr>';
-                echo $leave_type_detail;
-                //echo '<td>' . $row_leave['leave_type_detail'] . '</td>';
-                echo '<td>' . $row_leave['leave_day'] . '</td>';
-                echo '<td>' . $row_leave['day_max'] . '</td>';
-                echo '</tr>';
-            }
-        }
-
-        echo '</tbody>';
-        echo '</table>';
-        echo '</div>';
-    }
-    ?>
-
     <div class="card-body">
         <h4><span class="badge bg-info">แสดงข้อมูลการใช้วันหยุด (นักขัตฤกษ์-ประจำปี) พนักงาน</span></h4>
         <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
@@ -307,32 +187,23 @@ if ($form_type === 'employee') {
             $sql_leave = " SELECT vdholiday_event.* , em.status FROM vdholiday_event 
                LEFT JOIN memployee em on em.emp_id = vdholiday_event.emp_id
                WHERE vdholiday_event.doc_year = :year
-               AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to
-               AND vdholiday_event.dept_id = :branch   
+               AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to               
                ";
 
-            if (!empty($f_name)) {
-                $sql_leave_addition1 = " AND vdholiday_event.f_name = :f_name";
-            }
-
-            if (!empty($l_name)) {
-                $sql_leave_addition2 = " AND vdholiday_event.l_name = :l_name";
+            if (!empty($emp_id)) {
+                $sql_leave_addition1 = " AND vdholiday_event.emp_id = :emp_id";
             }
 
             $sql_oder = " ORDER BY vdholiday_event.f_name,vdholiday_event.doc_date ";
-            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_leave_addition2 . $sql_oder;
+            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_oder;
+
             $statement_leave = $conn->prepare($sql_leave);
             $statement_leave->bindParam(':year', $year);
             $statement_leave->bindParam(':month_id_start', $month_id_start);
             $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->bindParam(':branch', $branch);
 
-            if (!empty($f_name)) {
-                $statement_leave->bindParam(':f_name', $f_name);
-            }
-
-            if (!empty($l_name)) {
-                $statement_leave->bindParam(':l_name', $l_name);
+            if (!empty($emp_id)) {
+                $statement_leave->bindParam(':emp_id', $emp_id);
             }
 
             $statement_leave->execute();
@@ -380,32 +251,22 @@ if ($form_type === 'employee') {
             $sql_leave = " SELECT v_dchange_event.* , em.status FROM v_dchange_event 
                LEFT JOIN memployee em on em.emp_id = v_dchange_event.emp_id
                WHERE v_dchange_event.doc_year = :year
-               AND v_dchange_event.doc_month BETWEEN :month_id_start AND :month_id_to
-               AND v_dchange_event.dept_id = :branch   
+               AND v_dchange_event.doc_month BETWEEN :month_id_start AND :month_id_to               
                ";
 
-            if (!empty($f_name)) {
-                $sql_leave_addition1 = " AND v_dchange_event.f_name = :f_name";
-            }
-
-            if (!empty($l_name)) {
-                $sql_leave_addition2 = " AND v_dchange_event.l_name = :l_name";
+            if (!empty($emp_id)) {
+                $sql_leave_addition1 = " AND v_dchange_event.emp_id = :emp_id";
             }
 
             $sql_oder = " ORDER BY v_dchange_event.f_name,v_dchange_event.doc_date ";
-            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_leave_addition2 . $sql_oder;
+            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_oder;
             $statement_leave = $conn->prepare($sql_leave);
             $statement_leave->bindParam(':year', $year);
             $statement_leave->bindParam(':month_id_start', $month_id_start);
             $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->bindParam(':branch', $branch);
 
-            if (!empty($f_name)) {
-                $statement_leave->bindParam(':f_name', $f_name);
-            }
-
-            if (!empty($l_name)) {
-                $statement_leave->bindParam(':l_name', $l_name);
+            if (!empty($emp_id)) {
+                $statement_leave->bindParam(':emp_id', $emp_id);
             }
 
             $statement_leave->execute();
