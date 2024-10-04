@@ -121,7 +121,9 @@ include('includes/CheckDevice.php');
                         <div class="col-lg-12">
                             <div class="login-form">
                                 <div class="text-center">
-                                    <div><img src="img/logo/logo text-01.png" width="400" height="158"/></div>
+                                    <div>
+                                        <img src="img/logo/logo text-01.png" class="img-fluid" alt="Logo" style="max-width: 100%; height: auto;">
+                                    </div>
                                     <h1 class="h4 text-gray-900 mb-4">ระบบข้อมูลพนักงาน SAC</h1>
                                 </div>
                                 <div class="form-group">
