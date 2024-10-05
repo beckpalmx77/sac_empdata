@@ -42,9 +42,6 @@
         <i class="fa fa-bars"></i>
     </button>
     <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-        <!-- Left: Clock -->
-        <div class="text-white" id="clock" style="font-size: 1rem;"></div>
-
         <?php if ($_SESSION['deviceType'] !== 'computer') { ?>
 
         <!-- Right: Navbar items -->
@@ -61,7 +58,8 @@
             </li>
         </ul>
         <?php } else { ?>
-
+        <!-- Left: Clock -->
+        <div class="text-white" id="clock" style="font-size: 1rem;"></div>
         <!-- Right: Navbar items -->
         <ul class="navbar-nav ml-auto d-flex align-items-center">
             <li class="nav-item dropdown no-arrow mx-1">
