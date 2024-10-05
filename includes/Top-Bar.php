@@ -49,11 +49,10 @@
             <li class="nav-item dropdown no-arrow mx-1">
                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-heart"></i>
-                    <span>&nbsp;<?php echo $_SESSION['system_name_2']?></span>
+                    <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?></span>
+                    <!--span>&nbsp;<?php echo $_SESSION['system_name_2']?>&nbsp;</span-->
                     <?php $src = $_SESSION['sex']==="M" ? "img/boy.png" : "img/girl.png"; ?>
                     <img class="img-profile rounded-circle" src="<?php echo $src;?>" style="max-width: 60px">
-                    <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?></span>
                 </a>
             </li>
         </ul>
