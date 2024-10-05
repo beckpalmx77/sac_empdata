@@ -49,7 +49,7 @@
             <li class="nav-item dropdown no-arrow mx-1">
                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <span>&nbsp;<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']?>&nbsp;</span>
+                    <span>&nbsp;<?php echo "SAC System : " . $_SESSION['first_name'] . " " . $_SESSION['last_name']?>&nbsp;</span>
                     <?php $src = $_SESSION['sex']==="M" ? "img/boy.png" : "img/girl.png"; ?>
                     <img class="img-profile rounded-circle" src="<?php echo $src;?>" style="max-width: 60px">
                 </a>
