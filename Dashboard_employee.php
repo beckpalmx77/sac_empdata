@@ -19,7 +19,10 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 include('includes/Top-Bar.php');
                 ?>
                 <div class="container-fluid" id="container-wrapper">
-                    <div class="row mb-12">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน <?php echo "ปี " . date("Y");?></div>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน <?php echo "ปี " . date("Y");?></h1>
+                    </div>
+
                     <div class="row mb-3">
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
                             <div class="card h-100">
@@ -197,13 +200,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     cond = " Where leave_type_id = 'H2' " + where_emp_id + where_year;
                     break;
             }
-            let formData = {action: action, table_name: table_name , field: field, cond: cond};
+            let formData = {action: action, table_name: table_name, field: field, cond: cond};
             $.ajax({
                 type: "POST",
                 url: 'model/manage_general_data.php',
                 data: formData,
                 success: function (response) {
-                    input_text.innerHTML = "ใช้ไปแล้วจำนวน " + response + " วัน";
+                    // ใช้การใส่วงเล็บเพื่อแก้ไขปัญหาใน ternary operator
+                    input_text.innerHTML = "ใช้ไปแล้วจำนวน " + (response < 1 ? '0' : response) + " วัน";
                 },
                 error: function (response) {
                     alertify.error("error : " + response);
