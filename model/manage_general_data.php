@@ -46,3 +46,16 @@ if ($_POST["action"] === 'GET_COUNT_RECORDS_COND') {
     }
     echo $record;
 }
+
+if ($_POST["action"] === 'GET_SUM_RESULT_COND') {
+    $field = $_POST["field"];
+    $cond = $_POST["cond"];
+    $return_arr = array();
+    $sql_get = "SELECT SUM(" .$field .") as sum_result  FROM " . $table_name . $cond;
+    $statement = $conn->query($sql_get);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($results as $result) {
+        $sum_result = $result['sum_result'];
+    }
+    echo $sum_result;
+}
