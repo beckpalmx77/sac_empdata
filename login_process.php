@@ -77,6 +77,8 @@ if ($query->rowCount() == 1) {
             $_SESSION['permission_price'] = $result->permission_price;
             $_SESSION['dashboard_page'] = $result->dashboard_page;
             $_SESSION['system_name'] = $system_name;
+            $_SESSION['system_name_1'] = $system_name_1;
+            $_SESSION['system_name_2'] = $system_name_2;
             $_SESSION['start_work_date'] = $result->start_work_date;
             $_SESSION['work_time_start'] = $result->work_time_start;
             $_SESSION['work_time_stop'] = $result->work_time_stop;

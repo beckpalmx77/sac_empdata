@@ -51,7 +51,12 @@
                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-heart"></i>
-                    <span>&nbsp;<?php echo $_SESSION['system_name']?></span>
+                    <span>
+                    <?php  if ($_SESSION['deviceType'] !== 'computer') {
+                        echo $_SESSION['system_name_2'];
+                    } else {
+                        echo $_SESSION['system_name_1'];
+                    } ?>
                 </a>
             </li>
 
@@ -83,7 +88,7 @@
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <?php $src = $_SESSION['sex']==="M" ? "img/boy.png" : "img/boy-cp.png"; ?>
+                    <?php $src = $_SESSION['sex']==="M" ? "img/boy.png" : "img/girl.png"; ?>
                     <img class="img-profile rounded-circle" src="<?php echo $src;?>" style="max-width: 60px">
 
                     <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?></span>
