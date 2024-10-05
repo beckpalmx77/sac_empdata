@@ -97,28 +97,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">เอกสารการขอทำงานล่วงเวลา
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <p class="text-success" id="Text5"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-file fa-2x text-success"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
                 </div>
             </div>
         </div>
