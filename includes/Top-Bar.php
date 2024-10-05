@@ -42,9 +42,6 @@
         <i class="fa fa-bars"></i>
     </button>
     <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-        <!-- Left: Clock -->
-        <div class="text-white" id="clock" style="font-size: 1rem;"></div>
-
         <!-- Right: Navbar items -->
         <ul class="navbar-nav ml-auto d-flex align-items-center">
             <li class="nav-item dropdown no-arrow mx-1">
@@ -52,10 +49,12 @@
                    aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-heart"></i>
                     <span>
-                    <?php  if ($_SESSION['deviceType'] !== 'computer') {
+                    <?php if ($_SESSION['deviceType'] !== 'computer') {
                         echo $_SESSION['system_name_2'];
-                    } else {
-                        echo $_SESSION['system_name_1'];
+                    } else { ?>
+                        <!-- Left: Clock -->
+                        <div class="text-white" id="clock" style="font-size: 1rem;"></div>
+                        <?php echo $_SESSION['system_name_1'];
                     } ?>
                 </a>
             </li>
@@ -88,8 +87,8 @@
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <?php $src = $_SESSION['sex']==="M" ? "img/boy.png" : "img/girl.png"; ?>
-                    <img class="img-profile rounded-circle" src="<?php echo $src;?>" style="max-width: 60px">
+                    <?php $src = $_SESSION['sex'] === "M" ? "img/boy.png" : "img/girl.png"; ?>
+                    <img class="img-profile rounded-circle" src="<?php echo $src; ?>" style="max-width: 60px">
 
                     <span class="ml-2 d-none d-lg-inline text-white small"><?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?></span>
                 </a>
@@ -106,21 +105,18 @@
 
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
 
-        function load_unseen_notification(view = '')
-        {
+        function load_unseen_notification(view = '') {
             $.ajax({
-                url:"fetch.php",
-                method:"POST",
-                data:{view:view},
-                dataType:"json",
-                success:function(data)
-                {
+                url: "fetch.php",
+                method: "POST",
+                data: {view: view},
+                dataType: "json",
+                success: function (data) {
                     //alert(data);
                     $('.dropdown-menu').html(data.notification);
-                    if(data.unseen_notification > 0)
-                    {
+                    if (data.unseen_notification > 0) {
                         $('.count').html(data.unseen_notification);
                     }
                 }
@@ -129,13 +125,13 @@
 
         load_unseen_notification();
 
-        $(document).on('click', '.dropdown-toggle', function(){
+        $(document).on('click', '.dropdown-toggle', function () {
             $('.count').html('');
             load_unseen_notification('yes');
         });
 
         //setInterval(function(){
-            //load_unseen_notification();;
+        //load_unseen_notification();;
         //}, 5000);
 
     });
