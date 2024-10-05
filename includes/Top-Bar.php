@@ -54,15 +54,14 @@
                     } else { ?>
                         <!-- Left: Clock -->
                         <div class="text-white" id="clock" style="font-size: 1rem;"></div>
-                        <?php echo $_SESSION['system_name_1'];
-                    } ?>
-                </a>
-            </li>
-
             <li class="nav-item dropdown no-arrow mx-1">
                 <a class="nav-link dropdown-toggle" href="manage-message.php" target="_self">
                     <span class="badge badge-danger">Message</span>&nbsp;<i class="fa fa-bell"></i>
                 </a>
+            </li>
+            <?php echo $_SESSION['system_name_1'];
+            } ?>
+            </a>
             </li>
 
             <li class="nav-item dropdown no-arrow">
