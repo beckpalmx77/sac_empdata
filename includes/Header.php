@@ -48,14 +48,13 @@
     ?>
     <style>
         body, h1, h2, h3, h4, h5, h6 {
-            font-family: 'Prompt', sans-serif !important;
+            font-family: 'THSarabunNew', sans-serif !important;
         }
     </style>
     <?php } else { ?>
-
     <style>
         body, h1, h2, h3, h4, h5, h6 {
-            font-family: 'THSarabunNew', sans-serif !important;
+            font-family: 'Prompt', sans-serif !important;
         }
     </style>
     <?php } ?>

@@ -4,13 +4,22 @@
 <?php
 include('includes/Header.php');
 include('includes/CheckDevice.php');
+if ($_SESSION['deviceType'] !== 'computer') {
 ?>
 
 <style>
     body {
-        font-family: 'Prompt', sans-serif;
+        font-family: 'THSarabunNew', sans-serif;
     }
 </style>
+<?php } else { ?>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+        }
+    </style>
+
+<?php } ?>
 
 <style type="text/css">
     .toggleeye {
