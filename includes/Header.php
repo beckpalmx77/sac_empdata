@@ -44,7 +44,7 @@
     <?php
     session_start();
     error_reporting(0);
-    if (strlen($_SESSION['deviceType']) !== "computer") {
+    if ($_SESSION['deviceType'] !== 'computer') {
     ?>
     <style>
         body, h1, h2, h3, h4, h5, h6 {
