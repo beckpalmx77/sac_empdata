@@ -103,6 +103,61 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card h-100">
                                 <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">เอกสารการขอทำงานล่วงเวลา
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><p class="text-success"
+                                                                                                   id="Text5"></p></div>
+                                            <div class="mt-2 mb-0 text-muted text-xs">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-file fa-2x text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">เอกสารการแจ้งเปลี่ยนวันหยุด
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><p class="text-info"
+                                                                                                   id="Text6"></p></div>
+
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-file fa-2x text-info"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">เอกสารการแจ้งเปลี่ยนเวลาการทำงาน
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><p class="text-warning"
+                                                                                                   id="Text7"></p></div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-file fa-2x text-warning"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">บันทึกวันหยุด (นักขัตฤกษ์-ประจำปี) ใช้สิทธิ์ได้  <?php echo $_SESSION['H1']?> วัน/ปี

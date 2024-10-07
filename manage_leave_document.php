@@ -292,7 +292,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
 
                                                                     <div class="col-sm-9">
-                                                                        <label for="remark" class="control-label">หมายเหตุ</label>
+                                                                        <label for="remark" class="control-label">เหตุผล</label>
                                                                         <textarea class="form-control" id="remark" name="remark" rows="1"></textarea>
                                                                     </div>
                                                                 </div>
