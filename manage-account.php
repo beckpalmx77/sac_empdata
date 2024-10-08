@@ -206,6 +206,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <option value="EMPLOYEE">EMPLOYEE</option>
                                                                         <option value="HR">HR</option>
                                                                         <option value="ADMIN">ADMIN</option>
+                                                                        <option value="OBSERVE">OBSERVE</option>
                                                                     </select>
                                                                 </div>
 

@@ -62,7 +62,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>หน่วยงาน</th>
                                                     <th>ชื่อเล่น</th>
                                                     <th>วันเริ่มงาน</th>
-                                                    <th>dept_id_approve</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -74,7 +73,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>หน่วยงาน</th>
                                                     <th>ชื่อเล่น</th>
                                                     <th>วันเริ่มงาน</th>
-                                                    <th>dept_id_approve</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -420,7 +418,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_EMPLOYEE", sub_action: "GET_MASTER" ,page_manage: "ADMIN",};
+            let formData = {action: "GET_EMPLOYEE", sub_action: "GET_MASTER", page_manage: "ADMIN",};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -439,7 +437,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'serverSide': true,
                 'serverMethod': 'post',
                 'ajax': {
-                    'url': 'model/manage_employee_process.php',
+                    'url': 'model/manage_employee_self_process.php',
                     'data': formData
                 },
                 'columns': [
@@ -448,63 +446,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'department_id'},
                     {data: 'nick_name'},
                     {data: 'start_work_date'},
-                    {data: 'dept_id_approve'},
                     {data: 'status'},
-                    {data: 'update'},
+                    {data: 'detail'},
                 ]
             });
-
-            <!-- *** FOR SUBMIT FORM *** -->
-            $("#recordModal").on('submit', '#recordForm', function (event) {
-                event.preventDefault();
-                $('#save').attr('disabled', 'disabled');
-                let formData = $(this).serialize();
-                $.ajax({
-                    url: 'model/manage_employee_process.php',
-                    method: "POST",
-                    data: formData,
-                    success: function (data) {
-                        alertify.success(data);
-                        $('#recordForm')[0].reset();
-                        $('#recordModal').modal('hide');
-                        $('#save').attr('disabled', false);
-                        dataRecords.ajax.reload();
-                    }
-                })
-            });
-            <!-- *** FOR SUBMIT FORM *** -->
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-
-            $("#btnAdd").click(function () {
-                $('#recordModal').modal('show');
-                $('#id').val("");
-                $('#emp_id').val("");
-                $('#f_name').val("");
-                $('#l_name').val("");
-                $('#dept_id').val("");
-                $('#department_id').val("");
-                $('#work_time_id').val("");
-                $('#work_time_desc').val("");
-                $('#start_work_date').val("");
-                $('#work_age').val("");
-                $('#ืnick_name').val("");
-                $('#prefix').val("");
-                $('#position').val("");
-                $('#remark').val("");
-                $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
-                $('#action').val('ADD');
-                $('#save').val('Save');
-            });
         });
     </script>
 
     <script>
 
-        $("#TableRecordList").on('click', '.update', function () {
+        $("#TableRecordList").on('click', '.detail', function () {
             let id = $(this).attr("id");
             // alert(id);
             let formData = {action: "GET_DATA", id: id};
@@ -529,11 +480,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let work_time_id = response[i].work_time_id;
                         let work_time_detail = response[i].work_time_detail;
                         let position = response[i].position;
-                        let remark = response[i].remark;
                         let week_holiday = response[i].week_holiday;
-                        let dept_id_approve = response[i].dept_id_approve;
 
-                        let work_age = 0 ;
+                        let work_age = 0;
                         let start_w_date = start_work_date.substr(3,2) + "/" + start_work_date.substr(0,2) + "/" + start_work_date.substr(6,10);
                         work_age = getAge(start_w_date);
 
@@ -553,9 +502,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#work_time_detail').val(work_time_detail);
                         $('#work_age').val(work_age);
                         $('#position').val(position);
-                        $('#remark').val(remark);
                         $('#week_holiday').val(week_holiday);
-                        $('#dept_id_approve').val(dept_id_approve);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
@@ -569,7 +516,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
 
     </script>
-
 
     <script>
         $(document).ready(function () {
@@ -612,8 +558,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             return { years, months, days };
 
     </script>
-
-
 
 
     </body>

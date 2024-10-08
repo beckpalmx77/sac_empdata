@@ -151,7 +151,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                required="required"
-                                                                               value=""
+                                                                               value="<?php echo $_SESSION['emp_id'] ?>"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-6">
@@ -163,7 +163,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <input type="text" class="form-control"
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
-                                                                               value=""
+                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'] ?>"
                                                                                placeholder="">
                                                                     </div>
 
