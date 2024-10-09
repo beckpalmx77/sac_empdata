@@ -1,4 +1,6 @@
 <?php
+session_start();
+error_reporting(0);
 include('includes/Header.php');
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index");
@@ -115,15 +117,18 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <?php } ?>
                                                                     </select>
 
-                                                                    <input type="hidden" id="document_dept_cond" name="document_dept_cond"
+                                                                    <input type="hidden" id="document_dept_cond"
+                                                                           name="document_dept_cond"
                                                                            value="<?php echo $_SESSION['document_dept_cond']; ?>">
-                                                                    <input type="hidden" id="dept_id_approve" name="dept_id_approve"
+                                                                    <input type="hidden" id="dept_id_approve"
+                                                                           name="dept_id_approve"
                                                                            value="<?php echo $_SESSION['dept_id_approve']; ?>">
                                                                     <input type="hidden" id="emp_id" name="emp_id"
                                                                            value="<?php echo $_SESSION['emp_id']; ?>">
 
                                                                     <label for="employee">เลือกพนักงาน :</label>
-                                                                    <select name="employee" id="employee" class="form-control" required>
+                                                                    <select name="employee1" id="employee"
+                                                                            class="form-control" required>
                                                                         <option value="">กรุณาเลือกพนักงาน</option>
                                                                     </select>
 
@@ -222,7 +227,7 @@ if (strlen($_SESSION['alogin']) == "") {
         </script>
 
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 fetchEmployees();
 
                 // Initialize Select2 for the employee select element
@@ -248,7 +253,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         dept_id_approve: dept_id_approve,
                         emp_id: emp_id
                     },
-                    success: function(data) {
+                    success: function (data) {
                         let employeeSelect = $('#employee');
                         employeeSelect.empty();
                         employeeSelect.append('<option value="">กรุณาเลือกพนักงาน</option>');
@@ -260,7 +265,7 @@ if (strlen($_SESSION['alogin']) == "") {
                             allowClear: true
                         });
                     },
-                    error: function() {
+                    error: function () {
                         console.error('Error fetching employees.');
                     }
                 });
