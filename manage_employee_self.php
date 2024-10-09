@@ -189,6 +189,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                 class="form-control"
                                                                                 data-live-search="true"
                                                                                 title="Please select">
+                                                                            <option value="0">ไม่ระบุ</option>
                                                                             <option value="1">วันจันทร์</option>
                                                                             <option value="2">วันอังคาร</option>
                                                                             <option value="3">วันพุธ</option>

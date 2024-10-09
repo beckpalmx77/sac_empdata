@@ -21,7 +21,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $sql = "UPDATE mdepartment SET department_desc=:department_desc,status=:status
         WHERE department_id = :department_id ";
 
-        echo $sql . "\n\r";
+        //echo $sql . "\n\r";
 
         $query = $conn->prepare($sql);
         $query->bindParam(':department_desc', $result_sqlsvr["DEPT_THAIDESC"], PDO::PARAM_STR);
@@ -34,7 +34,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $sql = "INSERT INTO mdepartment(department_id,department_desc,status)
         VALUES (:department_id,:department_desc,:status)";
 
-        echo $sql . "\n\r";
+        //echo $sql . "\n\r";
 
         $query = $conn->prepare($sql);
         $query->bindParam(':department_id', $result_sqlsvr["DEPT_KEY"], PDO::PARAM_STR);

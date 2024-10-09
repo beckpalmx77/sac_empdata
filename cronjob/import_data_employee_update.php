@@ -49,7 +49,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $nRows = $conn->query($sql_find)->fetchColumn();
     if ($nRows > 0) {
 
-        echo "UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $birth . " | " . $result_sqlsvr["EMP_NAME"] . " | " . $result_sqlsvr["EMP_SURNME"] . $result_sqlsvr["DEPT_THAIDESC"] . "\n\r";
+        //echo "UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $birth . " | " . $result_sqlsvr["EMP_NAME"] . " | " . $result_sqlsvr["EMP_SURNME"] . $result_sqlsvr["DEPT_THAIDESC"] . "\n\r";
 
         $sql = "UPDATE memployee SET position_id=:position_id,position=:position,dept_id=:dept_id,department_id=:department_id,
         status=:status,work_time_id=:work_time_id,birthday=:birthday,start_work_date=:start_work_date,phone=:emp_tel

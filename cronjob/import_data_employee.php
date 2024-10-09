@@ -49,7 +49,8 @@ $status_u = '';
 $approve_level = "-";
 $approve_permission = "N";
 $lang = "th";
-$account_type = "user";
+$account_type = "employee";
+$role = "EMPLOYEE";
 $permission_price = "-";
 $document_dept_cond = "-";
 
@@ -64,7 +65,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $status = $result_sqlsvr["PRI_STATUS"] == "1" ? "Y" : "N";
     $status_u = $result_sqlsvr["PRI_STATUS"] == "1" ? "Active" : "Inactive";
 
-/*
     switch ($result_sqlsvr["PRS_DEPT"]) {
         case "181":
             $branch = "CP1";
@@ -76,66 +76,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
             $branch = "CP2";
             break;
         case "184":
-            $branch = "CP4";
-            break;
-        default:
-            $branch = "-";
-            break;
-    }
-*/
-
-    switch ($result_sqlsvr["PRS_DEPT"]) {
-
-        case "132":
-            $dept_id_approve = "WHL";
-            $branch = "-";
-            break;
-        case "139":
-            $dept_id_approve = "OFF";
-            $branch = "-";
-            break;
-        case "156":
-            $dept_id_approve = "WHL";
-            $branch = "-";
-            break;
-        case "160":
-            $dept_id_approve = "GPH";
-            $branch = "-";
-            break;
-        case "162":
-            $dept_id_approve = "ACC";
-            $branch = "-";
-            break;
-        case "163":
-            $dept_id_approve = "SL1";
-            $branch = "-";
-            break;
-        case "164":
-            $dept_id_approve = "SL2";
-            $branch = "-";
-            break;
-        case "172":
-            $dept_id_approve = "RDQ";
-            $branch = "-";
-            break;
-        case "180":
-            $dept_id_approve = "BTC";
-            $branch = "-";
-            break;
-        case "181":
-            $dept_id_approve = "CP1";
-            $branch = "CP1";
-            break;
-        case "182":
-            $dept_id_approve = "CP3";
-            $branch = "CP3";
-            break;
-        case "183":
-            $dept_id_approve = "CP2";
-            $branch = "CP2";
-            break;
-        case "184":
-            $dept_id_approve = "CP4";
             $branch = "CP4";
             break;
         default:
@@ -145,12 +85,29 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     }
 
+    $branch_com_pare = ["CP4", "CP3", "CP2", "CP1"];
+
+    if (in_array($branch, $branch_com_pare)) {
+        $week_holiday = "0";
+    } else {
+        $week_holiday = "7";
+    }
+
+    $sql_get_dept_approve = "SELECT dept_id_approve FROM ims_approve_dept WHERE dept_id = '" . $result_sqlsvr["PRS_DEPT"] . "'";
+    $query = $conn->prepare($sql_get_dept_approve);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+    if ($query->rowCount() > 0) {
+        foreach ($results as $result) {
+            $dept_id_approve = $result->dept_id_approve;
+        }
+    }
+
     if ($result_sqlsvr["PRS_NO"]==='81352') {
         $dept_id_approve = 'ITD';
     }
 
     echo "Check UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
-
 
     $birth_str = $result_sqlsvr["EMP_BIRTH"] == "" ? "0000-00-00" : $result_sqlsvr["EMP_BIRTH"];
     $birth = substr($birth_str, 8, 2) . "-" . substr($birth_str, 5, 2) . "-" . substr($birth_str, 0, 4);
@@ -163,10 +120,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     if ($nRows > 0) {
 
         if ($result_sqlsvr["PRS_NO"]==='81055') {
-            echo "UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
+            //echo "UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
         }
         $sql = "UPDATE memployee SET position_id=:position_id,position=:position,dept_id=:dept_id,department_id=:department_id,
-        status=:status,work_time_id=:work_time_id,birthday=:birthday,start_work_date=:start_work_date,branch=:branch,dept_id_approve=:dept_id_approve
+        status=:status,work_time_id=:work_time_id,birthday=:birthday,start_work_date=:start_work_date,branch=:branch,dept_id_approve=:dept_id_approve,week_holiday=:week_holiday        
         WHERE emp_id = :emp_id ";
 
         $query = $conn->prepare($sql);
@@ -180,6 +137,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':start_work_date', $start_work_date, PDO::PARAM_STR);
         $query->bindParam(':branch', $branch, PDO::PARAM_STR);
         $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
+        $query->bindParam(':week_holiday', $week_holiday, PDO::PARAM_STR);
         $query->bindParam(':emp_id', $result_sqlsvr["PRS_NO"], PDO::PARAM_STR);
         $query->execute();
 
@@ -190,7 +148,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $sql = "INSERT INTO memployee(emp_id,sex,prefix,f_name,l_name,nick_name,email_address,birthday,position_id,position,dept_id
         ,department_id,start_work_date,work_time_id,status,branch,dept_id_approve)
         VALUES (:emp_id,:sex,:prefix,:f_name,:l_name,:nick_name,:email_address,:birthday,:position_id,:position,:dept_id
-        ,:department_id,:start_work_date,:work_time_id,:status,:branch,:dept_id_approve)";
+        ,:department_id,:start_work_date,:work_time_id,:status,:branch,:dept_id_approve,:week_holiday)";
         $query = $conn->prepare($sql);
         $query->bindParam(':emp_id', $result_sqlsvr["PRS_NO"], PDO::PARAM_STR);
         $query->bindParam(':sex', $sex, PDO::PARAM_STR);
@@ -209,6 +167,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':status', $status, PDO::PARAM_STR);
         $query->bindParam(':branch', $branch, PDO::PARAM_STR);
         $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
+        $query->bindParam(':week_holiday', $week_holiday, PDO::PARAM_STR);
         $query->execute();
 
         $lastInsertId = $conn->lastInsertId();
@@ -237,10 +196,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
         $last_row = LAST_ID($conn, "ims_user", "line_no");
 
-        $sql = "INSERT INTO ims_user(line_no,emp_id,email,user_id,first_name,last_name,department_id,account_type,picture,lang,permission_price,company,approve_permission,approve_level,status,password,document_dept_cond,dept_id_approve)
-        VALUES (:line_no,:emp_id,:email,:user_id,:first_name,:last_name,:department_id,:account_type,:picture,:lang,:permission_price,:company,:approve_permission,:approve_level,:status,:password,:document_dept_cond,:dept_id_approve)";
+        $sql = "INSERT INTO ims_user(line_no,emp_id,email,user_id,first_name,last_name,department_id,account_type,picture,lang,permission_price,company,approve_permission,approve_level,status,password,document_dept_cond,dept_id_approve,role)
+        VALUES (:line_no,:emp_id,:email,:user_id,:first_name,:last_name,:department_id,:account_type,:picture,:lang,:permission_price,:company,:approve_permission,:approve_level,:status,:password,:document_dept_cond,:dept_id_approve,:role)";
 
-        echo "Insert ims_user Row = " . $last_row . " | " . $result_sqlsvr["PRS_NO"] . " > " . $dept_id_approve.  "\n\r";
+        //echo "Insert ims_user Row = " . $last_row . " | " . $result_sqlsvr["PRS_NO"] . " > " . $dept_id_approve.  "\n\r";
 
         $query = $conn->prepare($sql);
         $query->bindParam(':line_no', $last_row, PDO::PARAM_STR);
@@ -261,6 +220,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $query->bindParam(':password', $password, PDO::PARAM_STR);
         $query->bindParam(':document_dept_cond', $document_dept_cond, PDO::PARAM_STR);
         $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
+        $query->bindParam(':role', $role, PDO::PARAM_STR);
         $query->execute();
 
     }
