@@ -116,7 +116,7 @@ $doc_date_to = $_POST["doc_date_to"];
 
     <div class="container-fluid" id="container-wrapper">
         <div class="card-body">
-            <h4><span class="badge bg-success">แสดงข้อมูลใช้วันหยุด พนักงาน</span></h4>
+            <h4><span class="badge bg-info">แสดงข้อมูลใช้วันหยุด พนักงาน</span></h4>
             <table id="example" class="display table table-striped table-bordered" cellspacing="0">
                 <thead>
                 <tr>
