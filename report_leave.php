@@ -50,7 +50,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                 <div class="form-group row mb-3">
                                                                     <div class="col-sm-3">
                                                                         <label for="doc_date_start"
-                                                                               class="control-label">จากวันที่</label>
+                                                                               class="control-label">จากวันที่เอกสาร</label>
                                                                         <div class="input-group">
                                                                             <input type="text" class="form-control"
                                                                                    id="doc_date_start"
@@ -65,7 +65,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <label for="doc_date_to" class="control-label">ถึงวันที่</label>
+                                                                        <label for="doc_date_to" class="control-label">ถึงวันที่เอกสาร</label>
                                                                         <div class="input-group">
                                                                             <input type="text" class="form-control"
                                                                                    id="doc_date_to" name="doc_date_to"
