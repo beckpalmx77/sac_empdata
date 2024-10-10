@@ -238,7 +238,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
             // ตั้งค่าการส่งแบบฟอร์ม
             document.forms['from_data'].target = '_blank'; // กำหนดให้ form ส่งไปที่หน้าต่างใหม่
-            document.forms['from_data'].action = 'show_report_leave_sac.php';
+            document.forms['from_data'].action = 'show_report_leave_sac';
             document.forms['from_data'].submit();
 
             // ซ่อน loader หลังจากการส่ง

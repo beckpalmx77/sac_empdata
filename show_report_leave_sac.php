@@ -7,7 +7,21 @@ include("config/connect_db.php");
 $doc_date_start = $_POST["doc_date_start"];
 $doc_date_to = $_POST["doc_date_to"];
 
+// แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
+$start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+$end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+
+function fetchLeaveData($conn, $table, $start_date, $end_date) {
+    $sql = "SELECT * FROM $table WHERE STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$start_date' AND '$end_date' ORDER BY STR_TO_DATE(doc_date, '%d-%m-%Y')";
+    $query = $conn->prepare($sql);
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_OBJ);
+}
+
+$leave_data = fetchLeaveData($conn, 'v_dleave_event', $start_date, $end_date);
+$holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,9 +42,7 @@ $doc_date_to = $_POST["doc_date_to"];
     <script src='js/util.js'></script>
     <title>สงวนออโต้คาร์</title>
     <style>
-        table {
-            width: 100%;
-        }
+        table { width: 100%; }
     </style>
 </head>
 <body>
@@ -42,146 +54,76 @@ $doc_date_to = $_POST["doc_date_to"];
     </div>
 
     <div class="card-body">
-        <div class="container-fluid" id="container-wrapper">
-            <button class="btn btn-danger" onclick="window.close()">ปิด (Close)</button>
-        </div>
-    </div>
+        <button class="btn btn-danger" onclick="window.close()">ปิด (Close)</button>
 
-    <div class="container-fluid" id="container-wrapper">
-        <div class="card-body">
-            <h4><span class="badge bg-success">แสดงข้อมูลการลา พนักงาน</span></h4>
-            <table id="example" class="display table table-striped table-bordered" cellspacing="0">
-                <thead>
+        <h4><span class="badge bg-success">แสดงข้อมูลการลา พนักงาน</span></h4>
+        <table id="leaveTable" class="display table table-striped table-bordered" cellspacing="0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>วันที่เอกสาร</th>
+                <th>รหัสพนักงาน</th>
+                <th>ชื่อพนักงาน</th>
+                <th>หน่วยงาน</th>
+                <th>ประเภทการลา</th>
+                <th>วันที่ลาเริ่มต้น</th>
+                <th>วันที่ลาสิ้นสุด</th>
+                <th>จำนวนวัน</th>
+                <th>หมายเหตุ</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($leave_data as $index => $row_leave): ?>
                 <tr>
-                    <th>#</th>
-                    <th>วันที่เอกสาร</th>
-                    <th>รหัสพนักงาน</th>
-                    <th>ชื่อพนักงาน</th>
-                    <th>หน่วยงาน</th>
-                    <th>ประเภทการลา</th>
-                    <th>วันที่ลาเริ่มต้น</th>
-                    <th>วันที่ลาสิ้นสุด</th>
-                    <th>จำนวนวัน</th>
-                    <th>หมายเหตุ</th>
+                    <td><?php echo htmlentities($index + 1); ?></td>
+                    <td><?php echo htmlentities($row_leave->doc_date); ?></td>
+                    <td><?php echo htmlentities($row_leave->emp_id); ?></td>
+                    <td><?php echo htmlentities($row_leave->f_name . " " . $row_leave->l_name); ?></td>
+                    <td><?php echo htmlentities($row_leave->department_id); ?></td>
+                    <td><span style="color: <?php echo htmlentities($row_leave->color); ?>"><?php echo htmlentities($row_leave->leave_type_detail); ?></span></td>
+                    <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
+                    <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
+                    <td><?php echo htmlentities($row_leave->leave_day); ?></td>
+                    <td><?php echo htmlentities($row_leave->remark); ?></td>
                 </tr>
-                </thead>
-                <tbody>
-                <?php
-                // แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
-                $start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-                $end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+            <?php endforeach; ?>
+            </tbody>
+        </table>
 
-                // เขียนคำสั่ง SQL โดยเทียบตามช่วงวันที่
-                $sql_leave = "SELECT v_dleave_event.* 
-                              FROM v_dleave_event "
-                              . " WHERE STR_TO_DATE(v_dleave_event.doc_date, '%d-%m-%Y') BETWEEN '" . $start_date . "' AND '". $end_date ."'"
-                              . " ORDER BY STR_TO_DATE(v_dleave_event.doc_date, '%d-%m-%Y')";
-/*
-                $txt = $sql_leave ;
-                $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $txt);
-                fclose($my_file);
-*/
-
-
-                // เตรียมและรันคำสั่ง SQL
-                $query = $conn->prepare($sql_leave);
-                $query->execute();
-                $results_leave = $query->fetchAll(PDO::FETCH_OBJ);
-
-                // เริ่มแสดงผลในรูปแบบตาราง
-                $line_no = 0;
-                foreach ($results_leave as $row_leave) {
-                    $line_no++;
-                    ?>
-                    <tr>
-                        <td><?php echo htmlentities($line_no); ?></td>
-                        <td><?php echo htmlentities($row_leave->doc_date); ?></td>
-                        <td><?php echo htmlentities($row_leave->emp_id); ?></td>
-                        <td><?php echo htmlentities($row_leave->f_name . " " . $row_leave->l_name); ?></td>
-                        <td><?php echo htmlentities($row_leave->department_id); ?></td>
-                        <td>
-                            <span style="color: <?php echo htmlentities($row_leave->color); ?>"><?php echo htmlentities($row_leave->leave_type_detail); ?></span>
-                        </td>
-                        <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
-                        <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
-                        <td><?php echo htmlentities($row_leave->leave_day); ?></td>
-                        <td><?php echo htmlentities($row_leave->remark); ?></td>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="container-fluid" id="container-wrapper">
-        <div class="card-body">
-            <h4><span class="badge bg-info">แสดงข้อมูลใช้วันหยุด พนักงาน</span></h4>
-            <table id="example" class="display table table-striped table-bordered" cellspacing="0">
-                <thead>
+        <h4><span class="badge bg-info">แสดงข้อมูลใช้วันหยุด พนักงาน</span></h4>
+        <table id="holidayTable" class="display table table-striped table-bordered" cellspacing="0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>วันที่เอกสาร</th>
+                <th>รหัสพนักงาน</th>
+                <th>ชื่อพนักงาน</th>
+                <th>หน่วยงาน</th>
+                <th>ประเภทการลา</th>
+                <th>วันที่ลาเริ่มต้น</th>
+                <th>วันที่ลาสิ้นสุด</th>
+                <th>จำนวนวัน</th>
+                <th>หมายเหตุ</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($holiday_data as $index => $row_holiday): ?>
                 <tr>
-                    <th>#</th>
-                    <th>วันที่เอกสาร</th>
-                    <th>รหัสพนักงาน</th>
-                    <th>ชื่อพนักงาน</th>
-                    <th>หน่วยงาน</th>
-                    <th>ประเภทการลา</th>
-                    <th>วันที่ลาเริ่มต้น</th>
-                    <th>วันที่ลาสิ้นสุด</th>
-                    <th>จำนวนวัน</th>
-                    <th>หมายเหตุ</th>
+                    <td><?php echo htmlentities($index + 1); ?></td>
+                    <td><?php echo htmlentities($row_holiday->doc_date); ?></td>
+                    <td><?php echo htmlentities($row_holiday->emp_id); ?></td>
+                    <td><?php echo htmlentities($row_holiday->f_name . " " . $row_holiday->l_name); ?></td>
+                    <td><?php echo htmlentities($row_holiday->department_id); ?></td>
+                    <td><span style="color: <?php echo htmlentities($row_holiday->color); ?>"><?php echo htmlentities($row_holiday->leave_type_detail); ?></span></td>
+                    <td><?php echo htmlentities($row_holiday->date_leave_start); ?></td>
+                    <td><?php echo htmlentities($row_holiday->date_leave_to); ?></td>
+                    <td><?php echo htmlentities($row_holiday->leave_day); ?></td>
+                    <td><?php echo htmlentities($row_holiday->remark); ?></td>
                 </tr>
-                </thead>
-                <tbody>
-                <?php
-                // แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
-                $start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-                $end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
-
-                // เขียนคำสั่ง SQL โดยเทียบตามช่วงวันที่
-                $sql_leave = "SELECT vdholiday_event.* 
-                              FROM vdholiday_event "
-                    . " WHERE STR_TO_DATE(vdholiday_event.doc_date, '%d-%m-%Y') BETWEEN '" . $start_date . "' AND '". $end_date ."'"
-                    . " ORDER BY STR_TO_DATE(vdholiday_event.doc_date, '%d-%m-%Y')";
-                /*
-                                $txt = $sql_leave ;
-                                $my_file = fopen("wh_param.txt", "w") or die("Unable to open file!");
-                                fwrite($my_file, $txt);
-                                fclose($my_file);
-                */
-
-
-                // เตรียมและรันคำสั่ง SQL
-                $query = $conn->prepare($sql_leave);
-                $query->execute();
-                $results_leave = $query->fetchAll(PDO::FETCH_OBJ);
-
-                // เริ่มแสดงผลในรูปแบบตาราง
-                $line_no = 0;
-                foreach ($results_leave as $row_leave) {
-                    $line_no++;
-                    ?>
-                    <tr>
-                        <td><?php echo htmlentities($line_no); ?></td>
-                        <td><?php echo htmlentities($row_leave->doc_date); ?></td>
-                        <td><?php echo htmlentities($row_leave->emp_id); ?></td>
-                        <td><?php echo htmlentities($row_leave->f_name . " " . $row_leave->l_name); ?></td>
-                        <td><?php echo htmlentities($row_leave->department_id); ?></td>
-                        <td>
-                            <span style="color: <?php echo htmlentities($row_leave->color); ?>"><?php echo htmlentities($row_leave->leave_type_detail); ?></span>
-                        </td>
-                        <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
-                        <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
-                        <td><?php echo htmlentities($row_leave->leave_day); ?></td>
-                        <td><?php echo htmlentities($row_leave->remark); ?></td>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-        </div>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
-
-
 </div>
 
 </body>
