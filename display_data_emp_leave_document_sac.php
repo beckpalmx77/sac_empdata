@@ -127,7 +127,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            value="<?php echo $_SESSION['emp_id']; ?>">
 
                                                                     <label for="employee">เลือกพนักงาน :</label>
-                                                                    <select name="employee1" id="employee"
+                                                                    <select name="employee" id="employee"
                                                                             class="form-control" required>
                                                                         <option value="">กรุณาเลือกพนักงาน</option>
                                                                     </select>

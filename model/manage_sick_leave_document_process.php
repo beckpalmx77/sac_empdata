@@ -348,9 +348,12 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 
     if ($_SESSION['role'] === "SUPERVISOR") {
         $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
-    } else if ($_SESSION['role'] !== "SUPERVISOR") {
+    } else if ($_SESSION['role'] === "HR") {
+        $searchQuery = " ";
+    } else {
         $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
     }
+
     if ($searchValue != '') {
         $searchQuery = " AND (dl.f_name LIKE :f_name 
         or dl.l_name LIKE :l_name 

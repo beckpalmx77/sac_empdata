@@ -126,6 +126,11 @@ if ($form_type === 'employee') {
                             AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to 
                             GROUP BY v_dleave_event.leave_type_detail, mleave_type.day_max , mleave_type.color";
 
+        $txt = $sql_leave_count . " | " . $year . " | " . $f_name . " | " . $l_name . " | " . $leave_type_id . " | " . $month_id_start . " | " . $month_id_to;
+        $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+
         $statement_leave = $conn->prepare($sql_leave_count);
         $statement_leave->bindParam(':year', $year);
         $statement_leave->bindParam(':f_name', $f_name);
