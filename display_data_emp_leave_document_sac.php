@@ -129,7 +129,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <label for="employee">เลือกพนักงาน :</label>
                                                                     <select name="employee" id="employee"
                                                                             class="form-control" required>
-                                                                        <option value="">กรุณาเลือกพนักงาน</option>
+                                                                        <option value="-">กรุณาเลือกพนักงาน</option>
                                                                     </select>
 
                                                                     <br>
