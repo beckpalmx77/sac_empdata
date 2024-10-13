@@ -616,26 +616,36 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let today = new Date(); // Get today's date
+            // กำหนดวันที่ปัจจุบัน
+            let today = new Date();
+
+            // เพิ่มล่วงหน้า 3 วัน
+            today.setDate(today.getDate() + 3);
+
             $('#date_leave_start').datepicker({
-                startDate: today,
-                format: "dd-mm-yyyy",
-                todayHighlight: true,
-                language: "th",
-                autoclose: true
+                startDate: today, // เริ่มต้นให้เลือกได้จากวันที่ล่วงหน้า 3 วัน
+                format: "dd-mm-yyyy", // รูปแบบวันที่
+                todayHighlight: true, // ไฮไลต์วันที่ปัจจุบัน
+                language: "th", // ภาษาไทย (ถ้าเพิ่มไฟล์ภาษาไว้)
+                autoclose: true // ปิดปฏิทินอัตโนมัติเมื่อเลือกวันที่
             });
         });
     </script>
 
     <script>
         $(document).ready(function () {
-            let today = new Date(); // Get today's date
+            // กำหนดวันที่ปัจจุบัน
+            let today = new Date();
+
+            // เพิ่มล่วงหน้า 3 วัน
+            today.setDate(today.getDate() + 3);
+
             $('#date_leave_to').datepicker({
-                startDate: today,
-                format: "dd-mm-yyyy",
-                todayHighlight: true,
-                language: "th",
-                autoclose: true
+                startDate: today, // เริ่มต้นให้เลือกได้จากวันที่ล่วงหน้า 3 วัน
+                format: "dd-mm-yyyy", // รูปแบบวันที่
+                todayHighlight: true, // ไฮไลต์วันที่ปัจจุบัน
+                language: "th", // ภาษาไทย (ถ้าเพิ่มไฟล์ภาษาไว้)
+                autoclose: true // ปิดปฏิทินอัตโนมัติเมื่อเลือกวันที่
             });
         });
     </script>
