@@ -137,6 +137,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 </div>
 
                                                                 <div class="form-group">
+                                                                    <label for="day_flag"
+                                                                           class="control-label">Day Flag</label>
+                                                                    <select id="day_flag" name="day_flag"
+                                                                            class="form-control" data-live-search="true"
+                                                                            title="Please select">
+                                                                        <option>L</option>
+                                                                        <option>H</option>
+                                                                        <option>O</option>
+                                                                        <option>C</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group">
                                                                     <label for="status"
                                                                            class="control-label">Status</label>
                                                                     <select id="status" name="status"
@@ -347,16 +360,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let id = response[i].id;
                         let leave_type_id = response[i].leave_type_id;
                         let leave_type_detail = response[i].leave_type_detail;
-                        let status = response[i].status;
                         let day_max = response[i].day_max;
+                        let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
                         let remark = response[i].remark;
+                        let status = response[i].status;
 
                         $('#recordModal').modal('show');
                         $('#id').val(id);
                         $('#leave_type_id').val(leave_type_id);
                         $('#leave_type_detail').val(leave_type_detail);
                         $('#day_max').val(day_max);
+                        $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);
                         $('#remark').val(remark);
                         $('#status').val(status);
@@ -390,6 +405,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let leave_type_id = response[i].leave_type_id;
                         let leave_type_detail = response[i].leave_type_detail;
                         let day_max = response[i].day_max;
+                        let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
                         let remark = response[i].remark;
                         let status = response[i].status;
@@ -399,6 +415,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#leave_type_id').val(leave_type_id);
                         $('#leave_type_detail').val(leave_type_detail);
                         $('#day_max').val(day_max);
+                        $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);
                         $('#remark').val(remark);
                         $('#status').val(status);

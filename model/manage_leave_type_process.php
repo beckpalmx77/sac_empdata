@@ -95,6 +95,7 @@ if ($_POST["action"] === 'ADD') {
         $leave_type_id = $_POST["leave_type_id"];
         $leave_type_detail = $_POST["leave_type_detail"];
         $day_max = $_POST["day_max"];
+        $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
         $work_age_allow = $_POST["work_age_allow"];
         $remark = $_POST["remark"];
@@ -105,8 +106,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,day_max,leave_before,work_age_allow,remark,status) 
-                    VALUES (:leave_type_id,:leave_type_detail,:day_max,:leave_before,:work_age_allow,:remark,:status)";
+            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,day_max,leave_before,work_age_allow,remark,day_flag,status) 
+                    VALUES (:leave_type_id,:leave_type_detail,:day_max,:leave_before,:work_age_allow,:remark,:day_flag,:status)";
             $query = $conn->prepare($sql);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
             $query->bindParam(':leave_type_detail', $leave_type_detail, PDO::PARAM_STR);
@@ -114,6 +115,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':leave_before', $leave_before, PDO::PARAM_STR);
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query->bindParam(':day_flag', $day_flag, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
@@ -133,6 +135,7 @@ if ($_POST["action"] === 'UPDATE') {
         $leave_type_id = $_POST["leave_type_id"];
         $leave_type_detail = $_POST["leave_type_detail"];
         $day_max = $_POST["day_max"];
+        $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
         $remark = $_POST["remark"];
         $status = $_POST["status"];
@@ -140,7 +143,7 @@ if ($_POST["action"] === 'UPDATE') {
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE mleave_type SET leave_type_id=:leave_type_id,leave_type_detail=:leave_type_detail
-            ,day_max=:day_max,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,status=:status            
+            ,day_max=:day_max,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,day_flag=:day_flag,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
@@ -150,6 +153,7 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->bindParam(':day_flag', $day_flag, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;
@@ -247,6 +251,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
                 "leave_type_id" => $row['leave_type_id'],
                 "leave_type_detail" => $leave_type_detail,
                 "day_max" => $row['day_max'],
+                "day_flag" => $row['day_flag'],
                 "leave_before" => $row['leave_before'],
                 "work_age_allow" => $row['work_age_allow'],
                 "color" => $result['color'],
