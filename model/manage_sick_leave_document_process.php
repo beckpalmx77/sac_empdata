@@ -194,8 +194,14 @@ if ($_POST["action"] === 'ADD') {
                         . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
 
                     echo $sMessage;
-                    //sendLineNotify($sMessage, $sToken);
+
+                    $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
+                    if ($line_alert==='Y') {
+                        sendLineNotify($sMessage, $sToken);
+                    }
+
                     echo $save_success;
+
                 } else {
                     echo $error;
                 }

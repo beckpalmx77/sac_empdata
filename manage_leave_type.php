@@ -56,6 +56,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>รหัสประเภทเอกสาร</th>
                                                     <th>รายละเอียด</th>
                                                     <th>จำนวนวันสูงสุด</th>
+                                                    <th>Line Alert</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -66,6 +67,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>รหัสประเภทเอกสาร</th>
                                                     <th>รายละเอียด</th>
                                                     <th>จำนวนวันสูงสุด</th>
+                                                    <th>Line Alert</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -146,6 +148,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <option>H</option>
                                                                         <option>O</option>
                                                                         <option>C</option>
+                                                                        <option>A</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="line_alert"
+                                                                           class="control-label">Line Alert</label>
+                                                                    <select id="line_alert" name="line_alert"
+                                                                            class="form-control" data-live-search="true"
+                                                                            title="Please select">
+                                                                        <option>Y</option>
+                                                                        <option>N</option>
                                                                     </select>
                                                                 </div>
 
@@ -298,6 +312,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'leave_type_id'},
                     {data: 'leave_type_detail'},
                     {data: 'day_max'},
+                    {data: 'line_alert'},
                     {data: 'status'},
                     {data: 'update'},
                     {data: 'delete'}
@@ -335,6 +350,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#leave_type_id').val("");
                 $('#leave_type_detail').val("");
                 $('#day_max').val("");
+                $('#line_alert').val("Y");
                 $('#remark').val("");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
@@ -364,6 +380,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
                         let remark = response[i].remark;
+                        let line_alert = response[i].line_alert;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
@@ -375,6 +392,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#leave_before').val(leave_before);
                         $('#remark').val(remark);
                         $('#status').val(status);
+                        $('#line_alert').val(line_alert);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
@@ -408,6 +426,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
                         let remark = response[i].remark;
+                        let line_alert = response[i].line_alert;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
@@ -418,6 +437,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);
                         $('#remark').val(remark);
+                        $('#line_alert').val(line_alert);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');

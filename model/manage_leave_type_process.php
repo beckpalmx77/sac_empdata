@@ -33,6 +33,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "work_age_allow" => $result['work_age_allow'],
             "day_flag" => $result['day_flag'],
             "remark" => $result['remark'],
+            "line_alert" => $result['line_alert'],
             "status" => $result['status']);
     }
 
@@ -67,6 +68,7 @@ if ($_POST["action"] === 'SEARCH_DATA') {
             "work_age_allow" => $result['work_age_allow'],
             "day_flag" => $result['day_flag'],
             "remark" => $result['remark'],
+            "line_alert" => $result['line_alert'],
             "status" => $result['status']);
     }
 
@@ -89,6 +91,27 @@ if ($_POST["action"] === 'SEARCH') {
     }
 }
 
+if ($_POST["action"] === 'CHECK_DAYS') {
+// ตรวจสอบว่ามีการส่ง leave_type_id มา
+    if (isset($_POST['leave_type_id'])) {
+        $leave_type_id = $_POST['leave_type_id'];
+
+        // Query ข้อมูล Leave Type จากฐานข้อมูล
+        $stmt = $conn->prepare("SELECT leave_before as advance_days FROM leave_types WHERE leave_type_id = :leave_type_id");
+        $stmt->bindParam(':leave_type_id', $leave_type_id);
+        $stmt->execute();
+
+        // ดึงผลลัพธ์
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            echo json_encode(['advance_days' => $result['advance_days']]);
+        } else {
+            echo json_encode(['advance_days' => 0]); // หากไม่มีข้อมูล, ส่งค่า 0
+        }
+    }
+}
+
 if ($_POST["action"] === 'ADD') {
     if ($_POST["leave_type_detail"] !== '') {
         //$leave_type_id = "D" . sprintf('%03s', LAST_ID($conn, "mleave_type", 'id'));
@@ -99,6 +122,7 @@ if ($_POST["action"] === 'ADD') {
         $leave_before = $_POST["leave_before"];
         $work_age_allow = $_POST["work_age_allow"];
         $remark = $_POST["remark"];
+        $line_alert = $_POST["line_alert"];
         $status = $_POST["status"];
         $sql_find = "SELECT * FROM mleave_type WHERE leave_type_id = '" . $leave_type_id . "'";
 
@@ -106,8 +130,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,day_max,leave_before,work_age_allow,remark,day_flag,status) 
-                    VALUES (:leave_type_id,:leave_type_detail,:day_max,:leave_before,:work_age_allow,:remark,:day_flag,:status)";
+            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,day_max,leave_before,work_age_allow,remark,day_flag,line_alert,status) 
+                    VALUES (:leave_type_id,:leave_type_detail,:day_max,:leave_before,:work_age_allow,:remark,:day_flag,:line_alert,:status)";
             $query = $conn->prepare($sql);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
             $query->bindParam(':leave_type_detail', $leave_type_detail, PDO::PARAM_STR);
@@ -116,6 +140,7 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
             $query->bindParam(':day_flag', $day_flag, PDO::PARAM_STR);
+            $query->bindParam(':line_alert', $line_alert, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->execute();
             $lastInsertId = $conn->lastInsertId();
@@ -138,12 +163,13 @@ if ($_POST["action"] === 'UPDATE') {
         $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
         $remark = $_POST["remark"];
+        $line_alert = $_POST["line_alert"];
         $status = $_POST["status"];
         $sql_find = "SELECT * FROM mleave_type WHERE id = '" . $id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE mleave_type SET leave_type_id=:leave_type_id,leave_type_detail=:leave_type_detail
-            ,day_max=:day_max,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,day_flag=:day_flag,status=:status            
+            ,day_max=:day_max,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,line_alert=:line_alert,day_flag=:day_flag,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
@@ -152,8 +178,9 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':leave_before', $leave_before, PDO::PARAM_STR);
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
-            $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->bindParam(':line_alert', $line_alert, PDO::PARAM_STR);
             $query->bindParam(':day_flag', $day_flag, PDO::PARAM_STR);
+            $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;
@@ -221,7 +248,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM mleave_type WHERE 1 " . $searchQuery
-        . " ORDER BY " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset");
+        . " ORDER BY day_flag,leave_type_id " . " LIMIT :limit,:offset");
 
 /*
         $txt = $_POST["action"] . " | "  . $_POST["sub_action"] . " | " . $_POST["action_for"] . " | " . $columnName . " | " . $columnSortOrder ;
@@ -256,6 +283,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
                 "work_age_allow" => $row['work_age_allow'],
                 "color" => $result['color'],
                 "remark" => $row['remark'],
+                "line_alert" => $row['line_alert'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
                 "status" => $row['status'] === 'Y' ? "<div class='text-success'>" . $row['status'] . "</div>" : "<div class='text-muted'> " . $row['status'] . "</div>"

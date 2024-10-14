@@ -151,22 +151,23 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                required="required"
-                                                                               value=""
+                                                                               value="<?php echo $_SESSION['emp_id']; ?>"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <label for="text"
                                                                                class="control-label">ชื่อ -
                                                                             นามสกุล</label>
-                                                                        <input type="hidden" id="f_name" name="f_name" value="">
-                                                                        <input type="hidden" id="l_name" name="l_name" value="">
+                                                                        <input type="hidden" id="f_name" name="f_name"
+                                                                               value="<?php echo $_SESSION['first_name']; ?>">
+                                                                        <input type="hidden" id="l_name" name="l_name"
+                                                                               value="<?php echo $_SESSION['last_name']; ?>">
                                                                         <input type="text" class="form-control"
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
-                                                                               value=""
+                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
                                                                                placeholder="">
                                                                     </div>
-
                                                                     <div class="col-sm-2">
                                                                         <label for="emp_id"
                                                                                class="control-label">เลือก</label>
@@ -196,7 +197,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
 
                                                                 </div>
-
 
                                                                 <div class="form-group row">
                                                                     <input type="hidden" class="form-control"
@@ -287,13 +287,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <div class="form-group row d-flex align-items-center">
                                                                     <div class="col-sm-3">
                                                                         <label for="leave_day" class="control-label">จำนวนวันที่ลา</label>
-                                                                        <input type="text" class="form-control" id="leave_day" name="leave_day" value="" required="required" placeholder=""
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_day" name="leave_day" value=""
+                                                                               required="required" placeholder=""
                                                                                oninput="validateInput(this)">
                                                                     </div>
 
                                                                     <div class="col-sm-9">
                                                                         <label for="remark" class="control-label">หมายเหตุ</label>
-                                                                        <textarea class="form-control" id="remark" name="remark" rows="1"></textarea>
+                                                                        <textarea class="form-control" id="remark"
+                                                                                  name="remark" rows="1"></textarea>
                                                                     </div>
                                                                 </div>
 
@@ -336,7 +339,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="picture" id="picture"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
-                                                            <input type="hidden" name="leave_use_before" id="leave_use_before" value=""/>
+                                                            <input type="hidden" name="leave_use_before"
+                                                                   id="leave_use_before" value=""/>
                                                             <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
                                                             <input type="submit" name="save" id="save"
@@ -1016,6 +1020,48 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             });
         });
     </script>
+
+    <!--script>
+        $(document).ready(function () {
+            // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
+            function setDatePicker() {
+                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าจาก hidden input ที่ผู้ใช้เลือก
+                let startDate = new Date(); // วันที่ปัจจุบัน
+
+                // เรียก AJAX เพื่อดึงข้อมูลล่วงหน้ากี่วัน
+                $.ajax({
+                    url: 'model/manage_leave_type_process.php', // ไฟล์ PHP ที่ดึงข้อมูล
+                    type: 'POST',
+                    data: { action: "CHECK_DAYS" , leave_type_id: leave_type_id },
+                    success: function(response) {
+                        let data = JSON.parse(response);
+                        let advanceDays = data.advance_days || 0; // จำนวนวันล่วงหน้า
+
+                        // กำหนดวันที่เริ่มต้น
+                        startDate.setDate(startDate.getDate() + parseInt(advanceDays));
+
+                        // ตั้งค่า datepicker ใหม่
+                        $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
+                        $('#date_leave_start').datepicker({
+                            format: "dd-mm-yyyy",
+                            todayHighlight: true,
+                            language: "th",
+                            autoclose: true,
+                            startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
+                        });
+                    },
+                    error: function() {
+                        console.log('Error fetching data');
+                    }
+                });
+            }
+
+            // เรียกฟังก์ชันเมื่อ modal ปิด (หลังจากเลือกประเภทการลา)
+            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
+                setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
+            });
+        });
+    </script-->
 
     </body>
     </html>
