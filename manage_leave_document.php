@@ -995,6 +995,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
                 } else if (leave_type_id === 'L3') {
                     startDate.setDate(startDate.getDate() + 7); // เริ่มเลือกได้ตั้งแต่ 7 วันหลังจากวันนี้
+                } else if (leave_type_id === 'S') {
+                    startDate.setDate(startDate.getDate());
                 }
 
                 // ตั้งค่า datepicker
