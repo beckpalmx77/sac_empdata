@@ -122,6 +122,11 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         if ($result_sqlsvr["PRS_NO"]==='81055') {
             //echo "UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
         }
+
+        if ($result_sqlsvr["PRS_NO"]==='81014' || $result_sqlsvr["PRS_NO"]==='81232' || $result_sqlsvr["PRS_NO"]==='81350') {
+            $dept_id_approve = "OFP";
+        }
+
         $sql = "UPDATE memployee SET position_id=:position_id,position=:position,dept_id=:dept_id,department_id=:department_id,
         status=:status,work_time_id=:work_time_id,birthday=:birthday,start_work_date=:start_work_date,branch=:branch,dept_id_approve=:dept_id_approve,week_holiday=:week_holiday        
         WHERE emp_id = :emp_id ";
