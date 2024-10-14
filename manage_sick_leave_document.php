@@ -151,7 +151,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                required="required"
-                                                                               value="<?php echo $_SESSION['emp_id'] ?>"
+                                                                               value=""
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-6">
@@ -163,7 +163,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <input type="text" class="form-control"
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
-                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'] ?>"
+                                                                               value=""
                                                                                placeholder="">
                                                                     </div>
 
@@ -294,7 +294,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
 
                                                                     <div class="col-sm-9">
-                                                                        <label for="remark" class="control-label">เหตุผล</label>
+                                                                        <label for="remark" class="control-label">หมายเหตุ</label>
                                                                         <textarea class="form-control" id="remark" name="remark" rows="1"></textarea>
                                                                     </div>
                                                                 </div>
@@ -844,13 +844,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     </script>
 
+
     <script>
         $(document).ready(function () {
             $('#date_leave_start').datepicker({
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
-                autoclose: true
+                autoclose: true,
+                startDate: new Date() // เริ่มตั้งแต่วันที่ปัจจุบัน
             });
         });
     </script>
