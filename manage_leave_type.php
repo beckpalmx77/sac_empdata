@@ -56,6 +56,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>รหัสประเภทเอกสาร</th>
                                                     <th>รายละเอียด</th>
                                                     <th>จำนวนวันสูงสุด</th>
+                                                    <th>ลาล่วงหน้า (วัน)</th>
                                                     <th>Line Alert</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
@@ -67,6 +68,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>รหัสประเภทเอกสาร</th>
                                                     <th>รายละเอียด</th>
                                                     <th>จำนวนวันสูงสุด</th>
+                                                    <th>ลาล่วงหน้า (วัน)</th>
                                                     <th>Line Alert</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
@@ -312,6 +314,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'leave_type_id'},
                     {data: 'leave_type_detail'},
                     {data: 'day_max'},
+                    {data: 'leave_before'},
                     {data: 'line_alert'},
                     {data: 'status'},
                     {data: 'update'},
