@@ -151,7 +151,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                required="required"
-                                                                               value="<?php echo $_SESSION['emp_id'] ?>"
+                                                                               value=""
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-6">
@@ -163,11 +163,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <input type="text" class="form-control"
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
-                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'] ?>"
+                                                                               value=""
                                                                                placeholder="">
                                                                     </div>
 
-                                                                    <!--div class="col-sm-2">
+                                                                    <div class="col-sm-2">
                                                                         <label for="emp_id"
                                                                                class="control-label">เลือก</label>
                                                                         <a data-toggle="modal"
@@ -176,7 +176,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                             Click <i class="fa fa-search"
                                                                                      aria-hidden="true"></i>
                                                                         </a>
-                                                                    </div-->
+                                                                    </div>
 
                                                                 </div>
 
@@ -292,7 +292,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
 
                                                                     <div class="col-sm-9">
-                                                                        <label for="remark" class="control-label">เหตุผล</label>
+                                                                        <label for="remark" class="control-label">หมายเหตุ</label>
                                                                         <textarea class="form-control" id="remark" name="remark" rows="1"></textarea>
                                                                     </div>
                                                                 </div>
@@ -981,6 +981,38 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 input.setCustomValidity('');
             }
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
+            function setDatePicker() {
+                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าจาก hidden input ที่ผู้ใช้เลือก
+                let startDate = new Date(); // วันที่ปัจจุบัน
+
+                // ตรวจสอบประเภทการลา และกำหนดวันที่เริ่มต้น
+                if (leave_type_id === 'L1') {
+                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
+                } else if (leave_type_id === 'L3') {
+                    startDate.setDate(startDate.getDate() + 7); // เริ่มเลือกได้ตั้งแต่ 7 วันหลังจากวันนี้
+                }
+
+                // ตั้งค่า datepicker
+                $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
+                $('#date_leave_start').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
+                });
+            }
+
+            // เรียกฟังก์ชันเมื่อ modal ปิด (หลังจากเลือกประเภทการลา)
+            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
+                setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
+            });
+        });
     </script>
 
     </body>
