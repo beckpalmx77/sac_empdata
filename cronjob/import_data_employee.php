@@ -107,6 +107,10 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $dept_id_approve = 'ITD';
     }
 
+    if ($result_sqlsvr["PRS_NO"]==='81014' || $result_sqlsvr["PRS_NO"]==='81232' || $result_sqlsvr["PRS_NO"]==='81350') {
+        $dept_id_approve = "OFP";
+    }
+
     echo "Check UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
 
     $birth_str = $result_sqlsvr["EMP_BIRTH"] == "" ? "0000-00-00" : $result_sqlsvr["EMP_BIRTH"];
@@ -121,10 +125,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
         if ($result_sqlsvr["PRS_NO"]==='81055') {
             //echo "UPDATE Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $dept_id_approve . "\n\r";
-        }
-
-        if ($result_sqlsvr["PRS_NO"]==='81014' || $result_sqlsvr["PRS_NO"]==='81232' || $result_sqlsvr["PRS_NO"]==='81350') {
-            $dept_id_approve = "OFP";
         }
 
         $sql = "UPDATE memployee SET position_id=:position_id,position=:position,dept_id=:dept_id,department_id=:department_id,
