@@ -290,7 +290,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         $(document).ready(function () {
             let formData = {action: "GET_LEAVE_TYPE", sub_action: "GET_MASTER"};
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[10, 20, 50, 100], [10, 20, 50, 100]],
+                'lengthMenu': [[7 ,10, 20, 50, 100], [7 ,10, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',
