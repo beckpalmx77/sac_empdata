@@ -987,7 +987,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         }
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
             function setDatePicker() {
@@ -1019,9 +1019,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
             });
         });
-    </script>
+    </script-->
 
-    <!--script>
+    <script>
         $(document).ready(function () {
             // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
             function setDatePicker() {
@@ -1036,6 +1036,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     success: function(response) {
                         let data = JSON.parse(response);
                         let advanceDays = data.advance_days || 0; // จำนวนวันล่วงหน้า
+
+                        alert(advanceDays);
 
                         // กำหนดวันที่เริ่มต้น
                         startDate.setDate(startDate.getDate() + parseInt(advanceDays));
@@ -1061,7 +1063,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
             });
         });
-    </script-->
+    </script>
 
     </body>
     </html>
