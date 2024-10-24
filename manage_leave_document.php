@@ -1028,33 +1028,24 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 let leave_type_id = $('#leave_type_id').val(); // ดึงค่าจาก hidden input ที่ผู้ใช้เลือก
                 let startDate = new Date(); // วันที่ปัจจุบัน
 
-                // เรียก AJAX เพื่อดึงข้อมูลล่วงหน้ากี่วัน
-                $.ajax({
-                    url: 'model/manage_leave_type_process.php', // ไฟล์ PHP ที่ดึงข้อมูล
-                    type: 'POST',
-                    data: { action: "CHECK_DAYS" , leave_type_id: leave_type_id },
-                    success: function(response) {
-                        let data = JSON.parse(response);
-                        let advanceDays = data.advance_days || 0; // จำนวนวันล่วงหน้า
+                // ตรวจสอบประเภทการลา และกำหนดวันที่เริ่มต้น
+                if (leave_type_id === 'L1') {
+                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
+                } else if (leave_type_id === 'L3') {
+                    startDate.setDate(startDate.getDate() + 7); // เริ่มเลือกได้ตั้งแต่ 7 วันหลังจากวันนี้
+                } else if (leave_type_id === 'S') {
+                    startDate.setDate(startDate.getDate());
+                }
 
-                        alert(advanceDays);
 
-                        // กำหนดวันที่เริ่มต้น
-                        startDate.setDate(startDate.getDate() + parseInt(advanceDays));
-
-                        // ตั้งค่า datepicker ใหม่
-                        $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
-                        $('#date_leave_start').datepicker({
-                            format: "dd-mm-yyyy",
-                            todayHighlight: true,
-                            language: "th",
-                            autoclose: true,
-                            startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
-                        });
-                    },
-                    error: function() {
-                        console.log('Error fetching data');
-                    }
+                // ตั้งค่า datepicker
+                $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
+                $('#date_leave_start').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
                 });
             }
 
@@ -1064,6 +1055,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             });
         });
     </script>
+
 
     </body>
     </html>
