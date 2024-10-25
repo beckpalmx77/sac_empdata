@@ -302,30 +302,29 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <?php if ($_SESSION['approve_permission'] === 'Y') { ?>
                                                                     <div class="form-group">
                                                                         <label for="status"
-                                                                               class="control-label">Status</label>
-                                                                        N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ
+                                                                               class="control-label">สถานะเอกสาร</label>
+                                                                        <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
                                                                                 title="Please select">
-                                                                            <option>N</option>
-                                                                            <option>A</option>
-                                                                            <option>R</option>
+                                                                            <option value="N">รอพิจารณา</option>
+                                                                            <option value="A">อนุมัติ</option>
+                                                                            <option value="R">ไม่อนุมัติ</option>
                                                                         </select>
                                                                     </div>
                                                                 <?php } else { ?>
                                                                     <div class="form-group">
-                                                                        <label for="status"
-                                                                               class="control-label">Status</label>
-                                                                        N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ
+                                                                        <label for="status" class="control-label">สถานะเอกสาร</label>
+                                                                        <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
-                                                                                readonly="true"
-                                                                                title="Please select">
-                                                                            <option>N</option>
-                                                                            <option>A</option>
-                                                                            <option>R</option>
+                                                                                disabled="true"  <!-- ใช้ disabled แทน readonly -->
+                                                                        title="Please select">
+                                                                        <option value="N">รอพิจารณา</option>
+                                                                        <option value="A">อนุมัติ</option>
+                                                                        <option value="R">ไม่อนุมัติ</option>
                                                                         </select>
                                                                     </div>
 

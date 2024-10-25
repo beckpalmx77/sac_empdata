@@ -153,7 +153,7 @@ if ($_POST["action"] === 'ADD') {
 
                 if ($lAStInsertId) {
 
-                    $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+                    $sToken = "";
                     //$sToken = "zgbi6mXoK6rkJWSeFZm5wPjQfiOniYnV2MOxXeTMlA1";
                     $sMessage = "มีเอกสารการลงเวลาการทำงานกรณีสแกนนิ้วไม่ได้ เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
                         . "\n\r" . "วันที่ขอลงเวลาการทำงาน : " . $date_leave_start . " เวลา : " . $time_leave_start

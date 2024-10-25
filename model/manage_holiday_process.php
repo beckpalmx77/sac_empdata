@@ -129,7 +129,7 @@ if ($_POST["action"] === 'ADD') {
                 $lastInsertId = $conn->lastInsertId();
                 if ($lastInsertId) {
 
-                    $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+                    $sToken = "";
                     //$sToken = "zgbi6mXoK6rkJWSeFZm5wPjQfiOniYnV2MOxXeTMlA1";
                     $sMessage = "มีเอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี "
                         . "\n\r" . "เลขที่เอกสาร = " . $doc_id
