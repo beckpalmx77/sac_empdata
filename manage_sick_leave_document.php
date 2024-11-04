@@ -850,8 +850,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 format: "dd-mm-yyyy",
                 todayHighlight: true,
                 language: "th",
-                autoclose: true,
-                startDate: new Date() // เริ่มตั้งแต่วันที่ปัจจุบัน
+                autoclose: true
             });
         });
     </script>
