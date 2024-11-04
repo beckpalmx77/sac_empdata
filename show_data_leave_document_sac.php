@@ -126,12 +126,12 @@ if ($form_type === 'employee') {
                             AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to 
                             GROUP BY v_dleave_event.leave_type_detail, mleave_type.day_max , mleave_type.color";
 
-        /*
+/*
         $txt = $sql_leave_count . " | " . $year . " | " . $f_name . " | " . $l_name . " | " . $leave_type_id . " | " . $month_id_start . " | " . $month_id_to;
         $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
         fwrite($my_file, $txt);
         fclose($my_file);
-        */
+*/
 
         $statement_leave = $conn->prepare($sql_leave_count);
         $statement_leave->bindParam(':year', $year);
@@ -186,8 +186,7 @@ if ($form_type === 'employee') {
             $sql_leave = " SELECT v_dleave_event.* , em.status FROM v_dleave_event 
                        LEFT JOIN memployee em on em.emp_id = v_dleave_event.emp_id
                        WHERE v_dleave_event.doc_year = :year
-                       AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to
-                       AND v_dleave_event.dept_id = :branch   
+                       AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to                  
                        ";
 
             if (!empty($f_name)) {
@@ -205,7 +204,6 @@ if ($form_type === 'employee') {
             $statement_leave->bindParam(':year', $year);
             $statement_leave->bindParam(':month_id_start', $month_id_start);
             $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->bindParam(':branch', $branch);
 
             if (!empty($f_name)) {
                 $statement_leave->bindParam(':f_name', $f_name);
