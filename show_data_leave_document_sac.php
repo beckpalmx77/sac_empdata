@@ -313,8 +313,7 @@ if ($form_type === 'employee') {
             $sql_leave = " SELECT vdholiday_event.* , em.status FROM vdholiday_event 
                LEFT JOIN memployee em on em.emp_id = vdholiday_event.emp_id
                WHERE vdholiday_event.doc_year = :year
-               AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to
-               AND vdholiday_event.dept_id = :branch   
+               AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to               
                ";
 
             if (!empty($f_name)) {
@@ -331,7 +330,6 @@ if ($form_type === 'employee') {
             $statement_leave->bindParam(':year', $year);
             $statement_leave->bindParam(':month_id_start', $month_id_start);
             $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->bindParam(':branch', $branch);
 
             if (!empty($f_name)) {
                 $statement_leave->bindParam(':f_name', $f_name);
@@ -363,78 +361,6 @@ if ($form_type === 'employee') {
         </table>
     </div>
 
-    <div class="card-body">
-        <h4><span class="badge bg-warning">แสดงข้อมูลการเปลี่ยนวันหยุด พนักงาน</span></h4>
-        <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>วันที่เอกสาร</th>
-                <th>รหัสพนักงาน</th>
-                <th>ชื่อพนักงาน</th>
-                <th>หน่วยงาน</th>
-                <th>ประเภท</th>
-                <th>วันที่หยุดปกติ</th>
-                <th>วันที่ต้องการหยุด</th>
-                <th>หมายเหตุ</th>
-            </tr>
-            </thead>
-            <tfoot></tfoot>
-            <tbody>
-            <?php
-
-            $sql_leave = " SELECT v_dchange_event.* , em.status FROM v_dchange_event 
-               LEFT JOIN memployee em on em.emp_id = v_dchange_event.emp_id
-               WHERE v_dchange_event.doc_year = :year
-               AND v_dchange_event.doc_month BETWEEN :month_id_start AND :month_id_to
-               AND v_dchange_event.dept_id = :branch   
-               ";
-
-            if (!empty($f_name)) {
-                $sql_leave_addition1 = " AND v_dchange_event.f_name = :f_name";
-            }
-
-            if (!empty($l_name)) {
-                $sql_leave_addition2 = " AND v_dchange_event.l_name = :l_name";
-            }
-
-            $sql_oder = " ORDER BY v_dchange_event.f_name,v_dchange_event.doc_date ";
-            $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_leave_addition2 . $sql_oder;
-            $statement_leave = $conn->prepare($sql_leave);
-            $statement_leave->bindParam(':year', $year);
-            $statement_leave->bindParam(':month_id_start', $month_id_start);
-            $statement_leave->bindParam(':month_id_to', $month_id_to);
-            $statement_leave->bindParam(':branch', $branch);
-
-            if (!empty($f_name)) {
-                $statement_leave->bindParam(':f_name', $f_name);
-            }
-
-            if (!empty($l_name)) {
-                $statement_leave->bindParam(':l_name', $l_name);
-            }
-
-            $statement_leave->execute();
-            $results_leave = $statement_leave->fetchAll(PDO::FETCH_ASSOC);
-            $line_no = 0;
-            foreach ($results_leave as $row_leave) {
-                $line_no++;
-                ?>
-                <tr>
-                    <td><?php echo htmlentities($line_no); ?></td>
-                    <td><?php echo htmlentities($row_leave['doc_date']); ?></td>
-                    <td><?php echo htmlentities($row_leave['emp_id']); ?></td>
-                    <td><?php echo htmlentities($row_leave['f_name'] . " " . $row_leave['l_name']); ?></td>
-                    <td><?php echo htmlentities($row_leave['department_id']); ?></td>
-                    <td><?php echo htmlentities($row_leave['leave_type_detail']); ?></td>
-                    <td><?php echo htmlentities($row_leave['date_leave_start']); ?></td>
-                    <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
-                    <td><?php echo htmlentities($row_leave['remark']); ?></td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-    </div>
 </div>
 
 </body>
