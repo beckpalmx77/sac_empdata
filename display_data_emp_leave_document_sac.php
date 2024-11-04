@@ -126,11 +126,18 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     <input type="hidden" id="emp_id" name="emp_id"
                                                                            value="<?php echo $_SESSION['emp_id']; ?>">
 
-                                                                    <label for="employee">เลือกพนักงาน :</label>
-                                                                    <select name="employee" id="employee"
-                                                                            class="form-control" required>
-                                                                        <option value="-">กรุณาเลือกพนักงาน</option>
-                                                                    </select>
+                                                                    <label for="text"
+                                                                           class="control-label">ชื่อ -
+                                                                        นามสกุล</label>
+                                                                    <input type="hidden" id="f_name" name="f_name"
+                                                                           value="<?php echo $_SESSION['first_name']; ?>">
+                                                                    <input type="hidden" id="l_name" name="l_name"
+                                                                           value="<?php echo $_SESSION['last_name']; ?>">
+                                                                    <input type="text" class="form-control"
+                                                                           id="full_name" name="full_name"
+                                                                           readonly="true"
+                                                                           value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
+                                                                           placeholder="">
 
                                                                     <br>
                                                                     <div class="row">
