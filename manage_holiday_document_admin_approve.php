@@ -57,7 +57,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
                                                     <th>สถานะ</th>
-                                                    <th>Action</th>
+                                                    <!--th>Action</th-->
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -71,7 +71,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
                                                     <th>สถานะ</th>
-                                                    <th>Action</th>
+                                                    <!--th>Action</th-->
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -504,7 +504,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'leave_type_detail'},
                     {data: 'remark'},
                     {data: 'status'},
-                    {data: 'approve'},
+                    //{data: 'approve'},
                     {data: 'delete'},
                 ]
             });

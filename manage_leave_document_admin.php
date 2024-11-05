@@ -51,7 +51,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>สถานะ</th>
-                                                    <th>Action</th>
+                                                    <!--th>Action</th-->
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
@@ -64,7 +64,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>สถานะ</th>
-                                                    <th>Action</th>
+                                                    <!--th>Action</th-->
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -417,7 +417,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
                     {data: 'status'},
-                    {data: 'approve'},
+                    //{data: 'approve'},
                     {data: 'delete'},
                 ]
             });
