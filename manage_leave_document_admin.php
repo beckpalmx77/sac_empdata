@@ -40,16 +40,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-
-                                        <div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
-                                            <!--button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
-                                                <i class="fa fa-plus"></i>
-                                            </button-->
-                                        </div>
-
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
@@ -62,6 +52,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
+                                                    <th>Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
@@ -73,6 +64,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>สถานะ</th>
+                                                    <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
                                                 </tfoot>
@@ -400,7 +392,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'serverSide': true,
                 'serverMethod': 'post',
                 'ajax': {
-                    'url': 'model/manage_leave_document_process.php',
+                    'url': 'model/manage_leave_document_admin_process.php',
                     'data': formData
                 },
                 'columns': [
@@ -412,6 +404,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'dt_leave_to'},
                     {data: 'status'},
                     {data: 'approve'},
+                    {data: 'delete'},
                 ]
             });
 
@@ -421,7 +414,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
                 $.ajax({
-                    url: 'model/manage_leave_document_process.php',
+                    url: 'model/manage_leave_document_admin_process.php',
                     method: "POST",
                     data: formData,
                     success: function (data) {
@@ -464,7 +457,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_leave_document_process.php',
+                url: 'model/manage_leave_document_admin_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
@@ -519,7 +512,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
-                url: 'model/manage_leave_document_process.php',
+                url: 'model/manage_leave_document_admin_process.php',
                 dataType: "json",
                 data: formData,
                 success: function (response) {
@@ -555,6 +548,61 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
+                        $('#save').val('Save');
+                    }
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
+            });
+        });
+
+    </script>
+
+    <script>
+
+        $("#TableRecordList").on('click', '.delete', function () {
+            let id = $(this).attr("id");
+            //alert(id);
+            let formData = {action: "GET_DATA", id: id};
+            $.ajax({
+                type: "POST",
+                url: 'model/manage_leave_document_admin_process.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
+                        let id = response[i].id;
+                        let doc_id = response[i].doc_id;
+                        let doc_date = response[i].doc_date;
+                        let emp_id = response[i].emp_id;
+                        let full_name = response[i].full_name;
+                        let leave_type_id = response[i].leave_type_id;
+                        let leave_type_detail = response[i].leave_type_detail;
+                        let date_leave_start = response[i].date_leave_start;
+                        let date_leave_to = response[i].date_leave_to;
+                        let time_leave_start = response[i].time_leave_start;
+                        let time_leave_to = response[i].time_leave_to;
+                        let remark = response[i].remark;
+                        let status = response[i].status;
+
+                        $('#recordModal').modal('show');
+                        $('#id').val(id);
+                        $('#doc_id').val(doc_id);
+                        $('#doc_date').val(doc_date);
+                        $('#emp_id').val(emp_id);
+                        $('#full_name').val(full_name);
+                        $('#leave_type_id').val(leave_type_id);
+                        $('#leave_type_detail').val(leave_type_detail);
+                        $('#date_leave_start').val(date_leave_start);
+                        $('#date_leave_to').val(date_leave_to);
+                        $('#time_leave_start').val(time_leave_start);
+                        $('#time_leave_to').val(time_leave_to);
+                        $('#remark').val(remark);
+                        $('#status').val(status);
+                        $('.modal-title').html("<i class='fa fa-plus'></i> ยกเลิกเอกสาร DELETE Record");
+                        $('#action').val('DELETE');
                         $('#save').val('Save');
                     }
                 },
