@@ -55,11 +55,12 @@ $total = 0;
 $total_payment = 0;
 $sql_leave_addition = "";
 
+/*
 $txt = "Display " . $emp_id ;
 $my_file = fopen("a-leave_disp.txt", "w") or die("Unable to open file!");
 fwrite($my_file, $txt);
 fclose($my_file);
-
+*/
 
 ?>
 <!DOCTYPE html>
