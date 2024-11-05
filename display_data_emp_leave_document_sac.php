@@ -77,7 +77,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-12 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <form id="myform" name="myform" method="post">
+                                                        <form id="myform" name="myform"
+                                                              action="show_data_leave_document_sac.php" method="post">
 
                                                             <div class="row">
                                                                 <div class="col-sm-6">
@@ -127,8 +128,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                            value="<?php echo $_SESSION['emp_id']; ?>">
 
                                                                     <label for="text"
-                                                                           class="control-label">ชื่อ -
-                                                                        นามสกุล</label>
+                                                                           class="control-label">ชื่อ - นามสกุล</label>
                                                                     <input type="hidden" id="f_name" name="f_name"
                                                                            value="<?php echo $_SESSION['first_name']; ?>">
                                                                     <input type="hidden" id="l_name" name="l_name"
@@ -144,7 +144,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <div class="col-sm-12">
                                                                             <input type="hidden" id="form_type"
                                                                                    name="form_type" value="employee">
-                                                                            <button type="submit" id="BtnData"
+                                                                            <button type="button" id="BtnData"
                                                                                     name="BtnData"
                                                                                     class="btn btn-primary mb-3">
                                                                                 สรุปข้อมูล
@@ -200,38 +200,62 @@ if (strlen($_SESSION['alogin']) == "") {
                     $('#month_to').val(startMonth);
                 }
             }
+        </script>
 
+        <!-- script>
             $(document).ready(function () {
                 $('#myform').on('submit', function (e) {
-                    e.preventDefault(); // Prevent the form from submitting normally
+                    e.preventDefault(); // ป้องกันการ submit ปกติ
 
                     const startMonth = parseInt($('#month_start').val());
                     const endMonth = parseInt($('#month_to').val());
 
+                    // ตรวจสอบช่วงเดือนที่ถูกต้อง
                     if (endMonth < startMonth) {
                         alert("เดือนสิ้นสุดไม่ควรอยู่ก่อนเดือนเริ่มต้น");
                         return false;
                     }
 
-                    // Serialize the form data
+                    // Serialize ข้อมูลจากฟอร์ม
                     let formData = $(this).serialize();
 
-                    // Open a new window
+                    // เปิดหน้าต่างใหม่และตรวจสอบว่าเปิดขึ้นได้
                     let newWindow = window.open('', '_blank');
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                        alert("โปรดอนุญาตการเปิด pop-up ในเบราว์เซอร์ของคุณ");
+                        return false;
+                    }
 
-                    // Perform the AJAX request
+                    // ส่งข้อมูลผ่าน AJAX
                     $.ajax({
                         type: 'POST',
                         url: 'show_data_leave_document_sac.php',
                         data: formData,
                         success: function (response) {
-                            // Write the response to the new window
+                            // แสดงผลลัพธ์ในหน้าต่างใหม่
+                            newWindow.document.open();
                             newWindow.document.write(response);
+                            newWindow.document.close();
+                        },
+                        error: function (xhr, status, error) {
+                            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + error);
                         }
                     });
                 });
             });
+        </script-->
+
+        <script>
+
+            $("#BtnData").click(function () {
+                document.forms['myform'].action = 'show_data_leave_document_sac';
+                document.forms['myform'].target = '_blank';
+                document.forms['myform'].submit();
+                return true;
+            });
+
         </script>
+
 
         <script>
             $(document).ready(function () {

@@ -1,7 +1,10 @@
 <?php
-session_start();
-error_reporting(0);
-include("config/connect_db.php");
+include('includes/Header.php');
+if (strlen($_SESSION['alogin']) == "") {
+    header("Location: index.php");
+} else {
+
+include 'config/connect_db.php';
 
 $month_start = $_POST["month_start"];
 $month_to = $_POST["month_to"];
@@ -12,7 +15,7 @@ $form_type = $_POST["form_type"];
 $sql_leave_addition1 = "";
 $sql_leave_addition2 = "";
 
-$emp_id = $_POST["employee"];
+$emp_id = $_POST["emp_id"];
 
 $sql_emp = "SELECT * FROM memployee WHERE emp_id = :emp_id";
 $stmt_emp = $conn->prepare($sql_emp);
@@ -23,8 +26,6 @@ foreach ($EmpRows as $EmpRow) {
     $f_name = $EmpRow["f_name"];
     $l_name = $EmpRow["l_name"];
 }
-
-
 
 $month_name_start = "";
 $month_name_to = "";
@@ -53,6 +54,12 @@ $date = date("d/m/Y");
 $total = 0;
 $total_payment = 0;
 $sql_leave_addition = "";
+
+$txt = "Display " . $emp_id ;
+$my_file = fopen("a-leave_disp.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
+
 
 ?>
 <!DOCTYPE html>
@@ -103,7 +110,7 @@ $sql_leave_addition = "";
 <?php
 if ($form_type === 'employee') {
     echo '<div class="container-fluid" id="container-wrapper">';
-    echo '<th><b>' . 'ชื่อพนักงาน : ' . $f_name . ' ' . $l_name . '</b></th>';
+    echo '<th><b>' . 'ชื่อพนักงาน : ' . $emp_id . " : " . $f_name . ' ' . $l_name . '</b></th>';
     echo '<table id="leaveTable" class="display table table-striped table-bordered" cellspacing="0" width="100%">';
     echo '<thead>';
     echo '<tr>';
@@ -367,3 +374,5 @@ if ($form_type === 'employee') {
 
 </body>
 </html>
+
+<?php } ?>
