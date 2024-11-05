@@ -304,7 +304,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     <div class="form-group">
                                                                         <label for="status"
                                                                                class="control-label">สถานะเอกสาร</label>
-                                                                        <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
@@ -317,7 +316,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <?php } else { ?>
                                                                     <div class="form-group">
                                                                         <label for="status" class="control-label">สถานะเอกสาร</label>
-                                                                        <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"

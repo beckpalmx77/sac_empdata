@@ -169,7 +169,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let year = d.getFullYear();
             let emp_id = $("#emp_id").val();
             let where_emp_id = " And emp_id = '" + emp_id + "' ";
-            let where_date = " And doc_date = '" + current_date + "' ";
             let where_year = " And doc_year = '" + year + "' ";
             let input_text = document.getElementById("Text" + idx);
             let action = "GET_SUM_RESULT_COND";

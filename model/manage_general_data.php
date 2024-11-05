@@ -52,6 +52,13 @@ if ($_POST["action"] === 'GET_SUM_RESULT_COND') {
     $cond = $_POST["cond"];
     $return_arr = array();
     $sql_get = "SELECT SUM(" .$field .") as sum_result  FROM " . $table_name . $cond;
+
+/*
+    $sql_sqlsvr2 .= $sql_get . "\n\r";
+    $myfile = fopen($table_name . "aleave-2.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_sqlsvr2);
+    fclose($myfile);
+*/
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     foreach ($results as $result) {

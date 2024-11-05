@@ -404,13 +404,13 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
             LEFT JOIN mleave_type lt on lt.leave_type_id = dl.leave_type_id
             LEFT JOIN mstatus ms on ms.status_doctype = 'LEAVE' AND ms.status_doc_id = dl.status              
             WHERE dl.leave_type_id ='L2' " . $searchQuery . " ORDER BY id desc , " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+/*
 
-    /*
                 $txt = $sql_get_leave ;
                 $my_file = fopen("leave_select.txt", "w") or die("Unable to open file!");
                 fwrite($my_file, $searchValue. " | " .  $txt);
                 fclose($my_file);
-    */
+*/
 
     $stmt = $conn->prepare($sql_get_leave);
 
