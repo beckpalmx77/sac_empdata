@@ -171,12 +171,16 @@ if ($_POST["action"] === 'UPDATE') {
         $time_leave_to = $_POST["time_leave_to"];
         $remark = $_POST["remark"];
         $status = $_POST["status"];
-
+/*
+        $myfile = fopen("time2-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile,  $doc_id . " | " . $emp_id . " | ". $leave_type_id . " | " . $status);
+        fclose($myfile);
+*/
         $sql_find = "SELECT * FROM dholiday_event WHERE doc_id = '" . $doc_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
 
-            if ($_SESSION['document_dept_cond']=="A") {
+            if ($_SESSION['approve_permission'] === "Y") {
                 $sql_update = "UPDATE dholiday_event SET status=:status
                                WHERE id = :id";
                 $query = $conn->prepare($sql_update);

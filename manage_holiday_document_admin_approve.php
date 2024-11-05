@@ -45,16 +45,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                 </div>
                                 <div class="card-body">
                                     <section class="container-fluid">
-
-                                        <!--div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
-                                            <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div-->
-
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
@@ -66,6 +56,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่หยุด</th>
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
+                                                    <th>สถานะ</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -79,6 +70,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่หยุด</th>
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
+                                                    <th>สถานะ</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -145,19 +137,21 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                required="required"
-                                                                               value="<?php echo $_SESSION['emp_id'];?>"
+                                                                               value="<?php echo $_SESSION['emp_id']; ?>"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <label for="text"
                                                                                class="control-label">ชื่อ -
                                                                             นามสกุล</label>
-                                                                        <input type="hidden" id="f_name" name="f_name" value="<?php echo $_SESSION['first_name'];?>">
-                                                                        <input type="hidden" id="l_name" name="l_name" value="<?php echo $_SESSION['last_name'];?>">
+                                                                        <input type="hidden" id="f_name" name="f_name"
+                                                                               value="<?php echo $_SESSION['first_name']; ?>">
+                                                                        <input type="hidden" id="l_name" name="l_name"
+                                                                               value="<?php echo $_SESSION['last_name']; ?>">
                                                                         <input type="text" class="form-control"
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
-                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'];?>"
+                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-2">
@@ -270,7 +264,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
-                                                                                disabled="true"  <!-- ใช้ disabled แทน readonly -->
+                                                                                disabled="true"
+                                                                        <!-- ใช้ disabled แทน readonly -->
                                                                         title="Please select">
                                                                         <option value="N">รอพิจารณา</option>
                                                                         <option value="A">อนุมัติ</option>
@@ -285,7 +280,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
-                                                            <input type="hidden" name="status" id="status"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
                                                             <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
@@ -509,16 +503,22 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'date_leave_start'},
                     {data: 'leave_type_detail'},
                     {data: 'remark'},
+                    {data: 'status'},
                     {data: 'approve'},
                     {data: 'delete'},
                 ]
             });
+        });
+    </script>
 
+    <script>
+        $(document).ready(function () {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
+                //alert($('#status').val() + " | " +formData);
                 $.ajax({
                     url: 'model/manage_holiday_admin_approve_process.php',
                     method: "POST",
@@ -531,24 +531,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         dataRecords.ajax.reload();
                     }
                 })
-            });
-            <!-- *** FOR SUBMIT FORM *** -->
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-
-            $("#btnAdd").click(function () {
-                //alert(<?php echo $_SESSION['work_time_start']?>);
-                $('#recordModal').modal('show');
-                $('#id').val("");
-                $('#doc_id').val("");
-                $('#remark').val("");
-                $('#status').val("N");
-                $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
-                $('#action').val('ADD');
-                $('#save').val('Save');
             });
         });
     </script>
@@ -651,7 +633,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#remark').val(remark);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
-                        $('#action').val('UPDATE');
+                        $('#action').val('DELETE');
                         $('#save').val('Save');
                     }
                 },
