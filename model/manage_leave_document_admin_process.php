@@ -373,13 +373,13 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_dleave_event dl WHERE dl.leave_type_id <> 'L2' ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_dleave_event dl WHERE 1 ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $sql_count_record = "SELECT COUNT(*) AS allcount FROM v_dleave_event dl WHERE dl.leave_type_id <> 'L2' " . $searchQuery;
+    $sql_count_record = "SELECT COUNT(*) AS allcount FROM v_dleave_event dl WHERE 1 " . $searchQuery;
     $stmt = $conn->prepare($sql_count_record);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
@@ -400,7 +400,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
             FROM v_dleave_event dl
             LEFT JOIN mleave_type lt on lt.leave_type_id = dl.leave_type_id
             LEFT JOIN mstatus ms on ms.status_doctype = 'LEAVE' AND ms.status_doc_id = dl.status              
-            WHERE dl.leave_type_id <> 'L2' " . $searchQuery . " ORDER BY id desc , " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+            WHERE 1 " . $searchQuery . " ORDER BY id desc , " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
     /*
                 $txt = $sql_get_leave ;

@@ -129,6 +129,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="doc_date"
                                                                                name="doc_date"
                                                                                required="required"
+                                                                               readonly="true"
                                                                                value="<?php echo $curr_date ?>"
                                                                                placeholder="วันที่เอกสาร">
                                                                     </div>
@@ -604,7 +605,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             $('#doc_date').datepicker({
                 format: "dd-mm-yyyy",
@@ -613,7 +614,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 autoclose: true
             });
         });
-    </script>
+    </script-->
 
     <script>
         $(document).ready(function () {
