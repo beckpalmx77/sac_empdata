@@ -116,15 +116,16 @@ if ($form_type === 'employee') {
     echo '<thead>';
     echo '<tr>';
     echo '<th>ประเภทการลา</th>';
-    echo '<th>จำนวนวันที่ใช้การลา (วัน)</th>';
+    echo '<th>จำนวนที่ลา (วัน)</th>';
+    echo '<th>จำนวนที่ลา (ชั่วโมง)</th>';
     echo '<th>จำนวนวันที่ลาได้สูงสุด (วัน)</th>';
     echo '</tr>';
     echo '</thead>';
     echo '<tbody>';
 
-    for ($loop = 1; $loop <= 5; $loop++) {
+    for ($loop = 1; $loop <= 6; $loop++) {
         $leave_type_id = "L" . $loop;
-        $sql_leave_count = "SELECT v_dleave_event.leave_type_detail, SUM(v_dleave_event.leave_day) AS leave_day, mleave_type.day_max, mleave_type.color
+        $sql_leave_count = "SELECT v_dleave_event.leave_type_detail, SUM(v_dleave_event.leave_day) AS leave_day, SUM(v_dleave_event.leave_hour) AS leave_hour, mleave_type.day_max, mleave_type.color
                             FROM v_dleave_event 
                             LEFT JOIN mleave_type ON mleave_type.leave_type_id = v_dleave_event.leave_type_id
                             WHERE v_dleave_event.doc_year = :year 
@@ -157,6 +158,7 @@ if ($form_type === 'employee') {
             echo $leave_type_detail;
             //echo '<td>' . $row_leave['leave_type_detail'] . '</td>';
             echo '<td>' . $row_leave['leave_day'] . '</td>';
+            echo '<td>' . $row_leave['leave_hour'] . '</td>';
             echo '<td>' . $row_leave['day_max'] . '</td>';
             echo '</tr>';
         }
@@ -184,6 +186,7 @@ if ($form_type === 'employee') {
                 <th>วันที่ลาเริ่มต้น</th>
                 <th>วันที่ลาสิ้นสุด</th>
                 <th>จำนวนวัน</th>
+                <th>จำนวนชั่วโมง</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
@@ -240,6 +243,7 @@ if ($form_type === 'employee') {
                     <td><?php echo htmlentities($row_leave['date_leave_start']); ?></td>
                     <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
                     <td><?php echo htmlentities($row_leave['leave_day']); ?></td>
+                    <td><?php echo htmlentities($row_leave['leave_hour']); ?></td>
                     <td><?php echo htmlentities($row_leave['remark']); ?></td>
                 </tr>
             <?php } ?>
@@ -255,7 +259,8 @@ if ($form_type === 'employee') {
         echo '<thead>';
         echo '<tr>';
         echo '<th>ประเภทการลา</th>';
-        echo '<th>จำนวนวันที่ใช้การลา (วัน)</th>';
+        echo '<th>จำนวนที่ลา (วัน)</th>';
+        echo '<th>จำนวนที่ลา (ชั่วโมง)</th>';
         echo '<th>จำนวนวันที่ลาได้สูงสุด (วัน)</th>';
         echo '</tr>';
         echo '</thead>';
@@ -289,6 +294,7 @@ if ($form_type === 'employee') {
                 echo $leave_type_detail;
                 //echo '<td>' . $row_leave['leave_type_detail'] . '</td>';
                 echo '<td>' . $row_leave['leave_day'] . '</td>';
+                echo '<td>' . $row_leave['leave_hour'] . '</td>';
                 echo '<td>' . $row_leave['day_max'] . '</td>';
                 echo '</tr>';
             }
