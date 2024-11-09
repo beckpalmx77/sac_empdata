@@ -198,7 +198,7 @@ if ($_POST["action"] === 'ADD') {
 
                     echo $sMessage;
                     $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
-                    if ($line_alert==='Y') {
+                    if ($line_alert === 'Y') {
                         sendLineNotify($sMessage, $sToken);
                     }
                     echo $save_success;
@@ -433,7 +433,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
 
-            $leave_type_detail = '<span style="color: '. $row['color'] . ';">' . $row['leave_type_detail'] . '</span>';
+            $leave_type_detail = '<span style="color: ' . $row['color'] . ';">' . $row['leave_type_detail'] . '</span>';
 
             $data[] = array(
                 "id" => $row['id'],
