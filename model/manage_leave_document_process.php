@@ -49,6 +49,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "approve_2_status" => $result['approve_2_status'],
             "leave_before" => $result['leave_before'],
             "leave_day" => $result['leave_day'],
+            "leave_hour" => $result['leave_hour'],
             "picture" => $result['picture'],
             "remark" => $result['remark'],
             "status" => $result['status']);
@@ -123,6 +124,7 @@ if ($_POST["action"] === 'ADD') {
         $date_leave_to = $_POST["date_leave_to"];
         $time_leave_to = $_POST["time_leave_to"];
         $leave_day = $_POST["leave_day"];
+        $leave_hour = $_POST["leave_hour"];
 
         $remark = $_POST["remark"];
 
@@ -167,8 +169,8 @@ if ($_POST["action"] === 'ADD') {
             if ($nRows > 0) {
                 echo $dup;
             } else {
-                $sql = "INSERT INTO dleave_event (doc_id, doc_year, doc_month, dept_id, doc_date, leave_type_id, emp_id, date_leave_start, time_leave_start, date_leave_to, time_leave_to, remark, leave_day) 
-                VALUES (:doc_id, :doc_year, :doc_month, :dept_id, :doc_date, :leave_type_id, :emp_id, :date_leave_start, :time_leave_start, :date_leave_to, :time_leave_to, :remark, :leave_day)";
+                $sql = "INSERT INTO dleave_event (doc_id, doc_year, doc_month, dept_id, doc_date, leave_type_id, emp_id, date_leave_start, time_leave_start, date_leave_to, time_leave_to, remark, leave_day,leave_hour) 
+                VALUES (:doc_id, :doc_year, :doc_month, :dept_id, :doc_date, :leave_type_id, :emp_id, :date_leave_start, :time_leave_start, :date_leave_to, :time_leave_to, :remark, :leave_day,:leave_hour)";
                 $query = $conn->prepare($sql);
                 $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
                 $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
@@ -183,6 +185,7 @@ if ($_POST["action"] === 'ADD') {
                 $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':remark', $remark, PDO::PARAM_STR);
                 $query->bindParam(':leave_day', $leave_day, PDO::PARAM_STR);
+                $query->bindParam(':leave_hour', $leave_hour, PDO::PARAM_STR);
                 $query->execute();
                 $lastInsertId = $conn->lastInsertId();
 
@@ -226,6 +229,7 @@ if ($_POST["action"] === 'UPDATE') {
         $date_leave_to = $_POST["date_leave_to"];
         $time_leave_to = $_POST["time_leave_to"];
         $leave_day = $_POST["leave_day"];
+        $leave_hour = $_POST["leave_hour"];
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 
@@ -256,7 +260,7 @@ if ($_POST["action"] === 'UPDATE') {
                 $sql_update = "UPDATE dleave_event SET status=:status,leave_type_id=:leave_type_id
                 ,date_leave_start=:date_leave_start,date_leave_to=:date_leave_to
                 ,time_leave_start=:time_leave_start,time_leave_to=:time_leave_to,remark=:remark,doc_year=:doc_year,total_time=:total_time     
-                ,emp_id=:emp_id,leave_day=:leave_day                    
+                ,emp_id=:emp_id,leave_day=:leave_day,leave_hour=:leave_hour
                 WHERE id = :id";
 
                 //$myfile = fopen("update_sql1.txt", "w") or die("Unable to open file!");
@@ -275,6 +279,7 @@ if ($_POST["action"] === 'UPDATE') {
                 $query->bindParam(':total_time', $total_time, PDO::PARAM_STR);
                 $query->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
                 $query->bindParam(':leave_day', $leave_day, PDO::PARAM_STR);
+                $query->bindParam(':leave_hour', $leave_hour, PDO::PARAM_STR);
                 $query->bindParam(':id', $id, PDO::PARAM_STR);
                 $query->execute();
                 echo $save_success;
@@ -282,7 +287,7 @@ if ($_POST["action"] === 'UPDATE') {
                 $sql_update = "UPDATE dleave_event SET leave_type_id=:leave_type_id
                 ,date_leave_start=:date_leave_start,date_leave_to=:date_leave_to
                 ,time_leave_start=:time_leave_start,time_leave_to=:time_leave_to,remark=:remark,doc_year=:doc_year,total_time=:total_time     
-                ,emp_id=:emp_id,leave_day=:leave_day                  
+                ,emp_id=:emp_id,leave_day=:leave_day,leave_hour=:leave_hour                  
                 WHERE id = :id";
                 //$myfile = fopen("update_sql2.txt", "w") or die("Unable to open file!");
                 //fwrite($myfile,$sql_update);
@@ -298,6 +303,7 @@ if ($_POST["action"] === 'UPDATE') {
                 $query->bindParam(':total_time', $total_time, PDO::PARAM_STR);
                 $query->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
                 $query->bindParam(':leave_day', $leave_day, PDO::PARAM_STR);
+                $query->bindParam(':leave_hour', $leave_hour, PDO::PARAM_STR);
                 $query->bindParam(':id', $id, PDO::PARAM_STR);
                 $query->execute();
                 echo $save_success;
@@ -448,6 +454,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "department_id" => $row['department_id'],
                 "remark" => $row['remark'],
                 "leave_day" => $row['leave_day'],
+                "leave_hour" => $row['leave_hour'],
                 "full_name" => $row['f_name'] . " " . $row['l_name'],
                 "image" => "<button type='button' name='image' id='" . $row['id'] . "' Class='btn btn-secondary btn-xs image' data-toggle='tooltip' title='image'>Image</button>",
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' Class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",

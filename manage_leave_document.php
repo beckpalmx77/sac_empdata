@@ -70,6 +70,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>จำนวนวัน</th>
+                                                    <th>จำนวน ช.ม.</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
@@ -85,6 +86,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>จำนวนวัน</th>
+                                                    <th>จำนวน ช.ม.</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
@@ -213,7 +215,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                readonly="true"
                                                                                placeholder="">
                                                                     </div>
-
                                                                     <div class="col-sm-2">
                                                                         <label for="leave_type_id"
                                                                                class="control-label">เลือก</label>
@@ -233,6 +234,21 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         </button>
                                                                     </div>
 
+                                                                </div>
+
+                                                                <div class="form-group row">
+                                                                    <div class="col-sm-12">
+                                                                    <label for="leave_case" class="control-label">
+                                                                        <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
+                                                                    </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <div class="col-sm-12">
+                                                                        <label for="leave_case" class="control-label">
+                                                                            <span style="color: blue;">* ลาไม่รับค่าจ้าง ลาแบบเป็นครึ่งชั่วโมงได้ เช่น 8.30-9.00 / 10.30-11.00</span>
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
 
                                                                 <div class="form-group row">
@@ -292,8 +308,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                required="required" placeholder=""
                                                                                oninput="validateInput(this)">
                                                                     </div>
+                                                                    <div class="col-sm-3">
+                                                                        <label for="leave_hour" class="control-label">จำนวนชั่วโมงที่ลา</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_hour" name="leave_hour"
+                                                                               value=""
+                                                                               required="required" placeholder=""
+                                                                               oninput="validateInput(this)">
+                                                                    </div>
 
-                                                                    <div class="col-sm-9">
+                                                                    <div class="col-sm-6">
                                                                         <label for="remark" class="control-label">หมายเหตุ</label>
                                                                         <textarea class="form-control" id="remark"
                                                                                   name="remark" rows="1"></textarea>
@@ -319,7 +343,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
-                                                                                disabled="true"  <!-- ใช้ disabled แทน readonly -->
+                                                                                disabled="true"
+                                                                        <!-- ใช้ disabled แทน readonly -->
                                                                         title="Please select">
                                                                         <option value="N">รอพิจารณา</option>
                                                                         <option value="A">อนุมัติ</option>
@@ -619,6 +644,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
                     {data: 'leave_day'},
+                    {data: 'leave_hour'},
                     {data: 'status'},
                     {data: 'image'},
                     {data: 'update'},
@@ -707,6 +733,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#date_leave_start').val("");
                 $('#date_leave_to').val("");
                 $('#leave_day').val("1");
+                $('#leave_hour').val("0");
                 $('#remark').val("");
                 $('#status').val("N");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
@@ -746,6 +773,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let time_leave_to = response[i].time_leave_to;
                         let leave_before = response[i].leave_before;
                         let leave_day = response[i].leave_day;
+                        let leave_hour = response[i].leave_hour;
                         let remark = response[i].remark;
                         let status = response[i].status;
 
@@ -765,6 +793,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#time_leave_to').val(time_leave_to);
                         $('#leave_before').val(leave_before);
                         $('#leave_day').val(leave_day);
+                        $('#leave_hour').val(leave_hour);
                         $('#remark').val(remark);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
@@ -806,6 +835,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let time_leave_to = response[i].time_leave_to;
                         let leave_before = response[i].leave_before;
                         let leave_day = response[i].leave_day;
+                        let leave_hour = response[i].leave_hour;
                         let picture = response[i].picture;
                         let remark = response[i].remark;
                         let status = response[i].status;
@@ -826,6 +856,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             + '&time_leave_to=' + time_leave_to
                             + '&leave_before=' + leave_before
                             + '&leave_day=' + leave_day
+                            + '&leave_hour=' + leave_hour
                             + '&picture=' + picture
                             + '&remark=' + remark
                             + '&status=' + status
@@ -973,14 +1004,20 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script>
         function validateInput(input) {
             // ลบอักขระที่ไม่ใช่ตัวเลขออก
-            input.value = input.value.replace(/[^0-9]/g, '');
+            //input.value = input.value.replace(/[^0-9]/g, '');
 
             // ตรวจสอบว่าค่าไม่เป็นช่องว่างและมากกว่า 0
-            if (input.value === '' || parseInt(input.value) <= 0) {
-                input.setCustomValidity('กรุณาป้อนตัวเลขที่มากกว่า 0');
-            } else {
-                input.setCustomValidity('');
-            }
+            /*
+                        if (leave_type_id !== 'L6') {
+
+                            if (input.value === '' || parseInt(input.value) <= 0) {
+                                input.setCustomValidity('กรุณาป้อนตัวเลขที่มากกว่า 0');
+                            } else {
+                                input.setCustomValidity('');
+                            }
+                        }
+
+             */
         }
     </script>
 
