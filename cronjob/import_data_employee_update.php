@@ -6,21 +6,25 @@ error_reporting(~0);
 include("../config/connect_sqlserver.php");
 include("../config/connect_db.php");
 
+$previous_year = date("Y") - 2;
+$previous_year = "2023";
+
 $sql_sqlsvr = "SELECT EMP_KEY,EMP_INTL,EMPFILE.EMP_NAME,EMPFILE.EMP_SURNME,EMPFILE.EMP_GENDER,EMPFILE.EMP_EMAIL,EMPFILE.EMP_TEL
 ,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
 ,PERSONALINFO.PRS_JBT,DEPTTAB.DEPT_THAIDESC,JOBTITLE.JBT_THAIDESC
 ,PAYROLLINFO.PRI_STATUS,EMPFILE.EMP_BIRTH,PERSONALINFO.PRS_NO
-FROM EMPFILE 
+FROM EMPFILE
 LEFT JOIN PAYROLLINFO ON PAYROLLINFO.PRI_EMP = EMPFILE.EMP_KEY
 LEFT JOIN PERSONALINFO ON PERSONALINFO.PRS_EMP = EMPFILE.EMP_KEY
 LEFT JOIN DEPTTAB ON DEPTTAB.DEPT_KEY = PERSONALINFO.PRS_DEPT
-LEFT JOIN JOBTITLE ON JOBTITLE.JBT_KEY = PERSONALINFO.PRS_JBT 
+LEFT JOIN JOBTITLE ON JOBTITLE.JBT_KEY = PERSONALINFO.PRS_JBT
+WHERE YEAR(PERSONALINFO.PRS_SC_D) >= $previous_year 
 ORDER BY PERSONALINFO.PRS_DEPT DESC  ";
 
-
-//$myfile = fopen("qry_file1.txt", "w") or die("Unable to open file!");
-//fwrite($myfile, $sql_sqlsvr);
-//fclose($myfile);
+/*$myfile = fopen("qry_file1.txt", "w") or die("Unable to open file!");
+fwrite($myfile, $sql_sqlsvr);
+fclose($myfile);
+*/
 
 $email_address ="@sac.com";
 
