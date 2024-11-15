@@ -266,7 +266,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         $('#employeeSelect').append(
                             $('<option>', {
                                 value: employee.emp_id,
-                                text: `${employee.f_name} ${employee.l_name} (${employee.department_id})`
+                                text: `${employee.emp_id} ${employee.f_name} ${employee.l_name} (${employee.department_id})`
                             })
                         );
                     });
