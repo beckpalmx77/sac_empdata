@@ -6,20 +6,37 @@ include("config/connect_db.php");
 // รับ input จากผู้ใช้
 $doc_date_start = $_POST["doc_date_start"];
 $doc_date_to = $_POST["doc_date_to"];
-
+$employeeSelect = $_POST["employeeSelect"];
+$where_emp = "";
 // แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
 $start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
 $end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
 
-function fetchLeaveData($conn, $table, $start_date, $end_date) {
-    $sql = "SELECT * FROM $table WHERE STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$start_date' AND '$end_date' ORDER BY STR_TO_DATE(doc_date, '%d-%m-%Y')";
+if ($employeeSelect !== '-') {
+    $where_emp = " emp_id = '" . $employeeSelect . "'";
+} else {
+    $where_emp = " 1 ";
+}
+
+$leave_data = fetchLeaveData($conn, 'v_dleave_event', $start_date, $end_date,$where_emp);
+$holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date,$where_emp);
+
+function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
+{
+    $sql = "SELECT * FROM $table WHERE " . $where_emp . " AND STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$start_date' AND '$end_date' ORDER BY STR_TO_DATE(doc_date, '%d-%m-%Y')";
+
+/*
+    $txt = $sql ;
+    $my_file = fopen("a-leave_select.txt", "w") or die("Unable to open file!");
+    fwrite($my_file,  $txt);
+    fclose($my_file);
+*/
+
     $query = $conn->prepare($sql);
     $query->execute();
     return $query->fetchAll(PDO::FETCH_OBJ);
 }
 
-$leave_data = fetchLeaveData($conn, 'v_dleave_event', $start_date, $end_date);
-$holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date);
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +59,9 @@ $holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date)
     <script src='js/util.js'></script>
     <title>สงวนออโต้คาร์</title>
     <style>
-        table { width: 100%; }
+        table {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -80,7 +99,9 @@ $holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date)
                     <td><?php echo htmlentities($row_leave->emp_id); ?></td>
                     <td><?php echo htmlentities($row_leave->f_name . " " . $row_leave->l_name); ?></td>
                     <td><?php echo htmlentities($row_leave->department_id); ?></td>
-                    <td><span style="color: <?php echo htmlentities($row_leave->color); ?>"><?php echo htmlentities($row_leave->leave_type_detail); ?></span></td>
+                    <td>
+                        <span style="color: <?php echo htmlentities($row_leave->color); ?>"><?php echo htmlentities($row_leave->leave_type_detail); ?></span>
+                    </td>
                     <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_day); ?></td>
@@ -114,7 +135,9 @@ $holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date)
                     <td><?php echo htmlentities($row_holiday->emp_id); ?></td>
                     <td><?php echo htmlentities($row_holiday->f_name . " " . $row_holiday->l_name); ?></td>
                     <td><?php echo htmlentities($row_holiday->department_id); ?></td>
-                    <td><span style="color: <?php echo htmlentities($row_holiday->color); ?>"><?php echo htmlentities($row_holiday->leave_type_detail); ?></span></td>
+                    <td>
+                        <span style="color: <?php echo htmlentities($row_holiday->color); ?>"><?php echo htmlentities($row_holiday->leave_type_detail); ?></span>
+                    </td>
                     <td><?php echo htmlentities($row_holiday->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_holiday->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_holiday->leave_day); ?></td>

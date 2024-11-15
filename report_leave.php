@@ -44,7 +44,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                             <div class="col-md-12 col-md-offset-2">
                                                 <div class="panel">
                                                     <div class="panel-body">
-                                                        <form id="from_data" method="post" action="" enctype="multipart/form-data">
+                                                        <form id="from_data" method="post" action=""
+                                                              enctype="multipart/form-data">
                                                             <div class="modal-body">
                                                                 <h5 class="modal-title"><?php echo urldecode($_GET['s']) ?></h5>
                                                                 <div class="form-group row mb-3">
@@ -59,8 +60,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    placeholder="จากวันที่">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text"><i
-                                                                                        class="fa fa-calendar"
-                                                                                        aria-hidden="true"></i></span>
+                                                                                            class="fa fa-calendar"
+                                                                                            aria-hidden="true"></i></span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -73,35 +74,47 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                    placeholder="ถึงวันที่">
                                                                             <div class="input-group-append">
                                                                                 <span class="input-group-text"><i
-                                                                                        class="fa fa-calendar"
-                                                                                        aria-hidden="true"></i></span>
+                                                                                            class="fa fa-calendar"
+                                                                                            aria-hidden="true"></i></span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            <div class="modal-footer">
-                                                                <input type="hidden" name="id" id="id"/>
-                                                                <input type="hidden" name="save_status"
-                                                                       id="save_status"/>
-                                                                <input type="hidden" name="action" id="action"
-                                                                       value=""/>
-                                                                <button type="button" class="btn btn-primary"
-                                                                        id="btnDisplay" onclick="Print_Data();">
-                                                                    Report <i class="fa fa-check"></i>
-                                                                </button>
-                                                                <!--button type="button" class="btn btn-success"
-                                                                        id="btnExport" onclick="Export_Data();">
-                                                                    Export <i class="fa fa-check"></i>
-                                                                </button-->
-                                                                <!-- Spin Loader -->
-                                                                <div id="spinner" class="spinner-overlay"
-                                                                     style="display:none;">
-                                                                    <div class="spinner-border text-primary"
-                                                                         role="status">
-                                                                        <span class="sr-only">Loading...</span>
+
+                                                                <div class="form-group row mb-3">
+                                                                    <div class="col-sm-3">
+                                                                        <label for="employeeSelect" class="control-label">ถึงวันที่เอกสาร</label>
+                                                                        <!-- Select Element -->
+                                                                        <select id="employeeSelect" name="employeeSelect" class="form-control"
+                                                                                style="width: 100%;">
+                                                                            <option value="-">-- เลือกพนักงาน --</option>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+
+                                                                <div class="modal-footer">
+                                                                    <input type="hidden" name="id" id="id"/>
+                                                                    <input type="hidden" name="save_status"
+                                                                           id="save_status"/>
+                                                                    <input type="hidden" name="action" id="action"
+                                                                           value=""/>
+                                                                    <button type="button" class="btn btn-primary"
+                                                                            id="btnDisplay" onclick="Print_Data();">
+                                                                        Report <i class="fa fa-check"></i>
+                                                                    </button>
+                                                                    <!--button type="button" class="btn btn-success"
+                                                                            id="btnExport" onclick="Export_Data();">
+                                                                        Export <i class="fa fa-check"></i>
+                                                                    </button-->
+                                                                    <!-- Spin Loader -->
+                                                                    <div id="spinner" class="spinner-overlay"
+                                                                         style="display:none;">
+                                                                        <div class="spinner-border text-primary"
+                                                                             role="status">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                         </form>
                                                         <div id="result"></div>
                                                     </div>
@@ -207,8 +220,12 @@ if (strlen($_SESSION['alogin']) == "") {
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 
@@ -232,6 +249,42 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+        $(document).ready(function() {
+            // เรียกข้อมูลพนักงานจาก PHP
+            $.ajax({
+                url: 'model/get_employee_report.php', // ชี้ไปยังไฟล์ PHP ที่ดึงข้อมูล
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        console.error(response.error);
+                        return;
+                    }
+
+                    // เพิ่มตัวเลือกลงใน Select2
+                    $.each(response, function(index, employee) {
+                        $('#employeeSelect').append(
+                            $('<option>', {
+                                value: employee.emp_id,
+                                text: `${employee.f_name} ${employee.l_name} (${employee.department_id})`
+                            })
+                        );
+                    });
+
+                    // เรียกใช้ Select2
+                    $('#employeeSelect').select2({
+                        placeholder: '-- เลือกพนักงาน --',
+                        allowClear: true
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching employee data:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
         function Print_Data() {
             // แสดง loader
             document.getElementById('spinner').style.display = 'block';
@@ -242,7 +295,7 @@ if (strlen($_SESSION['alogin']) == "") {
             document.forms['from_data'].submit();
 
             // ซ่อน loader หลังจากการส่ง
-            setTimeout(function() {
+            setTimeout(function () {
                 document.getElementById('spinner').style.display = 'none';
             }, 4000); // ปรับเวลาตามต้องการ
 
