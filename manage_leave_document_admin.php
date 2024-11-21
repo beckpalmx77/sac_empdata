@@ -51,6 +51,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>สถานะ</th>
+                                                    <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -64,6 +65,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>สถานะ</th>
+                                                    <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -116,7 +118,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                value=""
-                                                                               placeholder="รหัสพนักงาน">                                                                    </div>
+                                                                               placeholder="รหัสพนักงาน"></div>
 
                                                                     <div class="col-sm-8">
                                                                         <label for="doc_date"
@@ -125,7 +127,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
                                                                                value=""
-                                                                               placeholder="full_name">                                                                    </div>
+                                                                               placeholder="full_name"></div>
                                                                 </div>
 
                                                                 <div class="form-group row">
@@ -173,15 +175,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                placeholder="วันที่ลาเริ่มต้น">
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                    <label for="date_leave_start"
-                                                                           class="control-label">เวลาเริ่มต้น</label>
-                                                                    <input type="text" class="form-control"
-                                                                           id="time_leave_start"
-                                                                           name="time_leave_start"
-                                                                           value="<?php echo $_SESSION['work_time_start'] ?>"
-                                                                           required="required"
-                                                                           readonly="true"
-                                                                           placeholder="เวลาเริ่มต้น">
+                                                                        <label for="date_leave_start"
+                                                                               class="control-label">เวลาเริ่มต้น</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="time_leave_start"
+                                                                               name="time_leave_start"
+                                                                               value="<?php echo $_SESSION['work_time_start'] ?>"
+                                                                               required="required"
+                                                                               readonly="true"
+                                                                               placeholder="เวลาเริ่มต้น">
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="date_leave_start"
@@ -237,7 +239,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
-                                                                                disabled="true"  <!-- ใช้ disabled แทน readonly -->
+                                                                                disabled="true"
+                                                                        <!-- ใช้ disabled แทน readonly -->
                                                                         title="Please select">
                                                                         <option value="N">รอพิจารณา</option>
                                                                         <option value="A">อนุมัติ</option>
@@ -357,6 +360,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
+    <script src="js/popup.js"></script>
+
     <style>
 
         .icon-input-btn {
@@ -387,11 +392,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER" ,page_manage: "ADMIN",};
+            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "ADMIN"};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
-                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
+                    search: 'ค้นหา',
+                    lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',
                     infoEmpty: 'ไม่มีข้อมูล',
                     zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
@@ -417,12 +423,39 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
                     {data: 'status'},
+                    {data: 'image'},
                     {data: 'approve'},
                     {data: 'delete'},
-                ]
+                    ],
+                'drawCallback': function (settings) {
+                    // ตรวจสอบและเพิ่ม class 'blink'
+                    $('#TableRecordList .image').each(function () {
+                        let picture = $(this).data('picture'); // ดึงค่าจาก data-picture
+                        if (picture) { // หากมีค่า picture
+                            $(this).addClass('blink');
+                        }
+                    });
+                }
             });
 
-            <!-- *** FOR SUBMIT FORM *** -->
+            // สร้าง animation กระพริบ
+            $('<style>')
+                .prop('type', 'text/css')
+                .html(`
+                .blink {
+                    animation: blinker 1s linear infinite;
+                }
+                @keyframes blinker {
+                    50% { opacity: 0; }
+                }
+            `)
+                .appendTo('head');
+        });
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
                 $('#save').attr('disabled', 'disabled');
@@ -440,8 +473,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     }
                 })
             });
-            <!-- *** FOR SUBMIT FORM *** -->
         });
+
     </script>
 
     <script>
@@ -618,6 +651,71 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('.modal-title').html("<i class='fa fa-plus'></i> ยกเลิกเอกสาร DELETE Record");
                         $('#action').val('DELETE');
                         $('#save').val('Save');
+                    }
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
+            });
+        });
+
+    </script>
+
+    <script>
+
+        $("#TableRecordList").on('click', '.image', function () {
+            let id = $(this).attr("id");
+            let formData = {action: "GET_DATA", id: id};
+            $.ajax({
+                type: "POST",
+                url: 'model/manage_leave_document_process.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
+                        let id = response[i].id;
+                        let doc_id = response[i].doc_id;
+                        let doc_date = response[i].doc_date;
+                        let emp_id = response[i].emp_id;
+                        let full_name = response[i].full_name;
+                        let leave_type_id = response[i].leave_type_id;
+                        let leave_type_detail = response[i].leave_type_detail;
+                        let date_leave_start = response[i].date_leave_start;
+                        let date_leave_to = response[i].date_leave_to;
+                        let time_leave_start = response[i].time_leave_start;
+                        let time_leave_to = response[i].time_leave_to;
+                        let leave_before = response[i].leave_before;
+                        let leave_day = response[i].leave_day;
+                        let leave_hour = response[i].leave_hour;
+                        let picture = response[i].picture;
+                        let remark = response[i].remark;
+                        let status = response[i].status;
+
+                        let main_menu = "บันทึกข้อมูลหลัก";
+                        let sub_menu = "เอกสารการลางาน (พนักงาน)";
+
+                        let originalURL = "upload_leave_data.php?title=เอกสารการลา (Document)"
+                            + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
+                            + '&id=' + id
+                            + '&doc_id=' + doc_id + '&doc_date=' + doc_date
+                            + '&emp_id=' + emp_id + '&full_name=' + full_name
+                            + '&leave_type_id=' + leave_type_id
+                            + '&leave_type_detail=' + leave_type_detail
+                            + '&date_leave_start=' + date_leave_start
+                            + '&date_leave_to=' + date_leave_to
+                            + '&time_leave_start=' + time_leave_start
+                            + '&time_leave_to=' + time_leave_to
+                            + '&leave_before=' + leave_before
+                            + '&leave_day=' + leave_day
+                            + '&leave_hour=' + leave_hour
+                            + '&picture=' + picture
+                            + '&remark=' + remark
+                            + '&status=' + status
+                            + '&action=UPDATE';
+
+                        OpenPopupCenter(originalURL, "", "");
+
                     }
                 },
                 error: function (response) {
