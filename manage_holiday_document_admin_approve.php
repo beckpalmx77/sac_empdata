@@ -469,7 +469,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
 
             let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
@@ -513,6 +513,75 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'delete'},
                 ]
             });
+        });
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
+
+            let dataRecords = $('#TableRecordList').DataTable({
+                'lengthMenu': [[8, 10, 20, 50, 100], [8, 10, 20, 50, 100]],
+                'language': {
+                    search: 'ค้นหา',
+                    lengthMenu: 'แสดง _MENU_ รายการ',
+                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                    infoEmpty: 'ไม่มีข้อมูล',
+                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                    paginate: {
+                        previous: 'ก่อนหน้า',
+                        last: 'สุดท้าย',
+                        next: 'ต่อไป'
+                    }
+                },
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'post',
+                'autoWidth': true,
+                <?php if ($_SESSION['deviceType'] !== 'computer') {
+                    echo "'scrollX': true,";
+                } ?>
+                'ajax': {
+                    'url': 'model/manage_holiday_admin_approve_process.php',
+                    'data': formData
+                },
+                'columns': [
+                    {data: 'doc_year'},
+                    {data: 'doc_date'},
+                    {data: 'full_name'},
+                    {data: 'department_id'},
+                    {data: 'date_leave_start'},
+                    {data: 'leave_type_detail'},
+                    {data: 'remark'},
+                    {data: 'status'},
+                    {data: 'image'},
+                    {data: 'approve'},
+                    {data: 'delete'},
+                ],
+                'drawCallback': function (settings) {
+                    // ตรวจสอบและเพิ่ม class 'blink'
+                    $('#TableRecordList .image').each(function () {
+                        let picture = $(this).data('picture'); // ดึงค่าจาก data-picture
+                        if (picture) { // หากมีค่า picture
+                            $(this).addClass('blink');
+                        }
+                    });
+                }
+            });
+
+            // สร้าง animation กระพริบ
+            $('<style>')
+                .prop('type', 'text/css')
+                .html(`
+                .blink {
+                    animation: blinker 1s linear infinite;
+                }
+                @keyframes blinker {
+                    50% { opacity: 0; }
+                }
+            `)
+                .appendTo('head');
         });
     </script>
 
