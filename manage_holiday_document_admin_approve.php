@@ -57,6 +57,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
                                                     <th>สถานะ</th>
+                                                    <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -71,6 +72,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
                                                     <th>สถานะ</th>
+                                                    <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -437,6 +439,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
+    <script src="js/popup.js"></script>
+
     <style>
 
         .icon-input-btn {
@@ -504,6 +508,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'leave_type_detail'},
                     {data: 'remark'},
                     {data: 'status'},
+                    {data: 'image'},
                     {data: 'approve'},
                     {data: 'delete'},
                 ]
@@ -646,16 +651,64 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
 
-    <!--script>
-        $(document).ready(function () {
-            $('#doc_date').datepicker({
-                format: "dd-mm-yyyy",
-                todayHighlight: true,
-                language: "th",
-                autoclose: true
+    <script>
+
+        $("#TableRecordList").on('click', '.image', function () {
+            let id = $(this).attr("id");
+            let formData = {action: "GET_DATA", id: id};
+            $.ajax({
+                type: "POST",
+                url: 'model/manage_holiday_process.php',
+                dataType: "json",
+                data: formData,
+                success: function (response) {
+                    let len = response.length;
+                    for (let i = 0; i < len; i++) {
+                        let id = response[i].id;
+                        let doc_id = response[i].doc_id;
+                        let doc_date = response[i].doc_date;
+                        let emp_id = response[i].emp_id;
+                        let full_name = response[i].full_name;
+                        let leave_type_id = response[i].leave_type_id;
+                        let leave_type_detail = response[i].leave_type_detail;
+                        let date_leave_start = response[i].date_leave_start;
+                        let date_leave_to = response[i].date_leave_to;
+                        let time_leave_start = response[i].time_leave_start;
+                        let time_leave_to = response[i].time_leave_to;
+                        let picture = response[i].picture;
+                        let remark = response[i].remark;
+                        let status = response[i].status;
+
+                        let main_menu = "บันทึกข้อมูลหลัก";
+                        let sub_menu = "เอกสารขอใช้นักขัตฤกษ์-ประจำปี (พนักงาน)";
+
+                        let originalURL = "upload_holiday_data.php?title=เอกสารการขอใช้นักขัตฤกษ์-ประจำปี (Document)"
+                            + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
+                            + '&id=' + id
+                            + '&doc_id=' + doc_id + '&doc_date=' + doc_date
+                            + '&emp_id=' + emp_id + '&full_name=' + full_name
+                            + '&leave_type_id=' + leave_type_id
+                            + '&leave_type_detail=' + leave_type_detail
+                            + '&date_leave_start=' + date_leave_start
+                            + '&date_leave_to=' + date_leave_to
+                            + '&time_leave_start=' + time_leave_start
+                            + '&time_leave_to=' + time_leave_to
+                            + '&picture=' + picture
+                            + '&remark=' + remark
+                            + '&status=' + status
+                            + '&action=UPDATE';
+
+                        OpenPopupCenter(originalURL, "", "");
+
+                    }
+                },
+                error: function (response) {
+                    alertify.error("error : " + response);
+                }
             });
         });
-    </script-->
+
+    </script>
 
     <script>
         $(document).ready(function () {

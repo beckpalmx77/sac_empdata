@@ -14,8 +14,7 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT dl.*,lt.leave_type_detail,ms.status_doc_desc FROM vdholiday_event dl
-            left join mleave_type lt on lt.leave_type_id = dl.leave_type_id
+    $sql_get = "SELECT dl.* FROM vdholiday_event dl            
             left join mstatus ms on ms.status_doctype = 'LEAVE' and ms.status_doc_id = dl.status  
             WHERE dl.id = " . $id;
 
@@ -39,6 +38,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "approve_1_status" => $result['approve_1_status'],
             "approve_2_id" => $result['approve_2_id'],
             "approve_2_status" => $result['approve_2_status'],
+            "picture" => $result['picture'],
             "remark" => $result['remark'],
             "status" => $result['status']);
     }
@@ -336,6 +336,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "dt_leave_start" => $row['date_leave_start'] . "  [" . $row['time_leave_start'] . "-" . $row['time_leave_to'] . "] ",
                 "t_leave_start" => $row['time_leave_start'] . "-" . $row['time_leave_to'],
                 "remark" => $row['remark'],
+                "image" => "<button type='button' name='image' id='" . $row['id'] . "' Class='btn btn-secondary btn-xs image' data-toggle='tooltip' title='image'>Image</button>",
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "approve" => "<button type='button' name='approve' id='" . $row['id'] . "' class='btn btn-success btn-xs approve' data-toggle='tooltip' title='Approve'>Approve</button>",
                 "status" => $row['status'] === 'A' ? "<div class='text-success'>" . $row['status_doc_desc'] . "</div>" : "<div class='text-muted'> " . $row['status_doc_desc'] . "</div>",
