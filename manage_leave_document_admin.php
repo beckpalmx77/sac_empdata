@@ -593,7 +593,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#time_leave_to').val(time_leave_to);
                         $('#remark').val(remark);
                         $('#status').val(status);
-                        $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
+                        $('.modal-title').html("<i class='fa fa-plus'></i> Approve Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
                     }
