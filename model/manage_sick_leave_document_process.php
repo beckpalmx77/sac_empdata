@@ -108,7 +108,7 @@ if ($_POST["action"] === 'ADD') {
 
         $last_number = LAST_DOCUMENT_NUMBER($conn, $filed, $table, $condition);
 
-        $doc_id = "L-" . $_SESSION['department_id'] . "-" . substr($doc_date, 3) . "-" . sprintf('%04s', $last_number);
+        $doc_id = "L-" . $_SESSION['dept_id_approve'] . "-" . substr($doc_date, 3) . "-" . sprintf('%04s', $last_number);
 
         /*
         $myfile = fopen("emp-param.txt", "w") or die("Unable to open file!");
