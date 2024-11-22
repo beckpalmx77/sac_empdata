@@ -648,11 +648,31 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'status'},
                     {data: 'image'},
                     {data: 'update'},
-                ]
+                ],
+                'drawCallback': function (settings) {
+                    // ตรวจสอบและเพิ่ม class 'blink'
+                    $('#TableRecordList .image').each(function () {
+                        let picture = $(this).data('picture'); // ดึงค่าจาก data-picture
+                        if (picture) { // หากมีค่า picture
+                            $(this).addClass('blink');
+                        }
+                    });
+                }
             });
 
+            // สร้าง animation กระพริบ
+            $('<style>')
+                .prop('type', 'text/css')
+                .html(`
+                .blink {
+                    animation: blinker 1s linear infinite;
+                }
+                @keyframes blinker {
+                    50% { opacity: 0; }
+                }
+            `)
+                .appendTo('head');
         });
-
     </script>
 
     <script>

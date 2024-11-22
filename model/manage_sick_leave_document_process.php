@@ -452,7 +452,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "remark" => $row['remark'],
                 "leave_day" => $row['leave_day'],
                 "full_name" => $row['f_name'] . " " . $row['l_name'],
-                "image" => "<button type='button' name='image' id='" . $row['id'] . "' Class='btn btn-secondary btn-xs image' data-toggle='tooltip' title='image'>Image</button>",
+                "image" => "<button type='button' name='image' id='" . $row['id'] . "' Class='btn btn-secondary btn-xs image' data-picture='" . $row['picture'] . "' data-toggle='tooltip' title='image'>Image</button>",
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' Class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "approve" => "<button type='button' name='approve' id='" . $row['id'] . "' Class='btn btn-success btn-xs approve' data-toggle='tooltip' title='Approve'>Approve</button>",
                 "status" => $row['status'] === 'A' ? "<div Class='text-success'>" . $row['status_doc_desc'] . "</div>" : "<div Class='text-muted'> " . $row['status_doc_desc'] . "</div>",
