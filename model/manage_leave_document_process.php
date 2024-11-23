@@ -228,8 +228,8 @@ if ($_POST["action"] === 'UPDATE') {
         $time_leave_start = $_POST["time_leave_start"];
         $date_leave_to = $_POST["date_leave_to"];
         $time_leave_to = $_POST["time_leave_to"];
-        $leave_day = $_POST["leave_day"];
-        $leave_hour = $_POST["leave_hour"];
+        $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
+        $leave_hour = !empty($_POST["leave_hour"]) ? $_POST["leave_hour"] : 0;
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 

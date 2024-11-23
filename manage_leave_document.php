@@ -752,8 +752,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#leave_type_detail').val("");
                 $('#date_leave_start').val("");
                 $('#date_leave_to').val("");
-                $('#leave_day').val("1");
-                $('#leave_hour').val("0");
+                $('#leave_day').val(1);
+                $('#leave_hour').val(0);
                 $('#remark').val("");
                 $('#status').val("N");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");

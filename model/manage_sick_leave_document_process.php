@@ -122,7 +122,8 @@ if ($_POST["action"] === 'ADD') {
         $time_leave_start = $_POST["time_leave_start"];
         $date_leave_to = $_POST["date_leave_to"];
         $time_leave_to = $_POST["time_leave_to"];
-        $leave_day = $_POST["leave_day"];
+
+        $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
 
         $remark = $_POST["remark"];
 
