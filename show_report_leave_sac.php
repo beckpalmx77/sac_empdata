@@ -89,11 +89,25 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                 <th>วันที่ลาสิ้นสุด</th>
                 <th>จำนวนวัน</th>
                 <th>จำนวนชั่วโมง</th>
+                <th>สถานะ</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($leave_data as $index => $row_leave): ?>
+                <?php
+                // กำหนดค่า $status_desc ตามค่า $row_leave->status
+                switch ($row_leave->status) {
+                    case 'A':
+                        $status_desc = "อนุมัติ";
+                        break;
+                    case 'R':
+                        $status_desc = "ไม่อนุมัติ";
+                        break;
+                    default:
+                        $status_desc = "รอพิจารณา";
+                }
+                ?>
                 <tr>
                     <td><?php echo htmlentities($index + 1); ?></td>
                     <td><?php echo htmlentities($row_leave->doc_date); ?></td>
@@ -101,12 +115,15 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_leave->f_name . " " . $row_leave->l_name); ?></td>
                     <td><?php echo htmlentities($row_leave->department_id); ?></td>
                     <td>
-                        <span style="color: <?php echo htmlentities($row_leave->color); ?>"><?php echo htmlentities($row_leave->leave_type_detail); ?></span>
+            <span style="color: <?php echo htmlentities($row_leave->color); ?>">
+                <?php echo htmlentities($row_leave->leave_type_detail); ?>
+            </span>
                     </td>
                     <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_day); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
+                    <td><?php echo htmlentities($status_desc); ?></td>
                     <td><?php echo htmlentities($row_leave->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -127,11 +144,25 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                 <th>วันที่ลาสิ้นสุด</th>
                 <th>จำนวนวัน</th>
                 <th>จำนวนชั่วโมง</th>
+                <th>สถานะ</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($holiday_data as $index => $row_holiday): ?>
+                <?php
+                // กำหนดค่า $status_desc ตามค่า $row_leave->status
+                switch ($row_leave->status) {
+                    case 'A':
+                        $status_desc = "อนุมัติ";
+                        break;
+                    case 'R':
+                        $status_desc = "ไม่อนุมัติ";
+                        break;
+                    default:
+                        $status_desc = "รอพิจารณา";
+                }
+                ?>
                 <tr>
                     <td><?php echo htmlentities($index + 1); ?></td>
                     <td><?php echo htmlentities($row_holiday->doc_date); ?></td>
@@ -145,6 +176,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_holiday->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_holiday->leave_day); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
+                    <td><?php echo htmlentities($status_desc); ?></td>
                     <td><?php echo htmlentities($row_holiday->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
