@@ -145,19 +145,21 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="emp_id" name="emp_id"
                                                                                readonly="true"
                                                                                required="required"
-                                                                               value="<?php echo $_SESSION['emp_id'];?>"
+                                                                               value="<?php echo $_SESSION['emp_id']; ?>"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <label for="text"
                                                                                class="control-label">ชื่อ -
                                                                             นามสกุล</label>
-                                                                        <input type="hidden" id="f_name" name="f_name" value="<?php echo $_SESSION['first_name'];?>">
-                                                                        <input type="hidden" id="l_name" name="l_name" value="<?php echo $_SESSION['last_name'];?>">
+                                                                        <input type="hidden" id="f_name" name="f_name"
+                                                                               value="<?php echo $_SESSION['first_name']; ?>">
+                                                                        <input type="hidden" id="l_name" name="l_name"
+                                                                               value="<?php echo $_SESSION['last_name']; ?>">
                                                                         <input type="text" class="form-control"
                                                                                id="full_name" name="full_name"
                                                                                readonly="true"
-                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name'];?>"
+                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-2">
@@ -206,18 +208,27 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                placeholder="วันที่หยุด">
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <label for="date_leave_start"
-                                                                               class="control-label"></label>
-                                                                        <input type="hidden" class="form-control"
+                                                                        <label for="time_leave_start"
+                                                                               class="control-label">เวลาเริ่มต้น</label>
+                                                                        <input type="text" class="form-control"
                                                                                id="time_leave_start"
                                                                                name="time_leave_start"
                                                                                value="<?php echo $_SESSION['work_time_start'] ?>"
                                                                                required="required"
-                                                                               readonly="true"
                                                                                placeholder="">
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                        <label for="date_leave_start"
+                                                                        <label for="time_leave_to"
+                                                                               class="control-label">เวลาสิ้นสุด</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="time_leave_to"
+                                                                               name="time_leave_to"
+                                                                               required="required"
+                                                                               value="<?php echo $_SESSION['work_time_stop'] ?>"
+                                                                               placeholder="เวลาสิ้นสุด">
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <label for="date_leave_to"
                                                                                class="control-label"></label>
                                                                         <!--i class="fa fa-calendar"
                                                                            aria-hidden="true"></i-->
@@ -228,14 +239,24 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                readonly="true"
                                                                                placeholder="">
                                                                     </div>
+                                                                </div>
+                                                                <div class="form-group row">
                                                                     <div class="col-sm-3">
-                                                                        <label for="time_leave_to"
-                                                                               class="control-label"></label>
-                                                                        <input type="hidden" class="form-control"
-                                                                               id="time_leave_to"
-                                                                               name="time_leave_to"
-                                                                               required="required"
-                                                                               value="<?php echo $_SESSION['work_time_stop'] ?>"
+                                                                        <label for="leave_day"
+                                                                               class="control-label">จำนวนวัน</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_day"
+                                                                               name="leave_day"
+                                                                               value="1"
+                                                                               placeholder="">
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <label for="leave_hour"
+                                                                               class="control-label">จำนวนชั่วโมง</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_hour"
+                                                                               name="leave_hour"
+                                                                               value="0"
                                                                                placeholder="เวลาสิ้นสุด">
                                                                     </div>
                                                                 </div>
@@ -270,7 +291,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <select id="status" name="status"
                                                                                 class="form-control"
                                                                                 data-live-search="true"
-                                                                                disabled="true"  <!-- ใช้ disabled แทน readonly -->
+                                                                                disabled="true"
+                                                                        <!-- ใช้ disabled แทน readonly -->
                                                                         title="Please select">
                                                                         <option value="N">รอพิจารณา</option>
                                                                         <option value="A">อนุมัติ</option>

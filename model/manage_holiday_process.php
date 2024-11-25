@@ -34,6 +34,8 @@ if ($_POST["action"] === 'GET_DATA') {
             "date_leave_to" => $result['date_leave_to'],
             "time_leave_start" => $result['time_leave_start'],
             "time_leave_to" => $result['time_leave_to'],
+            "leave_day" => $result['leave_day'],
+            "leave_hour" => $result['leave_hour'],
             "approve_1_id" => $result['approve_1_id'],
             "approve_1_status" => $result['approve_1_status'],
             "approve_2_id" => $result['approve_2_id'],
@@ -75,6 +77,8 @@ if ($_POST["action"] === 'ADD') {
         $date_leave_to = $_POST["date_leave_start"];
         $time_leave_to = $_POST["time_leave_to"];
         $remark = $_POST["remark"];
+        $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
+        $leave_hour = !empty($_POST["leave_hour"]) ? $_POST["leave_hour"] : 0;
 
         $currentDate = date('d-m-Y');
 
@@ -97,12 +101,19 @@ if ($_POST["action"] === 'ADD') {
         $day_max = GET_VALUE($conn, "select day_max as data from mleave_type where leave_type_id ='H3' ");
 
         $cnt_day = "";
-        $sql_cnt = "SELECT COUNT(*) as days FROM vdholiday_event WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
+        $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM vdholiday_event WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
         foreach ($conn->query($sql_cnt) as $row) {
             $cnt_day = $row['days'];
+            $cnt_hour = $row['hours'];
         }
 
-        if ($cnt_day >= $day_max) {
+        $cnt_day = $cnt_day + (float)$leave_day;
+        $cnt_hour = $cnt_hour + (float)$leave_hour;
+
+        $day_hour_max = ($day_max * 8);
+        $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
+
+        if ($cnt_total_day_hour >= $day_hour_max) {
             echo $Error_Over;
         } else {
 

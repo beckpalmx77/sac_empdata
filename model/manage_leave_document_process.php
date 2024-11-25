@@ -123,8 +123,6 @@ if ($_POST["action"] === 'ADD') {
         $time_leave_start = $_POST["time_leave_start"];
         $date_leave_to = $_POST["date_leave_to"];
         $time_leave_to = $_POST["time_leave_to"];
-        $leave_day = $_POST["leave_day"];
-        $leave_hour = $_POST["leave_hour"];
 
         $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
         $leave_hour = !empty($_POST["leave_hour"]) ? $_POST["leave_hour"] : 0;
@@ -150,8 +148,8 @@ if ($_POST["action"] === 'ADD') {
 
         $leave_save = "Y";
 
-        $day_hour_max = ($day_max) * 8;
-        $cnt_total_day_hour = ($cnt_day) * 8 + $cnt_hour;
+        $day_hour_max = ($day_max * 8);
+        $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
 
 /*
         $txt = "Leave Type = " . $leave_type_id . " Max = " . $day_max . " | Count = " . $cnt_day . " | " . $sql_cnt . " | "
