@@ -88,6 +88,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                 <th>วันที่ลาเริ่มต้น</th>
                 <th>วันที่ลาสิ้นสุด</th>
                 <th>จำนวนวัน</th>
+                <th>จำนวนชั่วโมง</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
@@ -105,6 +106,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_day); ?></td>
+                    <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
                     <td><?php echo htmlentities($row_leave->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -124,6 +126,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                 <th>วันที่ลาเริ่มต้น</th>
                 <th>วันที่ลาสิ้นสุด</th>
                 <th>จำนวนวัน</th>
+                <th>จำนวนชั่วโมง</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
@@ -141,6 +144,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_holiday->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_holiday->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_holiday->leave_day); ?></td>
+                    <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
                     <td><?php echo htmlentities($row_holiday->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
