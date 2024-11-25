@@ -124,6 +124,7 @@ if ($_POST["action"] === 'ADD') {
         $time_leave_to = $_POST["time_leave_to"];
 
         $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
+        $leave_hour = !empty($_POST["leave_hour"]) ? $_POST["leave_hour"] : 0;
 
         $remark = $_POST["remark"];
 
@@ -134,25 +135,25 @@ if ($_POST["action"] === 'ADD') {
         $table = "v_dleave_event";
 
         $cnt_day = "";
-        $sql_cnt = "SELECT SUM(leave_day) AS days FROM " . $table
+        $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM " . $table
             . " WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
         foreach ($conn->query($sql_cnt) as $row) {
             $cnt_day = $row['days'];
+            $cnt_hour = $row['hours'];
         }
 
         $cnt_day = $cnt_day + (float)$leave_day;
+        $cnt_hour = $cnt_hour + (float)$leave_hour;
 
         $leave_save = "Y";
-        /*
-                $txt = "Leave Type = " . $leave_type_id . " Max = " . $day_max . " | Count = " . $cnt_day . " | " . $sql_cnt . " | " . $leave_save . " | " . $work_age;
-                $myfile = fopen("emp-param.txt", "w") or die("Unable to open file!");
-                fwrite($myfile, $txt);
-                fclose($myfile);
-        */
-        if ($leave_type_id === 'L3' && ($cnt_day > $day_max || $work_age < 365)) {
+
+        $day_hour_max = ($day_max * 8);
+        $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
+
+        if ($leave_type_id === 'L3' && ($cnt_total_day_hour > $day_hour_max || $work_age < 365)) {
             $leave_save = "N";
             echo $Error_Over1;
-        } else if ($leave_type_id !== 'L3' && $cnt_day > $day_max) {
+        } else if ($leave_type_id !== 'L3' && $cnt_total_day_hour > $day_hour_max) {
             $leave_save = "N";
             echo $Error_Over2;
         }
@@ -197,7 +198,7 @@ if ($_POST["action"] === 'ADD') {
                     echo $sMessage;
 
                     $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
-                    if ($line_alert==='Y') {
+                    if ($line_alert === 'Y') {
                         sendLineNotify($sMessage, $sToken);
                     }
 
@@ -405,13 +406,13 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
             LEFT JOIN mleave_type lt on lt.leave_type_id = dl.leave_type_id
             LEFT JOIN mstatus ms on ms.status_doctype = 'LEAVE' AND ms.status_doc_id = dl.status              
             WHERE dl.leave_type_id ='L2' " . $searchQuery . " ORDER BY id desc , " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
-/*
+    /*
 
-                $txt = $sql_get_leave ;
-                $my_file = fopen("leave_select.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $searchValue. " | " .  $txt);
-                fclose($my_file);
-*/
+                    $txt = $sql_get_leave ;
+                    $my_file = fopen("leave_select.txt", "w") or die("Unable to open file!");
+                    fwrite($my_file, $searchValue. " | " .  $txt);
+                    fclose($my_file);
+    */
 
     $stmt = $conn->prepare($sql_get_leave);
 
@@ -431,7 +432,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
 
-            $leave_type_detail = '<span style="color: '. $row['color'] . ';">' . $row['leave_type_detail'] . '</span>';
+            $leave_type_detail = '<span style="color: ' . $row['color'] . ';">' . $row['leave_type_detail'] . '</span>';
 
             $data[] = array(
                 "id" => $row['id'],
