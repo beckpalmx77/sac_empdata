@@ -126,6 +126,9 @@ if ($_POST["action"] === 'ADD') {
         $leave_day = $_POST["leave_day"];
         $leave_hour = $_POST["leave_hour"];
 
+        $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
+        $leave_hour = !empty($_POST["leave_hour"]) ? $_POST["leave_hour"] : 0;
+
         $remark = $_POST["remark"];
 
         $sql_get_max = "SELECT day_max AS data FROM mleave_type WHERE leave_type_id ='" . $leave_type_id . "'";
@@ -135,25 +138,33 @@ if ($_POST["action"] === 'ADD') {
         $table = "v_dleave_event";
 
         $cnt_day = "";
-        $sql_cnt = "SELECT SUM(leave_day) AS days FROM " . $table
+        $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM " . $table
             . " WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
         foreach ($conn->query($sql_cnt) as $row) {
             $cnt_day = $row['days'];
+            $cnt_hour = $row['hours'];
         }
 
         $cnt_day = $cnt_day + (float)$leave_day;
+        $cnt_hour = $cnt_hour + (float)$leave_hour;
 
         $leave_save = "Y";
-        /*
-                $txt = "Leave Type = " . $leave_type_id . " Max = " . $day_max . " | Count = " . $cnt_day . " | " . $sql_cnt . " | " . $leave_save . " | " . $work_age;
-                $myfile = fopen("emp-param.txt", "w") or die("Unable to open file!");
-                fwrite($myfile, $txt);
-                fclose($myfile);
-        */
-        if ($leave_type_id === 'L3' && ($cnt_day > $day_max || $work_age < 365)) {
+
+        $day_hour_max = ($day_max) * 8;
+        $cnt_total_day_hour = ($cnt_day) * 8 + $cnt_hour;
+
+/*
+        $txt = "Leave Type = " . $leave_type_id . " Max = " . $day_max . " | Count = " . $cnt_day . " | " . $sql_cnt . " | "
+            . $leave_save . " | " . $work_age . " | hour = " . $day_max * 8 . " | cnt_hour = " . $cnt_hour . " | cnt_total_day_hour = " . $cnt_total_day_hour;
+        $myfile = fopen("a-emp-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $txt);
+        fclose($myfile);
+*/
+
+        if ($leave_type_id === 'L3' && ($cnt_total_day_hour > $day_hour_max || $work_age < 365)) {
             $leave_save = "N";
             echo $Error_Over1;
-        } else if ($leave_type_id !== 'L3' && $cnt_day > $day_max) {
+        } else if ($leave_type_id !== 'L3' && $cnt_total_day_hour > $day_hour_max) {
             $leave_save = "N";
             echo $Error_Over2;
         }
