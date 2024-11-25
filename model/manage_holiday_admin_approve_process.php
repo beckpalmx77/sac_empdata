@@ -39,6 +39,8 @@ if ($_POST["action"] === 'GET_DATA') {
             "approve_1_status" => $result['approve_1_status'],
             "approve_2_id" => $result['approve_2_id'],
             "approve_2_status" => $result['approve_2_status'],
+            "leave_day" => $result['leave_day'],
+            "leave_hour" => $result['leave_hour'],
             "picture" => $result['picture'],
             "remark" => $result['remark'],
             "status" => $result['status']);

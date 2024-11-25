@@ -210,6 +210,27 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="form-group row">
+                                                                    <div class="col-sm-3">
+                                                                        <label for="leave_day"
+                                                                               class="control-label">จำนวนวัน</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_day"
+                                                                               name="leave_day"
+                                                                               value="1"
+                                                                               placeholder="">
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <label for="leave_hour"
+                                                                               class="control-label">จำนวนชั่วโมง</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_hour"
+                                                                               name="leave_hour"
+                                                                               value="0"
+                                                                               placeholder="เวลาสิ้นสุด">
+                                                                    </div>
+                                                                </div>
+
                                                                 <div class="form-group">
                                                                     <label for="remark"
                                                                            class="control-label">หมายเหตุ</label>
