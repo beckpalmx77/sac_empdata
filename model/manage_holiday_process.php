@@ -145,12 +145,12 @@ if ($_POST["action"] === 'ADD') {
                         . "\n\r" . "เลขที่เอกสาร = " . $doc_id
                         . "\n\r" . "วันที่เอกสาร = " . $currentDate
                         . "\n\r" . "วันที่ขอใช้ : " . $date_leave_start
-                        . "\n\r" . "ผู้ขอ : " . $full_name  . " " .  $dept_desc;
+                        . "\n\r" . "ผู้ขอ : " . $full_name . " " . $dept_desc;
 
-                    echo $sMessage ;
+                    echo $sMessage;
 
                     $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
-                    if ($line_alert==='Y') {
+                    if ($line_alert === 'Y') {
                         sendLineNotify($sMessage, $sToken);
                     }
 
@@ -186,7 +186,7 @@ if ($_POST["action"] === 'UPDATE') {
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
 
-            if ($_SESSION['document_dept_cond']=="A") {
+            if ($_SESSION['document_dept_cond'] == "A") {
                 $sql_update = "UPDATE dholiday_event SET status=:status
                                WHERE id = :id";
                 $query = $conn->prepare($sql_update);
@@ -248,11 +248,11 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $searchArray = array();
 
 ## Search
-/*
-    if ($_SESSION['document_dept_cond']!=="A") {
-        $searchQuery = " AND dept_id = '" . $_SESSION['department_id'] . "' ";
-    }
-*/
+    /*
+        if ($_SESSION['document_dept_cond']!=="A") {
+            $searchQuery = " AND dept_id = '" . $_SESSION['department_id'] . "' ";
+        }
+    */
 
     if ($_SESSION['role'] === "SUPERVISOR") {
         $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
@@ -260,12 +260,12 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
         $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
     }
 
-/*
-    $txt = $searchQuery ;
-    $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
-    fwrite($my_file, $txt);
-    fclose($my_file);
-*/
+    /*
+        $txt = $searchQuery ;
+        $my_file = fopen("leave_1.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+    */
 
     if ($searchValue != '') {
         $searchQuery = " AND (f_name LIKE :f_name or l_name LIKE :l_name or department_id LIKE :department_id or leave_type_id LIKE :leave_type_id or
@@ -306,12 +306,12 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 
     $stmt = $conn->prepare($sql_load);
 
-/*
-            $txt = $sql_load ;
-            $my_file = fopen("leave_a.txt", "w") or die("Unable to open file!");
-            fwrite($my_file, $txt);
-            fclose($my_file);
-*/
+    /*
+                $txt = $sql_load ;
+                $my_file = fopen("leave_a.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+    */
 
 
 // Bind values
@@ -335,7 +335,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "doc_year" => $row['doc_year'],
                 "doc_date" => $row['doc_date'],
                 "emp_id" => $row['emp_id'],
-                "full_name" => $row['f_name'] . " " . $row['l_name']  ,
+                "full_name" => $row['f_name'] . " " . $row['l_name'],
                 "department_id" => $row['department_id'],
                 "leave_type_id" => $row['leave_type_id'],
                 "leave_type_detail" => $row['leave_type_detail'],

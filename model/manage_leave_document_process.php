@@ -151,13 +151,13 @@ if ($_POST["action"] === 'ADD') {
         $day_hour_max = ($day_max * 8);
         $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
 
-/*
-        $txt = "Leave Type = " . $leave_type_id . " Max = " . $day_max . " | Count = " . $cnt_day . " | " . $sql_cnt . " | "
-            . $leave_save . " | " . $work_age . " | hour = " . $day_max * 8 . " | cnt_hour = " . $cnt_hour . " | cnt_total_day_hour = " . $cnt_total_day_hour;
-        $myfile = fopen("a-emp-param.txt", "w") or die("Unable to open file!");
-        fwrite($myfile, $txt);
-        fclose($myfile);
-*/
+        /*
+                $txt = "Leave Type = " . $leave_type_id . " Max = " . $day_max . " | Count = " . $cnt_day . " | " . $sql_cnt . " | "
+                    . $leave_save . " | " . $work_age . " | hour = " . $day_max * 8 . " | cnt_hour = " . $cnt_hour . " | cnt_total_day_hour = " . $cnt_total_day_hour;
+                $myfile = fopen("a-emp-param.txt", "w") or die("Unable to open file!");
+                fwrite($myfile, $txt);
+                fclose($myfile);
+        */
 
         if ($leave_type_id === 'L3' && ($cnt_total_day_hour > $day_hour_max || $work_age < 365)) {
             $leave_save = "N";
