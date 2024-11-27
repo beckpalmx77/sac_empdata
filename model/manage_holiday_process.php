@@ -139,8 +139,8 @@ if ($_POST["action"] === 'ADD') {
                 $query->execute();
                 $lastInsertId = $conn->lastInsertId();
                 if ($lastInsertId) {
-
-                    $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+                    $sToken = "";
+                    //$sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
                     $sMessage = "มีเอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี "
                         . "\n\r" . "เลขที่เอกสาร = " . $doc_id
                         . "\n\r" . "วันที่เอกสาร = " . $currentDate
