@@ -490,7 +490,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#recordForm')[0].reset();
                         $('#recordModal').modal('hide');
                         $('#save').attr('disabled', false);
-                        dataRecords.ajax.reload();
+                        ReloadDataTable();
+                        //dataRecords.ajax.reload();
                     }
                 })
             });
@@ -745,6 +746,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             });
         });
 
+    </script>
+
+    <script>
+        function ReloadDataTable() {
+            $('#TableRecordList').DataTable().ajax.reload();
+        }
     </script>
 
 
