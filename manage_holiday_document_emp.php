@@ -66,6 +66,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่หยุด</th>
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
+                                                    <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -79,6 +80,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่หยุด</th>
                                                     <th>ประเภทวันหยุด</th>
                                                     <th>หมายเหตุ</th>
+                                                    <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -533,6 +535,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'date_leave_start'},
                     {data: 'leave_type_detail'},
                     {data: 'remark'},
+                    {data: 'status'},
                     {data: 'image'},
                     {data: 'update'},
                 ],
