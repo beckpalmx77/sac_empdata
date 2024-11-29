@@ -178,9 +178,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         $lastInsertId = $conn->lastInsertId();
 
         if ($lastInsertId) {
-            echo "Save OK";
+            echo "Save OK" . "\n\r";
         } else {
-            echo "Error";
+            echo "Error" . "\n\r";
         }
     }
 
