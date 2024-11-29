@@ -151,7 +151,7 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
         //echo "INSERT Employee : " . $result_sqlsvr["PRS_NO"] . "|" . $birth . " | " . $result_sqlsvr["EMP_NAME"] . " | " . $result_sqlsvr["EMP_SURNME"] . $result_sqlsvr["DEPT_THAIDESC"] . "\n\r";
 
         $sql = "INSERT INTO memployee(emp_id,sex,prefix,f_name,l_name,nick_name,email_address,birthday,position_id,position,dept_id
-        ,department_id,start_work_date,work_time_id,status,branch,dept_id_approve)
+        ,department_id,start_work_date,work_time_id,status,branch,dept_id_approve,week_holiday)
         VALUES (:emp_id,:sex,:prefix,:f_name,:l_name,:nick_name,:email_address,:birthday,:position_id,:position,:dept_id
         ,:department_id,:start_work_date,:work_time_id,:status,:branch,:dept_id_approve,:week_holiday)";
         $query = $conn->prepare($sql);
