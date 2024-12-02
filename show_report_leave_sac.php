@@ -97,6 +97,12 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
             <?php foreach ($leave_data as $index => $row_leave): ?>
                 <?php
                 // กำหนดค่า $status_desc ตามค่า $row_leave->status
+
+                $txt = $row_leave->status ;
+                $my_file = fopen("a-leave_select.txt", "w") or die("Unable to open file!");
+                fwrite($my_file,  $txt);
+                fclose($my_file);
+
                 switch ($row_leave->status) {
                     case 'A':
                         $status_desc = "อนุมัติ";
@@ -151,8 +157,13 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
             <tbody>
             <?php foreach ($holiday_data as $index => $row_holiday): ?>
                 <?php
-                // กำหนดค่า $status_desc ตามค่า $row_leave->status
-                switch ($row_leave->status) {
+                // กำหนดค่า $status_desc ตามค่า $row_holiday->status
+                $txt = $row_holiday->status;
+                $my_file = fopen("a-leave_select2.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+
+                switch ($row_holiday->status) {
                     case 'A':
                         $status_desc = "อนุมัติ";
                         break;
@@ -170,16 +181,19 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_holiday->f_name . " " . $row_holiday->l_name); ?></td>
                     <td><?php echo htmlentities($row_holiday->department_id); ?></td>
                     <td>
-                        <span style="color: <?php echo htmlentities($row_holiday->color); ?>"><?php echo htmlentities($row_holiday->leave_type_detail); ?></span>
+            <span style="color: <?php echo htmlentities($row_holiday->color); ?>">
+                <?php echo htmlentities($row_holiday->leave_type_detail); ?>
+            </span>
                     </td>
                     <td><?php echo htmlentities($row_holiday->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_holiday->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_holiday->leave_day); ?></td>
-                    <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
+                    <td><?php echo htmlentities($row_holiday->leave_hour); ?></td>
                     <td><?php echo htmlentities($status_desc); ?></td>
                     <td><?php echo htmlentities($row_holiday->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
+
             </tbody>
         </table>
     </div>
