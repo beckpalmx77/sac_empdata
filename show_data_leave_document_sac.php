@@ -195,7 +195,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 <tbody>
                 <?php
 
-                $sql_leave = " SELECT v_dleave_event.* , em.status FROM v_dleave_event 
+                $sql_leave = " SELECT v_dleave_event.* , em.status AS emp_status FROM v_dleave_event 
                        LEFT JOIN memployee em on em.emp_id = v_dleave_event.emp_id
                        WHERE v_dleave_event.doc_year = :year
                        AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to AND v_dleave_event.emp_id = :emp_id 
@@ -231,8 +231,8 @@ if (strlen($_SESSION['alogin']) == "") {
                 $line_no = 0;
                 foreach ($results_leave as $row_leave) {
                     $line_no++;
-
-                    switch ($row_leave) {
+                    $status = $row_leave["status"];
+                    switch ($status) {
                         case 'A':
                             $status_desc = "อนุมัติ";
                             break;
@@ -339,7 +339,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 <tfoot></tfoot>
                 <tbody>
                 <?php
-                $sql_leave = " SELECT vdholiday_event.* , em.status FROM vdholiday_event 
+                $sql_leave = " SELECT vdholiday_event.* , em.status AS emp_status FROM vdholiday_event 
                LEFT JOIN memployee em on em.emp_id = vdholiday_event.emp_id
                WHERE vdholiday_event.doc_year = :year 
                AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to AND vdholiday_event.emp_id = :emp_id                
@@ -374,8 +374,14 @@ if (strlen($_SESSION['alogin']) == "") {
                 $line_no = 0;
                 foreach ($results_leave as $row_leave) {
                     $line_no++;
+                    $status = $row_leave["status"];
+/*
+                    $myfile = fopen("a-qry_file1.txt", "w") or die("Unable to open file!");
+                    fwrite($myfile, $sql_leave . " | " .  $status);
+                    fclose($myfile);
+*/
 
-                    switch ($row_leave) {
+                    switch ($status) {
                         case 'A':
                             $status_desc = "อนุมัติ";
                             break;
@@ -385,7 +391,6 @@ if (strlen($_SESSION['alogin']) == "") {
                         default:
                             $status_desc = "รอพิจารณา";
                     }
-
                     ?>
                     <tr>
                         <td><?php echo htmlentities($line_no); ?></td>
