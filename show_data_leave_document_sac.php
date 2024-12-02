@@ -234,13 +234,14 @@ if (strlen($_SESSION['alogin']) == "") {
                     $status = $row_leave["status"];
                     switch ($status) {
                         case 'A':
-                            $status_desc = "อนุมัติ";
+                            $status_desc = "<span style='color: green;'>อนุมัติ</span>";
                             break;
                         case 'R':
-                            $status_desc = "ไม่อนุมัติ";
+                            $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
                             break;
                         default:
-                            $status_desc = "รอพิจารณา";
+                            $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
+                            break;
                     }
                     ?>
                     <tr>
@@ -256,7 +257,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
                         <td><?php echo htmlentities($row_leave['leave_day']); ?></td>
                         <td><?php echo htmlentities($row_leave['leave_hour']); ?></td>
-                        <td><?php echo htmlentities($status_desc); ?></td>
+                        <td><?php echo $status_desc; ?></td>
                         <td><?php echo htmlentities($row_leave['remark']); ?></td>
                     </tr>
                 <?php } ?>
@@ -383,13 +384,14 @@ if (strlen($_SESSION['alogin']) == "") {
 
                     switch ($status) {
                         case 'A':
-                            $status_desc = "อนุมัติ";
+                            $status_desc = "<span style='color: green;'>อนุมัติ</span>";
                             break;
                         case 'R':
-                            $status_desc = "ไม่อนุมัติ";
+                            $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
                             break;
                         default:
-                            $status_desc = "รอพิจารณา";
+                            $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
+                            break;
                     }
                     ?>
                     <tr>
@@ -401,7 +403,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <td><?php echo htmlentities($row_leave['leave_type_detail']); ?></td>
                         <td><?php echo htmlentities($row_leave['date_leave_start']); ?></td>
                         <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
-                        <td><?php echo htmlentities($status_desc); ?></td>
+                        <td><?php echo $status_desc; ?></td>
                         <td><?php echo htmlentities($row_leave['remark']); ?></td>
                     </tr>
                 <?php } ?>

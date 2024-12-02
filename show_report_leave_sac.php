@@ -8,6 +8,7 @@ $doc_date_start = $_POST["doc_date_start"];
 $doc_date_to = $_POST["doc_date_to"];
 $employeeSelect = $_POST["employeeSelect"];
 $where_emp = "";
+
 // แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
 $start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
 $end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
@@ -18,25 +19,16 @@ if ($employeeSelect !== '-') {
     $where_emp = " 1 ";
 }
 
-$leave_data = fetchLeaveData($conn, 'v_dleave_event', $start_date, $end_date,$where_emp);
-$holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date,$where_emp);
+$leave_data = fetchLeaveData($conn, 'v_dleave_event', $start_date, $end_date, $where_emp);
+$holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date, $where_emp);
 
 function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
 {
     $sql = "SELECT * FROM $table WHERE " . $where_emp . " AND STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$start_date' AND '$end_date' ORDER BY STR_TO_DATE(doc_date, '%d-%m-%Y')";
-
-/*
-    $txt = $sql ;
-    $my_file = fopen("a-leave_select.txt", "w") or die("Unable to open file!");
-    fwrite($my_file,  $txt);
-    fclose($my_file);
-*/
-
     $query = $conn->prepare($sql);
     $query->execute();
     return $query->fetchAll(PDO::FETCH_OBJ);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -62,6 +54,18 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
         table {
             width: 100%;
         }
+        .status.approved {
+            color: green;
+            font-weight: bold;
+        }
+        .status.rejected {
+            color: red;
+            font-weight: bold;
+        }
+        .status.pending {
+            color: black;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -71,10 +75,10 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
         <i class="fa fa-signal" aria-hidden="true"></i> แสดงข้อมูลการลา-เปลี่ยนวันหยุด-วันหยุดนักขัตฤกษ์ พนักงาน
         <?php echo " วันที่ " . htmlentities($doc_date_start) . " ถึง " . htmlentities($doc_date_to); ?>
     </div>
-
     <div class="card-body">
         <button class="btn btn-danger" onclick="window.close()">ปิด (Close)</button>
 
+        <!-- Leave Data -->
         <h4><span class="badge bg-success">แสดงข้อมูลการลา พนักงาน</span></h4>
         <table id="leaveTable" class="display table table-striped table-bordered" cellspacing="0">
             <thead>
@@ -96,22 +100,15 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
             <tbody>
             <?php foreach ($leave_data as $index => $row_leave): ?>
                 <?php
-                // กำหนดค่า $status_desc ตามค่า $row_leave->status
-
-                $txt = $row_leave->status ;
-                $my_file = fopen("a-leave_select.txt", "w") or die("Unable to open file!");
-                fwrite($my_file,  $txt);
-                fclose($my_file);
-
                 switch ($row_leave->status) {
                     case 'A':
-                        $status_desc = "อนุมัติ";
+                        $status_desc = "<span style='color: green;'>อนุมัติ</span>";
                         break;
                     case 'R':
-                        $status_desc = "ไม่อนุมัติ";
+                        $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
                         break;
                     default:
-                        $status_desc = "รอพิจารณา";
+                        $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
                 }
                 ?>
                 <tr>
@@ -121,21 +118,22 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_leave->f_name . " " . $row_leave->l_name); ?></td>
                     <td><?php echo htmlentities($row_leave->department_id); ?></td>
                     <td>
-            <span style="color: <?php echo htmlentities($row_leave->color); ?>">
-                <?php echo htmlentities($row_leave->leave_type_detail); ?>
-            </span>
+                        <span style="color: <?php echo htmlentities($row_leave->color); ?>">
+                            <?php echo htmlentities($row_leave->leave_type_detail); ?>
+                        </span>
                     </td>
                     <td><?php echo htmlentities($row_leave->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_leave->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_day); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
-                    <td><?php echo htmlentities($status_desc); ?></td>
+                    <td><?php echo $status_desc; ?></td>
                     <td><?php echo htmlentities($row_leave->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
 
+        <!-- Holiday Data -->
         <h4><span class="badge bg-info">แสดงข้อมูลใช้วันหยุด พนักงาน</span></h4>
         <table id="holidayTable" class="display table table-striped table-bordered" cellspacing="0">
             <thead>
@@ -157,21 +155,15 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
             <tbody>
             <?php foreach ($holiday_data as $index => $row_holiday): ?>
                 <?php
-                // กำหนดค่า $status_desc ตามค่า $row_holiday->status
-                $txt = $row_holiday->status;
-                $my_file = fopen("a-leave_select2.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $txt);
-                fclose($my_file);
-
                 switch ($row_holiday->status) {
                     case 'A':
-                        $status_desc = "อนุมัติ";
+                        $status_desc = "<span style='color: green;'>อนุมัติ</span>";
                         break;
                     case 'R':
-                        $status_desc = "ไม่อนุมัติ";
+                        $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
                         break;
                     default:
-                        $status_desc = "รอพิจารณา";
+                        $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
                 }
                 ?>
                 <tr>
@@ -181,19 +173,18 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_holiday->f_name . " " . $row_holiday->l_name); ?></td>
                     <td><?php echo htmlentities($row_holiday->department_id); ?></td>
                     <td>
-            <span style="color: <?php echo htmlentities($row_holiday->color); ?>">
-                <?php echo htmlentities($row_holiday->leave_type_detail); ?>
-            </span>
+                        <span style="color: <?php echo htmlentities($row_holiday->color); ?>">
+                            <?php echo htmlentities($row_holiday->leave_type_detail); ?>
+                        </span>
                     </td>
                     <td><?php echo htmlentities($row_holiday->date_leave_start); ?></td>
                     <td><?php echo htmlentities($row_holiday->date_leave_to); ?></td>
                     <td><?php echo htmlentities($row_holiday->leave_day); ?></td>
                     <td><?php echo htmlentities($row_holiday->leave_hour); ?></td>
-                    <td><?php echo htmlentities($status_desc); ?></td>
+                    <td><?php echo $status_desc; ?></td>
                     <td><?php echo htmlentities($row_holiday->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
-
             </tbody>
         </table>
     </div>
