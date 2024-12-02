@@ -377,8 +377,9 @@ if (strlen($_SESSION['alogin']) == "") {
                     $line_no++;
                     $status = $row_leave["status"];
 /*
+                    $txt .= $img_doc . "\n\r";
                     $myfile = fopen("a-qry_file1.txt", "w") or die("Unable to open file!");
-                    fwrite($myfile, $sql_leave . " | " .  $status);
+                    fwrite($myfile, $txt);
                     fclose($myfile);
 */
 
