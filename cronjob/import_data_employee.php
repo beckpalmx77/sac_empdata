@@ -66,9 +66,6 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $status_u = $result_sqlsvr["PRI_STATUS"] == "1" ? "Active" : "Inactive";
 
     switch ($result_sqlsvr["PRS_DEPT"]) {
-        case "180":
-            $branch = "BTC";
-            break;
         case "181":
             $branch = "CP1";
             break;
