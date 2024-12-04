@@ -66,6 +66,9 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $status_u = $result_sqlsvr["PRI_STATUS"] == "1" ? "Active" : "Inactive";
 
     switch ($result_sqlsvr["PRS_DEPT"]) {
+        case "180":
+            $branch = "BTC";
+            break;
         case "181":
             $branch = "CP1";
             break;
@@ -86,12 +89,15 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     }
 
     $branch_com_pare = ["CP4", "CP3", "CP2", "CP1"];
-
+/*
     if (in_array($branch, $branch_com_pare)) {
         $week_holiday = "0";
     } else {
         $week_holiday = "7";
     }
+*/
+
+    $week_holiday = "7";
 
     $sql_get_dept_approve = "SELECT dept_id_approve FROM ims_approve_dept WHERE dept_id = '" . $result_sqlsvr["PRS_DEPT"] . "'";
     $query = $conn->prepare($sql_get_dept_approve);
