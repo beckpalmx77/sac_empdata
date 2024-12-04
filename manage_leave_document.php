@@ -170,16 +170,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
                                                                                placeholder="">
                                                                     </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label for="emp_id"
-                                                                               class="control-label">เลือก</label>
-                                                                        <a data-toggle="modal"
-                                                                           href="#SearchEmployeeModal"
-                                                                           class="btn btn-primary">
-                                                                            Click <i class="fa fa-search"
-                                                                                     aria-hidden="true"></i>
-                                                                        </a>
-                                                                    </div>
+                                                                    <?php if ($_SESSION['role'] !== "EMPLOYEE") { ?>
+                                                                        <div class="col-sm-2">
+                                                                            <label for="emp_id"
+                                                                                   class="control-label">เลือก</label>
+                                                                            <a data-toggle="modal"
+                                                                               href="#SearchEmployeeModal"
+                                                                               class="btn btn-primary">
+                                                                                Click <i class="fa fa-search"
+                                                                                         aria-hidden="true"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    <?php } ?>
 
                                                                 </div>
 
@@ -1021,60 +1023,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
         });
     </script>
-
-    <script>
-        function validateInput(input) {
-            // ลบอักขระที่ไม่ใช่ตัวเลขออก
-            //input.value = input.value.replace(/[^0-9]/g, '');
-
-            // ตรวจสอบว่าค่าไม่เป็นช่องว่างและมากกว่า 0
-            /*
-                        if (leave_type_id !== 'L6') {
-
-                            if (input.value === '' || parseInt(input.value) <= 0) {
-                                input.setCustomValidity('กรุณาป้อนตัวเลขที่มากกว่า 0');
-                            } else {
-                                input.setCustomValidity('');
-                            }
-                        }
-
-             */
-        }
-    </script>
-
-    <!--script>
-        $(document).ready(function () {
-            // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
-            function setDatePicker() {
-                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าจาก hidden input ที่ผู้ใช้เลือก
-                let startDate = new Date(); // วันที่ปัจจุบัน
-
-                // ตรวจสอบประเภทการลา และกำหนดวันที่เริ่มต้น
-                if (leave_type_id === 'L1') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
-                } else if (leave_type_id === 'L3') {
-                    startDate.setDate(startDate.getDate() + 7); // เริ่มเลือกได้ตั้งแต่ 7 วันหลังจากวันนี้
-                } else if (leave_type_id === 'S') {
-                    startDate.setDate(startDate.getDate());
-                }
-
-                // ตั้งค่า datepicker
-                $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
-                $('#date_leave_start').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
-                });
-            }
-
-            // เรียกฟังก์ชันเมื่อ modal ปิด (หลังจากเลือกประเภทการลา)
-            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
-                setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
-            });
-        });
-    </script-->
 
     <script>
         $(document).ready(function () {

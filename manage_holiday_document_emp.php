@@ -164,16 +164,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
                                                                                placeholder="">
                                                                     </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label for="emp_id"
-                                                                               class="control-label">เลือก</label>
-                                                                        <a data-toggle="modal"
-                                                                           href="#SearchEmployeeModal"
-                                                                           class="btn btn-primary">
-                                                                            Click <i class="fa fa-search"
-                                                                                     aria-hidden="true"></i>
-                                                                        </a>
-                                                                    </div>
+                                                                    <?php if ($_SESSION['role'] !== "EMPLOYEE") { ?>
+                                                                        <div class="col-sm-2">
+                                                                            <label for="emp_id"
+                                                                                   class="control-label">เลือก</label>
+                                                                            <a data-toggle="modal"
+                                                                               href="#SearchEmployeeModal"
+                                                                               class="btn btn-primary">
+                                                                                Click <i class="fa fa-search"
+                                                                                         aria-hidden="true"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    <?php } ?>
                                                                 </div>
 
                                                                 <div class="form-group row">

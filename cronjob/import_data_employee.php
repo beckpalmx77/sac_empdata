@@ -90,15 +90,16 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
 
     $branch_com_pare = ["CP4", "CP3", "CP2", "CP1"];
 
-    /*
+
     if (in_array($branch, $branch_com_pare)) {
         $week_holiday = "0";
+        $account_type = "cockpit_user";
     } else {
         $week_holiday = "7";
     }
-*/
 
-    $week_holiday = "7";
+    echo "Check UPDATE " . $branch . "|" . $week_holiday . "\n\r";
+
     $sql_get_dept_approve = "SELECT dept_id_approve FROM ims_approve_dept WHERE dept_id = '" . $result_sqlsvr["PRS_DEPT"] . "'";
     $query = $conn->prepare($sql_get_dept_approve);
     $query->execute();
