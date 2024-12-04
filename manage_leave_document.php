@@ -694,6 +694,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let check_day = CalDay(date_leave_1, date_leave_2); // Check Date
                         let l_before = $('#leave_before').val();
 
+                        alert(check_day);
+
 
                         $('#filename').val($('#ImgFile').val());
 
