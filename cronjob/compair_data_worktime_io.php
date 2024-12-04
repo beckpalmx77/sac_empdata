@@ -63,7 +63,14 @@ try {
             ]);
             echo "Inserted doc_id: " . $row1['doc_id'] . "\n\r";
         } else {
-            echo "doc_id: " . $doc_id . " already exists in db2." . "\n\r";
+            // ถ้ามี doc_id อยู่แล้ว ให้ทำการ update field status
+            $sql4 = "UPDATE worktime_emp_io SET status = :status WHERE doc_id = :doc_id";
+            $stmt4 = $pdo2->prepare($sql4);
+            $stmt4->execute([
+                'status' => $row1['status'],
+                'doc_id' => $doc_id
+            ]);
+            echo "Updated status for doc_id: " . $doc_id . "\n\r";
         }
     }
 } catch (PDOException $e) {
