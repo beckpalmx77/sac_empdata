@@ -285,25 +285,9 @@ if ($_POST["action"] === 'UPDATE') {
                 $query->execute();
                 echo $save_success;
             } else {
-                $sql_update = "UPDATE dleave_event SET leave_type_id=:leave_type_id
-                ,date_leave_start=:date_leave_start,date_leave_to=:date_leave_to
-                ,time_leave_start=:time_leave_start,time_leave_to=:time_leave_to,remark=:remark,doc_year=:doc_year,total_time=:total_time     
-                ,emp_id=:emp_id,leave_day=:leave_day                  
-                WHERE id = :id";
-                //$myfile = fopen("update_sql2.txt", "w") or die("Unable to open file!");
-                //fwrite($myfile,$sql_update);
-                //fclose($myfile);
+                $sql_update = "UPDATE dleave_event SET remark=:remark WHERE id = :id";
                 $query = $conn->prepare($sql_update);
-                $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
-                $query->bindParam(':date_leave_start', $date_leave_start, PDO::PARAM_STR);
-                $query->bindParam(':date_leave_to', $date_leave_to, PDO::PARAM_STR);
-                $query->bindParam(':time_leave_start', $time_leave_start, PDO::PARAM_STR);
-                $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':remark', $remark, PDO::PARAM_STR);
-                $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
-                $query->bindParam(':total_time', $total_time, PDO::PARAM_STR);
-                $query->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
-                $query->bindParam(':leave_day', $leave_day, PDO::PARAM_STR);
                 $query->bindParam(':id', $id, PDO::PARAM_STR);
                 $query->execute();
                 echo $save_success;
