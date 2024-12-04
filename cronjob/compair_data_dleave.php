@@ -84,14 +84,17 @@ try {
             if ($stmt_insert->execute()) {
                 echo "Document ID $doc_id inserted successfully into db2.\n";
             } else {
-                // ถ้ามี doc_id อยู่แล้ว ให้ทำการ update field status
-                $sql4 = "UPDATE dleave_event SET status = :status WHERE doc_id = :doc_id";
-                $stmt4 = $pdo2->prepare($sql4);
-                $stmt4->execute([
-                    'status' => $data_db1['status'],
-                    'doc_id' => $doc_id
-                ]);
-                echo "Updated status for doc_id: " . $doc_id . "\n\r";
+                if ($data_db1['status']==="Y") {
+                    // ถ้ามี doc_id อยู่แล้ว ให้ทำการ update field status
+                    $sql4 = "UPDATE dleave_event SET status = :status WHERE doc_id = :doc_id";
+                    $stmt4 = $pdo2->prepare($sql4);
+                    $stmt4->execute([
+                        'status' => $data_db1['status'],
+                        'doc_id' => $doc_id
+                    ]);
+                    echo "Updated status for doc_id: " . $doc_id . "\n\r";
+                }
+                echo "Duplication for doc_id: " . $doc_id . "\n\r";
             }
         }
     }
