@@ -694,9 +694,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let check_day = CalDay(date_leave_1, date_leave_2); // Check Date
                         let l_before = $('#leave_before').val();
 
-                        alert(check_day);
-
-
                         $('#filename').val($('#ImgFile').val());
 
                         let formData = $(this).serialize();
@@ -1037,7 +1034,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 if (leave_type_id === 'L1') {
                     startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
                 } else if (leave_type_id === 'L3') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 7 วันหลังจากวันนี้
+                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
                 } else if (leave_type_id === 'S') {
                     startDate.setDate(startDate.getDate());
                 }
@@ -1057,6 +1054,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             // เรียกฟังก์ชันเมื่อ modal ปิด (หลังจากเลือกประเภทการลา)
             $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
                 setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
+                $('#date_leave_start').val('');
             });
         });
     </script>
