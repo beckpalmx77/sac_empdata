@@ -166,6 +166,7 @@ if ($form_type === 'employee') {
                 <th>วันที่ลาเริ่มต้น</th>
                 <th>วันที่ลาสิ้นสุด</th>
                 <th>จำนวนวัน</th>
+                <th>สถานะ</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
@@ -173,7 +174,7 @@ if ($form_type === 'employee') {
             <tbody>
             <?php
 
-            $sql_leave = " SELECT v_dleave_event.* , em.status FROM v_dleave_event 
+            $sql_leave = " SELECT v_dleave_event.* , em.status AS emp_status FROM v_dleave_event 
                        LEFT JOIN memployee em on em.emp_id = v_dleave_event.emp_id
                        WHERE v_dleave_event.doc_year = :year
                        AND v_dleave_event.doc_month BETWEEN :month_id_start AND :month_id_to
@@ -210,6 +211,18 @@ if ($form_type === 'employee') {
             $line_no = 0;
             foreach ($results_leave as $row_leave) {
                 $line_no++;
+                $status = $row_leave["status"];
+                switch ($status) {
+                    case 'A':
+                        $status_desc = "<span style='color: green;'>อนุมัติ</span>";
+                        break;
+                    case 'R':
+                        $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
+                        break;
+                    default:
+                        $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
+                        break;
+                }
                 ?>
                 <tr>
                     <td><?php echo htmlentities($line_no); ?></td>
@@ -223,6 +236,7 @@ if ($form_type === 'employee') {
                     <td><?php echo htmlentities($row_leave['date_leave_start']); ?></td>
                     <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
                     <td><?php echo htmlentities($row_leave['leave_day']); ?></td>
+                    <td><?php echo $status_desc; ?></td>
                     <td><?php echo htmlentities($row_leave['remark']); ?></td>
                 </tr>
             <?php } ?>
@@ -296,13 +310,14 @@ if ($form_type === 'employee') {
                 <th>ประเภท</th>
                 <th>วันที่เริ่มต้น</th>
                 <th>วันที่สิ้นสุด</th>
+                <th>สถานะ</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
             <tfoot></tfoot>
             <tbody>
             <?php
-            $sql_leave = " SELECT vdholiday_event.* , em.status FROM vdholiday_event 
+            $sql_leave = " SELECT vdholiday_event.* , em.status  AS emp_status FROM vdholiday_event 
                LEFT JOIN memployee em on em.emp_id = vdholiday_event.emp_id
                WHERE vdholiday_event.doc_year = :year
                AND vdholiday_event.month BETWEEN :month_id_start AND :month_id_to
@@ -338,6 +353,18 @@ if ($form_type === 'employee') {
             $line_no = 0;
             foreach ($results_leave as $row_leave) {
                 $line_no++;
+                $status = $row_leave["status"];
+                switch ($status) {
+                    case 'A':
+                        $status_desc = "<span style='color: green;'>อนุมัติ</span>";
+                        break;
+                    case 'R':
+                        $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
+                        break;
+                    default:
+                        $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
+                        break;
+                }
                 ?>
                 <tr>
                     <td><?php echo htmlentities($line_no); ?></td>
@@ -348,6 +375,7 @@ if ($form_type === 'employee') {
                     <td><?php echo htmlentities($row_leave['leave_type_detail']); ?></td>
                     <td><?php echo htmlentities($row_leave['date_leave_start']); ?></td>
                     <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
+                    <td><?php echo $status_desc; ?></td>
                     <td><?php echo htmlentities($row_leave['remark']); ?></td>
                 </tr>
             <?php } ?>
@@ -368,6 +396,7 @@ if ($form_type === 'employee') {
                 <th>ประเภท</th>
                 <th>วันที่หยุดปกติ</th>
                 <th>วันที่ต้องการหยุด</th>
+                <th>สถานะ</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
@@ -375,7 +404,7 @@ if ($form_type === 'employee') {
             <tbody>
             <?php
 
-            $sql_leave = " SELECT v_dchange_event.* , em.status FROM v_dchange_event 
+            $sql_leave = " SELECT v_dchange_event.* , em.status AS emp_status FROM v_dchange_event 
                LEFT JOIN memployee em on em.emp_id = v_dchange_event.emp_id
                WHERE v_dchange_event.doc_year = :year
                AND v_dchange_event.doc_month BETWEEN :month_id_start AND :month_id_to
@@ -411,6 +440,18 @@ if ($form_type === 'employee') {
             $line_no = 0;
             foreach ($results_leave as $row_leave) {
                 $line_no++;
+                $status = $row_leave["status"];
+                switch ($status) {
+                    case 'A':
+                        $status_desc = "<span style='color: green;'>อนุมัติ</span>";
+                        break;
+                    case 'R':
+                        $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
+                        break;
+                    default:
+                        $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
+                        break;
+                }
                 ?>
                 <tr>
                     <td><?php echo htmlentities($line_no); ?></td>
@@ -421,6 +462,8 @@ if ($form_type === 'employee') {
                     <td><?php echo htmlentities($row_leave['leave_type_detail']); ?></td>
                     <td><?php echo htmlentities($row_leave['date_leave_start']); ?></td>
                     <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
+                    <td><?php echo htmlentities($row_leave['date_leave_to']); ?></td>
+                    <td><?php echo $status_desc; ?></td>
                     <td><?php echo htmlentities($row_leave['remark']); ?></td>
                 </tr>
             <?php } ?>
