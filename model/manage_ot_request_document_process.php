@@ -108,8 +108,6 @@ if ($_POST["action"] === 'ADD') {
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 
-        $create_by = $_SESSION['login_id'];
-
         $sql_time = "SELECT TIMEDIFF('". $time_leave_to . "','" . $time_leave_start ."') AS total_time ";
         foreach ($conn->query($sql_time) AS $row) {
             $total_time = $row['total_time'];
@@ -128,8 +126,8 @@ if ($_POST["action"] === 'ADD') {
             if ($nRows > 0) {
                 echo $dup;
             } else {
-                $sql = "INSERT INTO ot_request (doc_id,doc_year,doc_month,dept_id,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,total_time,remark,create_by) 
-                    VALUES (:doc_id,:doc_year,:doc_month,:dept_id,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:total_time,:remark,:create_by)";
+                $sql = "INSERT INTO ot_request (doc_id,doc_year,doc_month,dept_id,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,total_time,remark) 
+                    VALUES (:doc_id,:doc_year,:doc_month,:dept_id,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:total_time,:remark)";
 
                 //$myfile = fopen("condition-param.txt", "w") or die("Unable to open file!");
                 //fwrite($myfile,  $sql);
@@ -149,7 +147,6 @@ if ($_POST["action"] === 'ADD') {
                 $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':total_time', $total_time, PDO::PARAM_STR);
                 $query->bindParam(':remark', $remark, PDO::PARAM_STR);
-                $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
 
                 $query->execute();
                 $lAStInsertId = $conn->lAStInsertId();
