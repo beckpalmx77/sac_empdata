@@ -311,7 +311,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
-                                                            <input type="hidden" name="status" id="status"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
                                                             <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
@@ -571,9 +570,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         $(document).ready(function () {
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
+
+                //alert($('#status').val());
+
                 event.preventDefault();
                 $('#save').attr('disabled', 'disabled');
                 let formData = $(this).serialize();
+                //alert(formData);
                 $.ajax({
                     url: 'model/manage_holiday_process.php',
                     method: "POST",

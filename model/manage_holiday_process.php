@@ -171,6 +171,13 @@ if ($_POST["action"] === 'UPDATE') {
 
     if ($_POST["doc_id"] != '') {
 
+/*
+        $txt = "status = " .  $_POST["status"] ;
+        $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+*/
+
         $id = $_POST["id"];
         $doc_id = $_POST["doc_id"];
         $doc_date = $_POST["doc_date"];
