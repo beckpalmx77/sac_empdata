@@ -77,6 +77,7 @@ if ($_POST["action"] === 'ADD') {
         $date_leave_to = $_POST["date_leave_start"];
         $time_leave_to = $_POST["time_leave_to"];
         $remark = $_POST["remark"];
+        $create_by = $_SESSION['alogin'];
         $leave_day = !empty($_POST["leave_day"]) ? $_POST["leave_day"] : 0;
         $leave_hour = !empty($_POST["leave_hour"]) ? $_POST["leave_hour"] : 0;
 
@@ -122,8 +123,8 @@ if ($_POST["action"] === 'ADD') {
             if ($nRows > 0) {
                 echo $dup;
             } else {
-                $sql = "INSERT INTO dholiday_event (doc_id,doc_year,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,remark,dept_id) 
-                    VALUES (:doc_id,:doc_year,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:remark,:dept_id)";
+                $sql = "INSERT INTO dholiday_event (doc_id,doc_year,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,remark,dept_id,create_by) 
+                    VALUES (:doc_id,:doc_year,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:remark,:dept_id,:create_by)";
                 $query = $conn->prepare($sql);
                 $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
                 $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
@@ -136,6 +137,7 @@ if ($_POST["action"] === 'ADD') {
                 $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':remark', $remark, PDO::PARAM_STR);
                 $query->bindParam(':dept_id', $_SESSION['department_id'], PDO::PARAM_STR);
+                $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
                 $query->execute();
                 $lastInsertId = $conn->lastInsertId();
                 if ($lastInsertId) {

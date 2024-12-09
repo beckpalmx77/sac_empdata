@@ -128,6 +128,8 @@ if ($_POST["action"] === 'ADD') {
 
         $remark = $_POST["remark"];
 
+        $create_by = $_SESSION['alogin'];
+
         $sql_get_max = "SELECT day_max AS data FROM mleave_type WHERE leave_type_id ='" . $leave_type_id . "'";
 
         $day_max = GET_VALUE($conn, $sql_get_max);
@@ -169,8 +171,8 @@ if ($_POST["action"] === 'ADD') {
             if ($nRows > 0) {
                 echo $dup;
             } else {
-                $sql = "INSERT INTO dleave_event (doc_id, doc_year, doc_month, dept_id, doc_date, leave_type_id, emp_id, date_leave_start, time_leave_start, date_leave_to, time_leave_to, remark, leave_day) 
-                VALUES (:doc_id, :doc_year, :doc_month, :dept_id, :doc_date, :leave_type_id, :emp_id, :date_leave_start, :time_leave_start, :date_leave_to, :time_leave_to, :remark, :leave_day)";
+                $sql = "INSERT INTO dleave_event (doc_id, doc_year, doc_month, dept_id, doc_date, leave_type_id, emp_id, date_leave_start, time_leave_start, date_leave_to, time_leave_to, remark, leave_day,create_by) 
+                VALUES (:doc_id, :doc_year, :doc_month, :dept_id, :doc_date, :leave_type_id, :emp_id, :date_leave_start, :time_leave_start, :date_leave_to, :time_leave_to, :remark, :leave_day,:create_by)";
                 $query = $conn->prepare($sql);
                 $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
                 $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
@@ -185,6 +187,7 @@ if ($_POST["action"] === 'ADD') {
                 $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':remark', $remark, PDO::PARAM_STR);
                 $query->bindParam(':leave_day', $leave_day, PDO::PARAM_STR);
+                $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
                 $query->execute();
                 $lastInsertId = $conn->lastInsertId();
 
