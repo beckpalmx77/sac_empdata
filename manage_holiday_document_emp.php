@@ -601,6 +601,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#recordModal').modal('show');
                 $('#id').val("");
                 $('#doc_id').val("");
+                $('#date_leave_start').val("");
+                $('#date_leave_to').val("");
                 $('#remark').val("");
                 $('#status').val("N");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
