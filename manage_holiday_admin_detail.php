@@ -272,7 +272,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                     <div class="modal-footer">
                                         <input type="hidden" name="id" id="id"/>
-                                        <input type="hidden" name="status" id="status"/>
                                         <input type="hidden" name="action" id="action" value=""/>
                                         <span class="icon-input-btn">
                                                                 <i class="fa fa-check"></i>
