@@ -61,8 +61,15 @@ if ($_POST["action"] === 'ADD') {
         $department_id = $_POST["department_id"];
         $picture = $account_type == 'admin' ? "img/icon/admin-001.png" : "img/icon/user-001.png";
         $approve_permission = $_POST["approve_permission"];
-        $document_dept_cond = $_POST["document_dept_cond"];
+
         $role = $_POST["role"];
+
+        if ($role==='HR' || $role==='SUPERVISOR' || $role==='ADMIN') {
+            $document_dept_cond = "A";
+        } else {
+            $document_dept_cond = "-";
+        }
+
         $status = "Active";
 
         $sql_find = "SELECT * FROM ims_user WHERE user_id = '" . $user_id . "'";
@@ -120,8 +127,14 @@ if ($_POST["action"] === 'UPDATE') {
         $department_id = $_POST["department_id"];
         $picture = $account_type === 'admin' ? "img/icon/admin-001.png" : "img/icon/user-001.png";
         $approve_permission = $_POST["approve_permission"];
-        $document_dept_cond = $_POST["document_dept_cond"];
         $role = $_POST["role"];
+
+        if ($role==='HR' || $role==='SUPERVISOR' || $role==='ADMIN') {
+            $document_dept_cond = "A";
+        } else {
+            $document_dept_cond = "-";
+        }
+
         $sql_find = "SELECT * FROM ims_user WHERE id = '" . $id . "'";
 
         $nRows = $conn->query($sql_find)->fetchColumn();
