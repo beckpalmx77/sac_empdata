@@ -116,6 +116,12 @@ if ($_POST["action"] === 'ADD') {
         } else {
             $day_hour_max = ($day_max * 8);
         }
+/*
+        $txt = substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
+        $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+*/
 
         $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
         if ($cnt_total_day_hour >= $day_hour_max) {
@@ -145,7 +151,7 @@ if ($_POST["action"] === 'ADD') {
                 $lastInsertId = $conn->lastInsertId();
                 if ($lastInsertId) {
                     $sToken = "";
-                    $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+                    //$sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
                     $sMessage = "มีเอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี "
                         . "\n\r" . "เลขที่เอกสาร = " . $doc_id
                         . "\n\r" . "วันที่เอกสาร = " . $currentDate
