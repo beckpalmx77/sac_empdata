@@ -111,13 +111,16 @@ if ($_POST["action"] === 'ADD') {
         $cnt_day = $cnt_day + (float)$leave_day;
         $cnt_hour = $cnt_hour + (float)$leave_hour;
 
-        $day_hour_max = ($day_max * 8);
-        $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
+        if (substr($_SESSION['dept_id_approve'], 0, 2) === 'CP') {
+            $day_hour_max = (13 * 8);
+        } else {
+            $day_hour_max = ($day_max * 8);
+        }
 
+        $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
         if ($cnt_total_day_hour >= $day_hour_max) {
             echo $Error_Over;
         } else {
-
             $sql_find = "SELECT * FROM dholiday_event WHERE date_leave_start = '" . $_POST["date_leave_start"] . "' AND emp_id = '" . $emp_id . "'";
             $nRows = $conn->query($sql_find)->fetchColumn();
             if ($nRows > 0) {
