@@ -209,7 +209,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     $sql_leave_addition2 = " AND v_dleave_event.l_name = :l_name";
                 }
 
-                $sql_oder = " ORDER BY v_dleave_event.f_name,v_dleave_event.doc_date ";
+                $sql_oder = " ORDER BY v_dleave_event.f_name,v_dleave_event.create_date ";
                 $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_leave_addition2 . $sql_oder;
 
                 $statement_leave = $conn->prepare($sql_leave);
@@ -354,7 +354,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     $sql_leave_addition2 = " AND vdholiday_event.l_name = :l_name";
                 }
 
-                $sql_oder = " ORDER BY vdholiday_event.f_name,vdholiday_event.doc_date ";
+                $sql_oder = " ORDER BY vdholiday_event.f_name,vdholiday_event.create_date ";
                 $sql_leave = $sql_leave . $sql_leave_addition1 . $sql_leave_addition2 . $sql_oder;
                 $statement_leave = $conn->prepare($sql_leave);
                 $statement_leave->bindParam(':year', $year);
