@@ -83,7 +83,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                                 <div class="form-group row mb-3">
                                                                     <div class="col-sm-3">
-                                                                        <label for="employeeSelect" class="control-label">ถึงวันที่เอกสาร</label>
+                                                                        <label for="employeeSelect" class="control-label">เลือกรหัสพนักงาน</label>
                                                                         <!-- Select Element -->
                                                                         <select id="employeeSelect" name="employeeSelect" class="form-control"
                                                                                 style="width: 100%;">
