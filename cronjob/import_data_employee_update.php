@@ -7,7 +7,7 @@ include("../config/connect_sqlserver.php");
 include("../config/connect_db.php");
 
 $previous_year = date("Y") - 2;
-$previous_year = "2023";
+$previous_year = "2025";
 
 $sql_sqlsvr = "SELECT EMP_KEY,EMP_INTL,EMPFILE.EMP_NAME,EMPFILE.EMP_SURNME,EMPFILE.EMP_GENDER,EMPFILE.EMP_EMAIL,EMPFILE.EMP_TEL
 ,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
