@@ -102,10 +102,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                             id="btnDisplay" onclick="Print_Data();">
                                                                         Report <i class="fa fa-check"></i>
                                                                     </button>
-                                                                    <!--button type="button" class="btn btn-success"
+                                                                    <button type="button" class="btn btn-success"
                                                                             id="btnExport" onclick="Export_Data();">
                                                                         Export <i class="fa fa-check"></i>
-                                                                    </button-->
+                                                                    </button>
                                                                     <!-- Spin Loader -->
                                                                     <div id="spinner" class="spinner-overlay"
                                                                          style="display:none;">
@@ -292,6 +292,25 @@ if (strlen($_SESSION['alogin']) == "") {
             // ตั้งค่าการส่งแบบฟอร์ม
             document.forms['from_data'].target = '_blank'; // กำหนดให้ form ส่งไปที่หน้าต่างใหม่
             document.forms['from_data'].action = 'show_report_leave_sac';
+            document.forms['from_data'].submit();
+
+            // ซ่อน loader หลังจากการส่ง
+            setTimeout(function () {
+                document.getElementById('spinner').style.display = 'none';
+            }, 4000); // ปรับเวลาตามต้องการ
+
+            return true;
+        }
+    </script>
+
+    <script>
+        function Export_Data() {
+            // แสดง loader
+            document.getElementById('spinner').style.display = 'block';
+
+            // ตั้งค่าการส่งแบบฟอร์ม
+            document.forms['from_data'].target = '_blank'; // กำหนดให้ form ส่งไปที่หน้าต่างใหม่
+            document.forms['from_data'].action = 'export_process/export_leave_all';
             document.forms['from_data'].submit();
 
             // ซ่อน loader หลังจากการส่ง
