@@ -119,7 +119,6 @@ if ($query_leave->rowCount() >= 1) {
 }
 
 
-
 // แปลง encoding เป็น TIS-620 สำหรับภาษาไทย
 $data = iconv("utf-8", "tis-620", $data);
 
