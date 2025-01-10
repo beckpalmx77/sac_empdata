@@ -335,9 +335,21 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $empRecords = $stmt->fetchAll();
     $data = array();
 
+    $colors = ['DarkRed', 'DarkGreen', 'DarkBlue', 'DarkOrange', 'Indigo', 'DarkSlateGray', 'BlueViolet' , 'DarkCyan' , 'Chocolate' , 'DarkMagenta']; // รายการสีที่ใช้สุ่ม
+    $nameColorMap = []; // แมปชื่อกับสี
+
     foreach ($empRecords as $row) {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
+
+            // ตรวจสอบว่าชื่อ f_name มีสีที่แมปไว้หรือยัง
+            if (!isset($nameColorMap[$row['f_name']])) {
+                // สุ่มสีใหม่หากยังไม่มีการแมป
+                $nameColorMap[$row['f_name']] = $colors[array_rand($colors)];
+            }
+
+            // ใช้สีที่แมปไว้กับชื่อ f_name
+            $color_full_name = $nameColorMap[$row['f_name']];
 
             $data[] = array(
                 "id" => $row['id'],
@@ -345,7 +357,8 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "doc_year" => $row['doc_year'],
                 "doc_date" => $row['doc_date'],
                 "emp_id" => $row['emp_id'],
-                "full_name" => $row['f_name'] . " " . $row['l_name'],
+                "full_name" => '<span style="color: ' . $color_full_name . ';">' . $row['f_name'] . ' ' . $row['l_name'] . '</span>',
+                //"full_name" => $row['f_name'] . " " . $row['l_name'],
                 "department_id" => $row['department_id'],
                 "leave_type_id" => $row['leave_type_id'],
                 "leave_type_detail" => $row['leave_type_detail'],

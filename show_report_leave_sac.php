@@ -107,7 +107,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     case 'R':
                         $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
                         break;
-                    default:
+                    case 'N':
                         $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
                 }
                 ?>
@@ -162,7 +162,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     case 'R':
                         $status_desc = "<span style='color: red;'>ไม่อนุมัติ</span>";
                         break;
-                    default:
+                    case 'N':
                         $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
                 }
                 ?>

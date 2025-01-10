@@ -58,7 +58,7 @@ if ($query_leave->rowCount() >= 1) {
             case 'R':
                 $status_desc = "ไม่อนุมัติ";
                 break;
-            default:
+            case 'N':
                 $status_desc = "รอพิจารณา";
         }
         $data .= $i++ . ",";
@@ -98,7 +98,7 @@ if ($query_leave->rowCount() >= 1) {
             case 'R':
                 $status_desc = "ไม่อนุมัติ";
                 break;
-            default:
+            case 'N':
                 $status_desc = "รอพิจารณา";
         }
         $data .= $i++ . ",";

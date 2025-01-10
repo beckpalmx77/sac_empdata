@@ -425,9 +425,21 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $empRecords = $stmt->fetchAll();
     $data = array();
 
+    $colors = ['DarkRed', 'DarkGreen', 'DarkBlue', 'DarkOrange', 'Indigo', 'DarkSlateGray', 'BlueViolet' , 'DarkCyan' , 'Chocolate' , 'DarkMagenta']; // รายการสีที่ใช้สุ่ม
+    $nameColorMap = []; // แมปชื่อกับสี
+
     foreach ($empRecords as $row) {
 
         if ($_POST['sub_action'] === "GET_MASTER") {
+
+            // ตรวจสอบว่าชื่อ f_name มีสีที่แมปไว้หรือยัง
+            if (!isset($nameColorMap[$row['f_name']])) {
+                // สุ่มสีใหม่หากยังไม่มีการแมป
+                $nameColorMap[$row['f_name']] = $colors[array_rand($colors)];
+            }
+
+            // ใช้สีที่แมปไว้กับชื่อ f_name
+            $color_full_name = $nameColorMap[$row['f_name']];
 
             $leave_type_detail = '<span style="color: ' . $row['color'] . ';">' . $row['leave_type_detail'] . '</span>';
 
@@ -437,8 +449,10 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "doc_date" => $row['doc_date'],
                 "doc_year" => $row['doc_year'],
                 "emp_id" => $row['emp_id'],
-                "f_name" => $row['f_name'],
-                "l_name" => $row['l_name'],
+                //"f_name" => $row['f_name'],
+                //"l_name" => $row['l_name'],
+                "f_name" => '<span style="color: ' . $color_full_name . ';">' . $row['f_name'] . '</span>',
+                "l_name" => '<span style="color: ' . $color_full_name . ';">' . $row['l_name'] . '</span>',
                 "leave_type_id" => $row['leave_type_id'],
                 "leave_type_detail" => $leave_type_detail,
                 "date_leave_start" => $row['date_leave_start'],
@@ -451,7 +465,8 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "remark" => $row['remark'],
                 "leave_day" => $row['leave_day'],
                 "leave_hour" => $row['leave_hour'],
-                "full_name" => $row['f_name'] . " " . $row['l_name'],
+                "full_name" => '<span style="color: ' . $color_full_name . ';">' . $row['f_name'] . ' ' . $row['l_name'] . '</span>',
+                //"full_name" => $row['f_name'] . " " . $row['l_name'],
                 "image" => "<button type='button' name='image' id='" . $row['id'] . "' Class='btn btn-secondary btn-xs image' data-picture='" . $row['picture'] . "' data-toggle='tooltip' title='image'>Image</button>",
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' Class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' Class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='delete'>Delete</button>",
