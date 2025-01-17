@@ -92,6 +92,8 @@ if (is_dir($directory)) {
                             ':time' => $row['time'],
                         ]);
 
+                        echo "กำลังประมวลผลไฟล์: $filename import = " . $row['employee_code'] . " | " . $row['date'] . " | " . $row['time'] . "\n\r";
+
                         // หากข้อมูลซ้ำ ให้ข้ามไป
                         if ($checkStmt->fetchColumn() > 0) {
                             continue;
