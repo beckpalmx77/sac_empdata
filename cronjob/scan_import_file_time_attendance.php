@@ -5,7 +5,7 @@ include('../config/connect_db.php');
 date_default_timezone_set("Asia/Bangkok");
 
 // กำหนดโฟลเดอร์ที่ต้องการค้นหา
-$directory = 'T:\FingerScan';
+$directory = 'H:\FingerScan';
 //$directory = 'D:\finger';
 
 // ดึงวันที่ปัจจุบันในรูปแบบ Y-m-d
