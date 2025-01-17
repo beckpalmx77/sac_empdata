@@ -47,8 +47,8 @@ if (is_dir($directory)) {
             echo "กำลังประมวลผลไฟล์: $filename\n";
 
             if (file_exists($filename)) {
-                // อ่านข้อมูลจากไฟล์
-                $fileContent = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                // อ่านข้อมูลจากไฟล์และเรียงลำดับย้อนกลับ
+                $fileContent = array_reverse(file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
 
                 try {
                     // เตรียมคำสั่ง SQL สำหรับเพิ่มข้อมูล
@@ -135,5 +135,3 @@ $duration = $endTime - $startTime;
 echo "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', $startTime) . "\n";
 echo "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', $endTime) . "\n";
 echo "ระยะเวลาในการประมวลผลทั้งหมด: " . round($duration, 2) . " วินาที\n";
-
-
