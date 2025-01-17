@@ -5,8 +5,10 @@ include('../config/connect_db.php');
 date_default_timezone_set("Asia/Bangkok");
 
 // กำหนดโฟลเดอร์ที่ต้องการค้นหา
-$directory = 'H:\FingerScan';
+
 //$directory = 'D:\finger';
+
+$directory = 'H:\FingerScan';
 
 // ดึงวันที่ปัจจุบันในรูปแบบ Y-m-d
 $currentDate = date('Y-m-d');
@@ -48,7 +50,9 @@ if (is_dir($directory)) {
 
             if (file_exists($filename)) {
                 // อ่านข้อมูลจากไฟล์และเรียงลำดับย้อนกลับ
-                $fileContent = array_reverse(file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+                $fileContent = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                $fileContent = array_reverse($fileContent); // กลับลำดับจากท้าย
+                $fileContent = array_slice($fileContent, 0, 22000); // อ่านเฉพาะ 200 บรรทัดสุดท้าย
 
                 try {
                     // เตรียมคำสั่ง SQL สำหรับเพิ่มข้อมูล
@@ -132,6 +136,7 @@ $endTime = microtime(true);
 $duration = $endTime - $startTime;
 
 // แสดงผลเวลาเริ่มต้น, เวลาสิ้นสุด และระยะเวลา
-echo "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', $startTime) . "\n";
-echo "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', $endTime) . "\n";
+// แสดงผลเวลาเริ่มต้น, เวลาสิ้นสุด และระยะเวลา
+echo "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', (int)$startTime) . "\n";
+echo "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', (int)$endTime) . "\n";
 echo "ระยะเวลาในการประมวลผลทั้งหมด: " . round($duration, 2) . " วินาที\n";
