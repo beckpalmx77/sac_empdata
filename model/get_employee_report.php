@@ -2,7 +2,7 @@
 include('../config/connect_db.php');
 
 try {
-    $dept_ids = ['SLD', 'SL1', 'SL2', 'GRQ', 'WHL', 'ACC', 'OFF', 'OFP', 'BTC' ,'ITD'];
+    $dept_ids = ['SLD', 'SL1', 'SL2', 'GRQ', 'WHL', 'ACC', 'OFF', 'OFP', 'BTC' ,'ITD', 'GRP'];
     $query = "SELECT emp_id, f_name, l_name, department_id FROM memployee WHERE dept_id_approve IN ('" . implode("','", $dept_ids) . "') ORDER BY dept_id_approve ";
 
     /*
