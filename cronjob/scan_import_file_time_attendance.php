@@ -52,19 +52,19 @@ if (is_dir($directory)) {
                 // อ่านข้อมูลจากไฟล์และเรียงลำดับย้อนกลับ
                 $fileContent = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
                 $fileContent = array_reverse($fileContent); // กลับลำดับจากท้าย
-                $fileContent = array_slice($fileContent, 0, 22000); // อ่านเฉพาะ 200 บรรทัดสุดท้าย
+                $fileContent = array_slice($fileContent, 0, 300); // อ่านเฉพาะ 300 บรรทัดสุดท้าย
 
                 try {
                     // เตรียมคำสั่ง SQL สำหรับเพิ่มข้อมูล
                     $insertStmt = $conn->prepare("
-                        INSERT INTO ims_time_attendance (employee_code, full_code, date, time, status, device)
-                        VALUES (:employee_code, :full_code, :date, :time, :status, :device)
+                        INSERT INTO ims_time_attendance (emp_id, full_code, date, time, status, device)
+                        VALUES (:emp_id, :full_code, :date, :time, :status, :device)
                     ");
 
                     // เตรียมคำสั่ง SQL สำหรับตรวจสอบข้อมูลซ้ำ
                     $checkStmt = $conn->prepare("
                         SELECT COUNT(*) FROM ims_time_attendance
-                        WHERE employee_code = :employee_code AND date = :date AND time = :time
+                        WHERE emp_id = :emp_id AND date = :date AND time = :time
                     ");
 
                     foreach ($fileContent as $line) {
@@ -81,7 +81,7 @@ if (is_dir($directory)) {
 
                         // สร้าง array สำหรับแถวปัจจุบัน
                         $row = [
-                            'employee_code' => $employeeCode,
+                            'emp_id' => $employeeCode,
                             'full_code' => $columns[0] ?? '',
                             'date' => $columns[2] ?? '',
                             'time' => $columns[3] ?? '',
@@ -91,12 +91,12 @@ if (is_dir($directory)) {
 
                         // ตรวจสอบข้อมูลซ้ำในฐานข้อมูล
                         $checkStmt->execute([
-                            ':employee_code' => $row['employee_code'],
+                            ':emp_id' => $row['emp_id'],
                             ':date' => $row['date'],
                             ':time' => $row['time'],
                         ]);
 
-                        echo "กำลังประมวลผลไฟล์: $filename import = " . $row['employee_code'] . " | " . $row['date'] . " | " . $row['time'] . "\n\r";
+                        echo "กำลังประมวลผลไฟล์: $filename import = " . $row['emp_id'] . " | " . $row['date'] . " | " . $row['time'] . "\n\r";
 
                         // หากข้อมูลซ้ำ ให้ข้ามไป
                         if ($checkStmt->fetchColumn() > 0) {
@@ -105,7 +105,7 @@ if (is_dir($directory)) {
 
                         // บันทึกข้อมูลลงฐานข้อมูล
                         $insertStmt->execute([
-                            ':employee_code' => $row['employee_code'],
+                            ':emp_id' => $row['emp_id'],
                             ':full_code' => $row['full_code'],
                             ':date' => $row['date'],
                             ':time' => $row['time'],
