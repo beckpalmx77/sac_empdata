@@ -118,14 +118,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                         </div>
 
                                         <div class="form-group row">
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-4">
                                                 <label for="dept_id_approve" class="control-label">แผนก</label>
                                                 <input type="dept_id_approve" class="form-control"
                                                        id="dept_id_approve" name="dept_id_approve"
                                                        readonly="true"
                                                        placeholder="">
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-8">
                                                 <label for="department_id" class="control-label">ชื่อแผนก</label>
                                                 <input type="department_id" class="form-control"
                                                        id="department_id" name="department_id"
