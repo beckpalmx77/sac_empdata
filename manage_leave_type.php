@@ -120,7 +120,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                            id="effect_year"
                                                                            name="effect_year"
                                                                            required="required"
-                                                                           placeholder="">
+                                                                           placeholder="ปี">
                                                                 </div>
 
                                                                 <div class="form-group">
