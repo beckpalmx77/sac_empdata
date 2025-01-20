@@ -55,6 +55,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 <tr>
                                                     <th>รหัสประเภทเอกสาร</th>
                                                     <th>รายละเอียด</th>
+                                                    <th>ปี</th>
                                                     <th>จำนวนวันสูงสุด</th>
                                                     <th>ลาล่วงหน้า (วัน)</th>
                                                     <th>Line Alert</th>
@@ -67,6 +68,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 <tr>
                                                     <th>รหัสประเภทเอกสาร</th>
                                                     <th>รายละเอียด</th>
+                                                    <th>ปี</th>
                                                     <th>จำนวนวันสูงสุด</th>
                                                     <th>ลาล่วงหน้า (วัน)</th>
                                                     <th>Line Alert</th>
@@ -109,6 +111,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                            name="leave_type_detail"
                                                                            required="required"
                                                                            placeholder="ประเภท">
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="effect_year"
+                                                                           class="control-label">ปี</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="effect_year"
+                                                                           name="effect_year"
+                                                                           required="required"
+                                                                           placeholder="">
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -313,6 +325,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'columns': [
                     {data: 'leave_type_id'},
                     {data: 'leave_type_detail'},
+                    {data: 'effect_year'},
                     {data: 'day_max'},
                     {data: 'leave_before'},
                     {data: 'line_alert'},
@@ -352,6 +365,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#id').val("");
                 $('#leave_type_id').val("");
                 $('#leave_type_detail').val("");
+                $('#effect_year').val("");
                 $('#day_max').val("");
                 $('#line_alert').val("Y");
                 $('#remark').val("");
@@ -379,6 +393,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let id = response[i].id;
                         let leave_type_id = response[i].leave_type_id;
                         let leave_type_detail = response[i].leave_type_detail;
+                        let effect_year = response[i].effect_year;
                         let day_max = response[i].day_max;
                         let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
@@ -390,6 +405,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#id').val(id);
                         $('#leave_type_id').val(leave_type_id);
                         $('#leave_type_detail').val(leave_type_detail);
+                        $('#effect_year').val(effect_year);
                         $('#day_max').val(day_max);
                         $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);
@@ -425,6 +441,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let id = response[i].id;
                         let leave_type_id = response[i].leave_type_id;
                         let leave_type_detail = response[i].leave_type_detail;
+                        let effect_year = response[i].effect_year;
                         let day_max = response[i].day_max;
                         let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
@@ -436,6 +453,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#id').val(id);
                         $('#leave_type_id').val(leave_type_id);
                         $('#leave_type_detail').val(leave_type_detail);
+                        $('#effect_year').val(effect_year);
                         $('#day_max').val(day_max);
                         $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);

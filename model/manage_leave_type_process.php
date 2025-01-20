@@ -27,6 +27,7 @@ if ($_POST["action"] === 'GET_DATA') {
         $return_arr[] = array("id" => $result['id'],
             "leave_type_id" => $result['leave_type_id'],
             "leave_type_detail" => $result['leave_type_detail'],
+            "effect_year" => $result['effect_year'],
             "leave_before" => $result['leave_before'],
             "color" => $result['color'],
             "day_max" => $result['day_max'],
@@ -117,6 +118,7 @@ if ($_POST["action"] === 'ADD') {
         //$leave_type_id = "D" . sprintf('%03s', LAST_ID($conn, "mleave_type", 'id'));
         $leave_type_id = $_POST["leave_type_id"];
         $leave_type_detail = $_POST["leave_type_detail"];
+        $effect_year = $_POST["effect_year"];
         $day_max = $_POST["day_max"];
         $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
@@ -130,11 +132,12 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,day_max,leave_before,work_age_allow,remark,day_flag,line_alert,status) 
-                    VALUES (:leave_type_id,:leave_type_detail,:day_max,:leave_before,:work_age_allow,:remark,:day_flag,:line_alert,:status)";
+            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,effect_year,day_max,leave_before,work_age_allow,remark,day_flag,line_alert,status) 
+                    VALUES (:leave_type_id,:leave_type_detail,:effect_year,:day_max,:leave_before,:work_age_allow,:remark,:day_flag,:line_alert,:status)";
             $query = $conn->prepare($sql);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
             $query->bindParam(':leave_type_detail', $leave_type_detail, PDO::PARAM_STR);
+            $query->bindParam(':effect_year', $effect_year, PDO::PARAM_STR);
             $query->bindParam(':day_max', $day_max, PDO::PARAM_STR);
             $query->bindParam(':leave_before', $leave_before, PDO::PARAM_STR);
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
@@ -159,6 +162,7 @@ if ($_POST["action"] === 'UPDATE') {
         $id = $_POST["id"];
         $leave_type_id = $_POST["leave_type_id"];
         $leave_type_detail = $_POST["leave_type_detail"];
+        $effect_year = $_POST["effect_year"];
         $day_max = $_POST["day_max"];
         $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
@@ -168,12 +172,13 @@ if ($_POST["action"] === 'UPDATE') {
         $sql_find = "SELECT * FROM mleave_type WHERE id = '" . $id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
-            $sql_update = "UPDATE mleave_type SET leave_type_id=:leave_type_id,leave_type_detail=:leave_type_detail
+            $sql_update = "UPDATE mleave_type SET leave_type_id=:leave_type_id,leave_type_detail=:leave_type_detail,effect_year=:effect_year
             ,day_max=:day_max,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,line_alert=:line_alert,day_flag=:day_flag,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
             $query->bindParam(':leave_type_detail', $leave_type_detail, PDO::PARAM_STR);
+            $query->bindParam(':effect_year', $effect_year, PDO::PARAM_STR);
             $query->bindParam(':day_max', $day_max, PDO::PARAM_STR);
             $query->bindParam(':leave_before', $leave_before, PDO::PARAM_STR);
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
@@ -183,6 +188,12 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':status', $status, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
+
+            $sql_update_year = "UPDATE mleave_type SET effect_year=:effect_year ";
+            $query_year = $conn->prepare($sql_update_year);
+            $query_year->bindParam(':effect_year', $effect_year, PDO::PARAM_STR);
+            $query_year->execute();
+
             echo $save_success;
         }
     }
@@ -277,6 +288,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
                 "id" => $row['id'],
                 "leave_type_id" => $row['leave_type_id'],
                 "leave_type_detail" => $leave_type_detail,
+                "effect_year" => $row['effect_year'],
                 "day_max" => $row['day_max'],
                 "day_flag" => $row['day_flag'],
                 "leave_before" => $row['leave_before'],
