@@ -9,6 +9,8 @@ $sql_main = "SELECT * FROM v_ims_time_attendance
 $statement = $conn->query($sql_main);
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+$loop = 0;
+
 foreach ($results as $result) {
     // เตรียม SQL เพื่อค้นหา record ซ้ำ
     $sql_find = "
@@ -29,6 +31,10 @@ foreach ($results as $result) {
     // ตรวจสอบว่ามีข้อมูลซ้ำหรือไม่
     $nRows = $stmt_find->fetchColumn();
     if ($nRows > 0) {
+
+        $loop++;
+        echo $loop . " ";
+
         // หากพบข้อมูลซ้ำ ให้ทำการ UPDATE
         $sql_update = "
             UPDATE ims_time_attendance_work_date
