@@ -135,8 +135,12 @@ $endTime = microtime(true);
 // คำนวณระยะเวลาในการประมวลผล
 $duration = $endTime - $startTime;
 
-// แสดงผลเวลาเริ่มต้น, เวลาสิ้นสุด และระยะเวลา
-// แสดงผลเวลาเริ่มต้น, เวลาสิ้นสุด และระยะเวลา
-echo "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', (int)$startTime) . "\n";
-echo "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', (int)$endTime) . "\n";
-echo "ระยะเวลาในการประมวลผลทั้งหมด: " . round($duration, 2) . " วินาที\n";
+$date_write = date("Y-m-d H:i:s");
+
+$txt = "Write File At " . $date_write . "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', (int)$startTime) . "\n"
+    . "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', (int)$endTime) . "\n"
+    . "ระยะเวลาในการประมวลผลทั้งหมด: " . round($duration, 2) . " วินาที\n";
+
+$my_file = fopen("success-scan.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);

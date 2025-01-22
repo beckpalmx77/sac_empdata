@@ -1,6 +1,9 @@
 <?php
 include('../config/connect_db.php');
 
+// จับเวลาเริ่มต้นกระบวนการ
+$startTime = microtime(true);
+
 // ดึงข้อมูลจาก view v_ims_time_attendance
 $sql_main = "SELECT * FROM v_ims_time_attendance 
              ORDER BY work_date DESC, start_time DESC 
@@ -83,3 +86,19 @@ foreach ($results as $result) {
         }
     }
 }
+
+// จับเวลาเสร็จสิ้นกระบวนการ
+$endTime = microtime(true);
+
+// คำนวณระยะเวลาในการประมวลผล
+$duration = $endTime - $startTime;
+
+$date_write = date("Y-m-d H:i:s");
+
+$txt = "Write File At " . $date_write . "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', (int)$startTime) . "\n"
+    . "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', (int)$endTime) . "\n"
+    . "ระยะเวลาในการประมวลผลทั้งหมด: " . round($duration, 2) . " วินาที\n";
+
+$my_file = fopen("success-import.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
