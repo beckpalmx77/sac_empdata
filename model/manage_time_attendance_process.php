@@ -12,7 +12,7 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM ims_time_attendance_work_date WHERE id = " . $id;
+    $sql_get = "SELECT * FROM v_ims_time_attendance WHERE id = " . $id;
     $statement = $conn->query($sql_get);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -60,20 +60,20 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_time_attendance_work_date ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_ims_time_attendance ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM ims_time_attendance_work_date WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_ims_time_attendance WHERE 1 " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
 
-    $sql_record = "SELECT * FROM ims_time_attendance_work_date WHERE 1 " . $searchQuery;
+    $sql_record = "SELECT * FROM v_ims_time_attendance WHERE 1 " . $searchQuery;
 
     $sql_record .= " ORDER BY work_date DESC , start_time DESC LIMIT :limit,:offset";
 

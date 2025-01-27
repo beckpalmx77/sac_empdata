@@ -240,9 +240,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-12">
-                                                                    <label for="leave_case" class="control-label">
-                                                                        <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
-                                                                    </label>
+                                                                        <label for="leave_case" class="control-label">
+                                                                            <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">

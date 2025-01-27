@@ -1,88 +1,104 @@
 <?php
-
 include('../config/connect_db.php');
 
-// ชื่อไฟล์ที่ต้องการอ่าน
-$filename = 'd:\ims_time_attendance.txt';
+// จับเวลาเริ่มต้นกระบวนการ
+$startTime = microtime(true);
 
-// ตรวจสอบว่าไฟล์มีอยู่หรือไม่
-if (file_exists($filename)) {
-    // อ่านข้อมูลจากไฟล์
-    $fileContent = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+// ดึงข้อมูลจาก view v_ims_time_attendance
+$sql_main = "SELECT * FROM v_ims_time_attendance 
+             ORDER BY work_date DESC, start_time DESC 
+             LIMIT 30000";
 
-    try {
-        // เตรียมคำสั่ง SQL สำหรับเพิ่มข้อมูล
-        $insertStmt = $conn->prepare("
-            INSERT INTO ims_time_attendance (employee_code, full_code, date, time, status, device)
-            VALUES (:employee_code, :full_code, :date, :time, :status, :device)
-        ");
+$statement = $conn->query($sql_main);
+$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        // เตรียมคำสั่ง SQL สำหรับตรวจสอบข้อมูลซ้ำ
-        $checkStmt = $conn->prepare("
-            SELECT COUNT(*) FROM ims_time_attendance
-            WHERE employee_code = :employee_code AND date = :date AND time = :time
-        ");
+$loop = 0;
 
-        // เก็บผลลัพธ์ใน array
-        $result = [];
+foreach ($results as $result) {
+    // เตรียม SQL เพื่อค้นหา record ซ้ำ
+    $sql_find = "
+        SELECT COUNT(*) 
+        FROM ims_time_attendance_work_date 
+        WHERE emp_id = :emp_id 
+          AND work_date = :work_date 
+          AND start_time = :start_time          
+    ";
 
-        foreach ($fileContent as $line) {
-            // ตรวจสอบว่าบรรทัดเริ่มต้นด้วยตัวเลขหรือไม่
-            if (!preg_match('/^\d/', $line)) {
-                continue; // ข้ามบรรทัดที่ไม่ได้เริ่มต้นด้วยตัวเลข
-            }
+    // ใช้ prepared statement เพื่อป้องกัน SQL Injection
+    $stmt_find = $conn->prepare($sql_find);
+    $stmt_find->bindParam(':emp_id', $result['emp_id']);
+    $stmt_find->bindParam(':work_date', $result['work_date']);
+    $stmt_find->bindParam(':start_time', $result['start_time']);
+    $stmt_find->execute();
 
-            // รหัสพนักงาน 5 ตัวแรก
-            $employeeCode = substr($line, 0, 5);
+    // ตรวจสอบว่ามีข้อมูลซ้ำหรือไม่
+    $nRows = $stmt_find->fetchColumn();
+    if ($nRows > 0) {
 
-            // แยกคอลัมน์ตามช่องว่าง
-            $columns = preg_split('/\s+/', trim($line));
+        $loop++;
+        echo $loop . " ";
 
-            // สร้าง array สำหรับแถวปัจจุบัน
-            $row = [
-                'employee_code' => $employeeCode,
-                'full_code' => $columns[0] ?? '',
-                'date' => $columns[2] ?? '',
-                'time' => $columns[3] ?? '',
-                'status' => $columns[4] ?? '',
-                'device' => $columns[5] ?? '',
-            ];
+        // หากพบข้อมูลซ้ำ ให้ทำการ UPDATE
+        $sql_update = "
+            UPDATE ims_time_attendance_work_date
+            SET device = :device,
+                end_time = :end_time
+            WHERE emp_id = :emp_id 
+              AND work_date = :work_date 
+              AND start_time = :start_time
+        ";
 
-            // ตรวจสอบข้อมูลซ้ำในฐานข้อมูล
-            $checkStmt->execute([
-                ':employee_code' => $row['employee_code'],
-                ':date' => $row['date'],
-                ':time' => $row['time'],
-            ]);
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->bindParam(':device', $result['device']);
+        $stmt_update->bindParam(':end_time', $result['end_time']);
+        $stmt_update->bindParam(':emp_id', $result['emp_id']);
+        $stmt_update->bindParam(':work_date', $result['work_date']);
+        $stmt_update->bindParam(':start_time', $result['start_time']);
 
-            // หากข้อมูลซ้ำ ให้ข้ามไป
-            if ($checkStmt->fetchColumn() > 0) {
-                continue;
-            }
-
-            // เพิ่มข้อมูลในผลลัพธ์
-            $result[] = $row;
-
-            // บันทึกข้อมูลลงฐานข้อมูล
-            $insertStmt->execute([
-                ':employee_code' => $row['employee_code'],
-                ':full_code' => $row['full_code'],
-                ':date' => $row['date'],
-                ':time' => $row['time'],
-                ':status' => $row['status'],
-                ':device' => $row['device'],
-            ]);
+        if ($stmt_update->execute()) {
+            echo "Update = emp_id: " . $result['emp_id'] . ", work_date: " . $result['work_date'] . "\n\r";
+        } else {
+            echo "Failed to update record for emp_id: " . $result['emp_id'] . ", work_date: " . $result['work_date'] . "\n\r";
         }
+    } else {
+        // หากไม่พบข้อมูลซ้ำ ให้ทำการ INSERT
+        $sql_insert = "
+            INSERT INTO ims_time_attendance_work_date 
+            (emp_id, f_name, l_name, work_date, start_time, end_time, department_id, dept_id_approve, device) 
+            VALUES (:emp_id, :f_name, :l_name, :work_date, :start_time, :end_time, :department_id, :dept_id_approve, :device)
+        ";
 
-        // แสดงผลข้อมูล
-        echo "<pre>";
-        print_r($result);
-        echo "</pre>";
+        $stmt_insert = $conn->prepare($sql_insert);
+        $stmt_insert->bindParam(':emp_id', $result['emp_id']);
+        $stmt_insert->bindParam(':f_name', $result['f_name']);
+        $stmt_insert->bindParam(':l_name', $result['l_name']);
+        $stmt_insert->bindParam(':work_date', $result['work_date']);
+        $stmt_insert->bindParam(':start_time', $result['start_time']);
+        $stmt_insert->bindParam(':end_time', $result['end_time']);
+        $stmt_insert->bindParam(':department_id', $result['department_id']);
+        $stmt_insert->bindParam(':dept_id_approve', $result['dept_id_approve']);
+        $stmt_insert->bindParam(':device', $result['device']);
 
-        echo "บันทึกข้อมูลลงฐานข้อมูลเรียบร้อยแล้ว!";
-    } catch (PDOException $e) {
-        echo "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล: " . $e->getMessage();
+        if ($stmt_insert->execute()) {
+            echo "Insert = emp_id: " . $result['emp_id'] . ", work_date: " . $result['work_date'] . "\n\r";
+        } else {
+            echo "Failed to insert record for emp_id: " . $result['emp_id'] . ", work_date: " . $result['work_date'] . "\n\r";
+        }
     }
-} else {
-    echo "ไม่พบไฟล์: $filename";
 }
+
+// จับเวลาเสร็จสิ้นกระบวนการ
+$endTime = microtime(true);
+
+// คำนวณระยะเวลาในการประมวลผล
+$duration = $endTime - $startTime;
+
+$date_write = date("Y-m-d H:i:s");
+
+$txt = "Write File At " . $date_write . "\nเริ่มต้นประมวลผลเวลา: " . date('H:i:s', (int)$startTime) . "\n"
+    . "สิ้นสุดประมวลผลเวลา: " . date('H:i:s', (int)$endTime) . "\n"
+    . "ระยะเวลาในการประมวลผลทั้งหมด: " . round($duration, 2) . " วินาที\n";
+
+$my_file = fopen("success-import.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);

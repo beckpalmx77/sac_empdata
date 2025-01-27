@@ -257,7 +257,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
             );
         } else {
 
-            $leave_type_detail = '<span style="color: '. $row['color'] . ';">' . $row['leave_type_detail'] . '</span>';
+            $leave_type_detail = '<span style="color: '. $row['color'] . '">' . $row['leave_type_detail'] . '</span>';
 
             $data[] = array(
                 "id" => $row['id'],
