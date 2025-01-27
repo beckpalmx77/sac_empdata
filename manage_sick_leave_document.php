@@ -110,9 +110,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                             <div class="modal-body">
 
                                                                 <div class="form-group">
-                                                                    <label for="text"
+                                                                    <label for="doc_id"
                                                                            class="control-label">เลขที่เอกสาร</label>
-                                                                    <input type="doc_id" class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                            id="doc_id" name="doc_id"
                                                                            readonly="true"
                                                                            placeholder="สร้างอัตโนมัติ">

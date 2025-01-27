@@ -112,12 +112,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                             <div class="modal-body">
 
                                                                 <div class="form-group">
-                                                                    <!--label for="doc_id"
-                                                                           class="control-label">เลขที่เอกสาร</label-->
-                                                                    <input type="hidden" class="form-control"
+                                                                    <label for="doc_id"
+                                                                           class="control-label">เลขที่เอกสาร</label>
+                                                                    <input type="text" class="form-control"
                                                                            id="doc_id" name="doc_id"
                                                                            readonly="true"
-                                                                           placeholder="">
+                                                                           placeholder="สร้างอัตโนมัติ">
                                                                 </div>
 
 
@@ -207,7 +207,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                            id="leave_type_id"
                                                                            required="required"
                                                                            name="leave_type_id">
-                                                                    <div class="col-sm-6">
+                                                                    <div class="col-sm-8">
                                                                         <label for="leave_type_detail"
                                                                                class="control-label">ประเภทการลา</label>
                                                                         <input type="text" class="form-control"
