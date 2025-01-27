@@ -100,13 +100,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                         <div class="modal fade" id="recordModal">
                                             <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">+
-                                                    <div class="modal-header">
+                                                <div class="modal-content">
+                                                    <!--div class="modal-header">
                                                         <h4 class="modal-title">Modal title</h4>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                                 aria-hidden="true">×
                                                         </button>
-                                                    </div>
+                                                    </div-->
                                                     <form method="post" id="recordForm" enctype="multipart/form-data">
                                                         <div class="modal-body">
                                                             <div class="modal-body">
