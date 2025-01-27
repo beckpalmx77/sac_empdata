@@ -572,6 +572,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             top: 30%;
         }
     </style>
+
+    <style>
+        body.modal-open {
+            overflow-y: hidden;
+            padding-right: 0 !important;
+        }
+    </style>
+
     <script>
         $(document).ready(function () {
             $(".icon-input-btn").each(function () {
