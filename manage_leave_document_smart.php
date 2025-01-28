@@ -204,18 +204,22 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                                                 <div class="form-group row">
 
-                                                                    <label for="leave_type_id" class="control-label">ประเภทการลา</label>
-                                                                    <select class="form-control select2" id="leave_type_id" name="leave_type_id" required="required">
-                                                                        <!-- ตัวเลือกจะถูกเติมจาก AJAX -->
-                                                                    </select>
+                                                                    <div class="form-group row">
+                                                                        <label for="leave_type_id"
+                                                                               class="control-label mb-2">ประเภทการลา&nbsp;</label>
+                                                                        <select class="form-control select2"
+                                                                                id="leave_type_id" name="leave_type_id"
+                                                                                required="required">
+                                                                        </select>
+                                                                    </div>
 
                                                                 </div>
 
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-12">
-                                                                    <label for="leave_case" class="control-label">
-                                                                        <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
-                                                                    </label>
+                                                                        <label for="leave_case" class="control-label">
+                                                                            <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
+                                                                        </label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
@@ -525,6 +529,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet"/>
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+
     <script src="js/popup.js"></script>
 
     <style>
@@ -679,10 +690,10 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                         let formData = $(this).serialize();
 
-                        // alert(formData);
+                        alert(formData);
 
                         $.ajax({
-                            url: 'model/manage_leave_document_process.php',
+                            url: 'model/manage_leave_document_process-bak001.php',
                             method: "POST",
                             data: formData,
                             success: function (data) {
@@ -1054,7 +1065,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 placeholder: '-- กรุณาเลือกประเภทการลา --',
                 allowClear: true,
                 ajax: {
-                    url: 'modal/get_leave_data_type.php', // ระบุที่อยู่ไฟล์ PHP
+                    url: 'model/get_leave_data_type.php', // ระบุที่อยู่ไฟล์ PHP
                     type: 'POST',
                     dataType: 'json',
                     delay: 250,
@@ -1074,7 +1085,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             });
         });
     </script>
-
 
     </body>
     </html>
