@@ -188,6 +188,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     <th>จำนวนวัน</th>
                     <th>จำนวนชั่วโมง</th>
                     <th>สถานะ</th>
+                    <th>เอกสารแนบ</th>
                     <th>หมายเหตุ</th>
                 </tr>
                 </thead>
@@ -258,6 +259,14 @@ if (strlen($_SESSION['alogin']) == "") {
                         <td><?php echo htmlentities($row_leave['leave_day']); ?></td>
                         <td><?php echo htmlentities($row_leave['leave_hour']); ?></td>
                         <td><?php echo $status_desc; ?></td>
+                        <td>
+                            <?php if (!empty($row_leave['picture'])): ?>
+                                <img src="<?php echo htmlentities("img_doc/" . $row_leave['picture']); ?>"
+                                     alt="Attached Document"
+                                     style="width: 50px; height: 50px; cursor: pointer;"
+                                     onclick="openImage('<?php echo htmlentities("img_doc/" . $row_leave['picture']); ?>')">
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo htmlentities($row_leave['remark']); ?></td>
                     </tr>
                 <?php } ?>
@@ -413,6 +422,15 @@ if (strlen($_SESSION['alogin']) == "") {
         </div>
 
     </div>
+
+    <script>
+        function openImage(imageUrl) {
+            if (imageUrl) {
+                const imgWindow = window.open("", "_blank");
+                imgWindow.document.write('<img src="' + imageUrl + '" style="width:100%; height:auto;">');
+            }
+        }
+    </script>
 
     </body>
     </html>
