@@ -7,7 +7,7 @@ $startTime = microtime(true);
 // ดึงข้อมูลจาก view v_ims_time_attendance
 $sql_main = "SELECT * FROM v_ims_time_attendance 
              ORDER BY work_date DESC, start_time DESC 
-             LIMIT 30000";
+             LIMIT 400";
 
 $statement = $conn->query($sql_main);
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -87,6 +87,19 @@ foreach ($results as $result) {
     }
 }
 
+$delete_datetime = "
+    DELETE t1 FROM ims_time_attendance_work_date t1
+    LEFT JOIN (
+        SELECT MIN(id) AS min_id
+        FROM ims_time_attendance_work_date
+        GROUP BY emp_id, work_date, start_time, end_time
+    ) t2 ON t1.id = t2.min_id
+    WHERE t2.min_id IS NULL;
+";
+
+$stmt_delete = $conn->prepare($delete_datetime);
+$stmt_delete->execute();
+
 // จับเวลาเสร็จสิ้นกระบวนการ
 $endTime = microtime(true);
 
@@ -102,3 +115,5 @@ $txt = "Write File At " . $date_write . "\nเริ่มต้นประม�
 $my_file = fopen("success-import.txt", "w") or die("Unable to open file!");
 fwrite($my_file, $txt);
 fclose($my_file);
+
+echo "Command = " . $sql_main;
