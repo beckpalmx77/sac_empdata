@@ -94,6 +94,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                 <th>จำนวนวัน</th>
                 <th>จำนวนชั่วโมง</th>
                 <th>สถานะ</th>
+                <th>เอกสารแนบ</th>
                 <th>หมายเหตุ</th>
             </tr>
             </thead>
@@ -110,6 +111,13 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     case 'N':
                         $status_desc = "<span style='color: black;'>รอพิจารณา</span>";
                 }
+/*
+                if ($row_leave->picture===null) {
+                    $picture = "";
+                } else {
+                    $picture = $row_leave->picture;
+                }
+*/
                 ?>
                 <tr>
                     <td><?php echo htmlentities($index + 1); ?></td>
@@ -127,6 +135,14 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_leave->leave_day); ?></td>
                     <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
                     <td><?php echo $status_desc; ?></td>
+                    <td>
+                        <?php if (!empty($row_leave->picture)): ?>
+                            <img src="<?php echo htmlentities("img_doc/" . $row_leave->picture); ?>"
+                                 alt="Attached Document"
+                                 style="width: 50px; height: 50px; cursor: pointer;"
+                                 onclick="openImage('<?php echo htmlentities("img_doc/" . $row_leave->picture); ?>')">
+                        <?php endif; ?>
+                    </td>
                     <td><?php echo htmlentities($row_leave->remark); ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -189,6 +205,16 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
         </table>
     </div>
 </div>
+
+
+<script>
+    function openImage(imageUrl) {
+        if (imageUrl) {
+            const imgWindow = window.open("", "_blank");
+            imgWindow.document.write('<img src="' + imageUrl + '" style="width:100%; height:auto;">');
+        }
+    }
+</script>
 
 </body>
 </html>
