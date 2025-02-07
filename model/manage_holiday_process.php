@@ -99,8 +99,8 @@ if ($_POST["action"] === 'ADD') {
 
         $doc_id = "H-" . $_SESSION['dept_id_approve'] . "-" . substr($doc_date, 6) . "-" . sprintf('%04s', LAST_ID($conn, "dholiday_event", 'id'));
 
-        $day_max = GET_VALUE($conn, "select day_max as data from mleave_type where leave_type_id ='H3' ");
-        $day_max_ext = GET_VALUE($conn, "select day_max_ext as data from mleave_type where leave_type_id ='H3' ");
+        $day_max = GET_VALUE($conn, "select day_max as data from mleave_type where leave_type_id ='H2' ");
+        $day_max_ext = GET_VALUE($conn, "select day_max_ext as data from mleave_type where leave_type_id ='H2' ");
 
         $cnt_day = "";
         $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM vdholiday_event WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
