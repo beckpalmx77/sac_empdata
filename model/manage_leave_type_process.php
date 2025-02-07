@@ -31,6 +31,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "leave_before" => $result['leave_before'],
             "color" => $result['color'],
             "day_max" => $result['day_max'],
+            "day_max_ext" => $result['day_max_ext'],
             "work_age_allow" => $result['work_age_allow'],
             "day_flag" => $result['day_flag'],
             "remark" => $result['remark'],
@@ -65,6 +66,7 @@ if ($_POST["action"] === 'SEARCH_DATA') {
             "leave_type_detail" => $result['leave_type_detail'],
             "leave_before" => $result['leave_before'],
             "day_max" => $result['day_max'],
+            "day_max_ext" => $result['day_max_ext'],
             "color" => $result['color'],
             "work_age_allow" => $result['work_age_allow'],
             "day_flag" => $result['day_flag'],
@@ -120,6 +122,7 @@ if ($_POST["action"] === 'ADD') {
         $leave_type_detail = $_POST["leave_type_detail"];
         $effect_year = $_POST["effect_year"];
         $day_max = $_POST["day_max"];
+        $day_max_ext = $_POST["day_max_ext"];
         $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
         $work_age_allow = $_POST["work_age_allow"];
@@ -132,13 +135,14 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo $dup;
         } else {
-            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,effect_year,day_max,leave_before,work_age_allow,remark,day_flag,line_alert,status) 
-                    VALUES (:leave_type_id,:leave_type_detail,:effect_year,:day_max,:leave_before,:work_age_allow,:remark,:day_flag,:line_alert,:status)";
+            $sql = "INSERT INTO mleave_type(leave_type_id,leave_type_detail,effect_year,day_max,day_max_ext,leave_before,work_age_allow,remark,day_flag,line_alert,status) 
+                    VALUES (:leave_type_id,:leave_type_detail,:effect_year,:day_max,:day_max_ext,:leave_before,:work_age_allow,:remark,:day_flag,:line_alert,:status)";
             $query = $conn->prepare($sql);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
             $query->bindParam(':leave_type_detail', $leave_type_detail, PDO::PARAM_STR);
             $query->bindParam(':effect_year', $effect_year, PDO::PARAM_STR);
             $query->bindParam(':day_max', $day_max, PDO::PARAM_STR);
+            $query->bindParam(':day_max_ext', $day_max_ext, PDO::PARAM_STR);
             $query->bindParam(':leave_before', $leave_before, PDO::PARAM_STR);
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
@@ -164,6 +168,7 @@ if ($_POST["action"] === 'UPDATE') {
         $leave_type_detail = $_POST["leave_type_detail"];
         $effect_year = $_POST["effect_year"];
         $day_max = $_POST["day_max"];
+        $day_max_ext = $_POST["day_max_ext"];
         $day_flag = $_POST["day_flag"];
         $leave_before = $_POST["leave_before"];
         $remark = $_POST["remark"];
@@ -173,13 +178,14 @@ if ($_POST["action"] === 'UPDATE') {
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
             $sql_update = "UPDATE mleave_type SET leave_type_id=:leave_type_id,leave_type_detail=:leave_type_detail,effect_year=:effect_year
-            ,day_max=:day_max,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,line_alert=:line_alert,day_flag=:day_flag,status=:status            
+            ,day_max=:day_max,day_max_ext=:day_max_ext,leave_before=:leave_before,work_age_allow=:work_age_allow,remark=:remark,line_alert=:line_alert,day_flag=:day_flag,status=:status            
             WHERE id = :id";
             $query = $conn->prepare($sql_update);
             $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
             $query->bindParam(':leave_type_detail', $leave_type_detail, PDO::PARAM_STR);
             $query->bindParam(':effect_year', $effect_year, PDO::PARAM_STR);
             $query->bindParam(':day_max', $day_max, PDO::PARAM_STR);
+            $query->bindParam(':day_max_ext', $day_max_ext, PDO::PARAM_STR);
             $query->bindParam(':leave_before', $leave_before, PDO::PARAM_STR);
             $query->bindParam(':work_age_allow', $work_age_allow, PDO::PARAM_STR);
             $query->bindParam(':remark', $remark, PDO::PARAM_STR);
@@ -290,6 +296,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
                 "leave_type_detail" => $leave_type_detail,
                 "effect_year" => $row['effect_year'],
                 "day_max" => $row['day_max'],
+                "day_max_ext" => $row['day_max_ext'],
                 "day_flag" => $row['day_flag'],
                 "leave_before" => $row['leave_before'],
                 "work_age_allow" => $row['work_age_allow'],

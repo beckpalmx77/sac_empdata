@@ -123,7 +123,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                            placeholder="ปี">
                                                                 </div>
 
-                                                                <div class="form-group">
+                                                                <!--div class="form-group">
                                                                     <label for="day_max"
                                                                            class="control-label">จำนวนวันสูงสุด</label>
                                                                     <input type="text" class="form-control"
@@ -131,8 +131,21 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                            name="day_max"
                                                                            required="required"
                                                                            placeholder="จำนวนวันสูงสุด">
-                                                                </div>
+                                                                </div-->
 
+                                                                <div class="form-group">
+                                                                    <label class="control-label">จำนวนวันสูงสุด</label>
+                                                                    <div class="d-flex gap-3 align-items-center">
+                                                                        <div class="w-50">
+                                                                            <label for="day_max" class="form-label">Office</label>
+                                                                            <input type="text" class="form-control" id="day_max" name="day_max" required placeholder="">
+                                                                        </div>
+                                                                        <div class="w-50">
+                                                                            <label for="day_max_ext" class="form-label">สาขา</label>
+                                                                            <input type="text" class="form-control" id="day_max_ext" name="day_max_ext" required placeholder="">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="form-group">
                                                                     <label for="leave_before"
                                                                            class="control-label">จำนวนวันที่ต้องลาล่วงหน้า</label>
@@ -367,6 +380,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#leave_type_detail').val("");
                 $('#effect_year').val("");
                 $('#day_max').val("");
+                $('#day_max_ext').val("");
                 $('#line_alert').val("Y");
                 $('#remark').val("");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
@@ -395,6 +409,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let leave_type_detail = response[i].leave_type_detail;
                         let effect_year = response[i].effect_year;
                         let day_max = response[i].day_max;
+                        let day_max_ext = response[i].day_max_ext;
                         let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
                         let remark = response[i].remark;
@@ -407,6 +422,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#leave_type_detail').val(leave_type_detail);
                         $('#effect_year').val(effect_year);
                         $('#day_max').val(day_max);
+                        $('#day_max_ext').val(day_max_ext);
                         $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);
                         $('#remark').val(remark);
@@ -443,6 +459,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let leave_type_detail = response[i].leave_type_detail;
                         let effect_year = response[i].effect_year;
                         let day_max = response[i].day_max;
+                        let day_max_ext = response[i].day_max_ext;
                         let day_flag = response[i].day_flag;
                         let leave_before = response[i].leave_before;
                         let remark = response[i].remark;
@@ -455,6 +472,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#leave_type_detail').val(leave_type_detail);
                         $('#effect_year').val(effect_year);
                         $('#day_max').val(day_max);
+                        $('#day_max_ext').val(day_max_ext);
                         $('#day_flag').val(day_flag);
                         $('#leave_before').val(leave_before);
                         $('#remark').val(remark);
