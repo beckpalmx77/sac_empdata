@@ -199,9 +199,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                readonly="true"
                                                                                placeholder="วันที่เอกสาร">
                                                                     </div>
-
+                                                                    <div class="col-sm-9">
+                                                                        <label for="leave_case" class="control-label">
+                                                                            <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
+                                                                            <br>
+                                                                            <span style="color: blue;">* ลาไม่รับค่าจ้าง ลาแบบเป็นครึ่งชั่วโมงได้ เช่น 8.30-9.00 / 10.30-11.00</span>
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
-
                                                                 <div class="form-group row">
                                                                     <input type="hidden" class="form-control"
                                                                            id="leave_type_id"
@@ -237,22 +242,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
 
                                                                 </div>
-
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-12">
-                                                                    <label for="leave_case" class="control-label">
-                                                                        <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
-                                                                    </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-12">
-                                                                        <label for="leave_case" class="control-label">
-                                                                            <span style="color: blue;">* ลาไม่รับค่าจ้าง ลาแบบเป็นครึ่งชั่วโมงได้ เช่น 8.30-9.00 / 10.30-11.00</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-3">
                                                                         <label for="date_leave_start"
