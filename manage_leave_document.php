@@ -845,7 +845,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
-
         $("#TableRecordList").on('click', '.image', function () {
             let id = $(this).attr("id");
             let formData = {action: "GET_DATA", id: id};
@@ -897,8 +896,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             + '&status=' + status
                             + '&action=UPDATE';
 
-                        OpenPopupCenter(originalURL, "", "");
-
+                        // ใช้ window.open แทนการใช้ OpenPopupCenter
+                        window.open(originalURL, '_blank');
                     }
                 },
                 error: function (response) {
@@ -906,8 +905,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 }
             });
         });
-
     </script>
+
 
     <script>
         $(document).ready(function () {
