@@ -128,7 +128,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                         <input class="form-control" type="file" id="uploadImage" accept="image/*"
                                                name="image"
                                                onchange="readURL(this)" multiple/>
-                                        <div>Upload File (ไฟล์ .jpg , .png เท่านั้น) ชี้ที่รูปเพื่อขยาย</div>
+                                        <div>Upload File (ไฟล์ .jpg , .png เท่านั้น) ชี้ที่รูปเพื่อขยาย หรือ Click เพื่อเปิดดูภาพ</div>
                                     </div>
                                 </div>
 
@@ -139,7 +139,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <div class="modal-footer">
 
                             <div class='preview'>
-                                <img class="enlarge" src="" id="img" width="200" height="200">
+                                <img class="enlarge" src="" id="img" width="200" height="200" onclick="openImageInNewTab()">
                             </div>
 
                             <!--div class='preview'>
@@ -331,6 +331,13 @@ if (strlen($_SESSION['alogin']) == "") {
                 window.close();
             });
         });
+    </script>
+
+    <script>
+        function openImageInNewTab() {
+            let imgSrc = document.getElementById('img').src; // ดึง URL ของภาพ
+            window.open(imgSrc, '_blank'); // เปิดภาพในแท็บใหม่
+        }
     </script>
 
     </body>
