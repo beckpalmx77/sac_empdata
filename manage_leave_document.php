@@ -10,6 +10,8 @@ $l_pak_ron_max = $_SESSION['L3'];
 $l_holiday_max = $_SESSION['H3'];
 
 include('includes/Header.php');
+include('config/connect_db.php');
+
 if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "") {
     header("Location: index.php");
 } else {
@@ -207,8 +209,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         </label>
                                                                     </div>
                                                                 </div>
+
                                                                 <div class="form-group row">
-                                                                    <input type="hidden" class="form-control"
+                                                                    <!--input type="hidden" class="form-control"
                                                                            id="leave_type_id"
                                                                            required="required"
                                                                            name="leave_type_id">
@@ -231,6 +234,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                             Click <i class="fa fa-search"
                                                                                      aria-hidden="true"></i>
                                                                         </a>
+                                                                    </div-->
+                                                                    <div class="col-sm-8">
+                                                                        <label for="date_leave_start"
+                                                                               class="control-label">ประเภทการลา (เลือก)</label>
+                                                                        <select class="form-control" id="leave_type_id" name="leave_type_id" required onchange="showSelectedValue()">
+                                                                            <?php
+                                                                            $sql = "SELECT leave_type_id, leave_type_detail FROM mleave_type WHERE day_flag = 'L' AND leave_type_id <> 'L2' ORDER BY leave_type_id ";
+                                                                            $stmt = $conn->query($sql);
+                                                                            while ($row = $stmt->fetch()) {
+                                                                                echo "<option value='{$row['leave_type_id']}'>{$row['leave_type_detail']}</option>";
+                                                                            }
+                                                                            ?>
+                                                                        </select>
                                                                     </div>
                                                                     <div class="col-sm-2">
                                                                         <label for="search_data"
@@ -695,7 +711,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                         let formData = $(this).serialize();
 
-                        // alert(formData);
+                        //alert(formData);
 
                         $.ajax({
                             url: 'model/manage_leave_document_process.php',
@@ -1020,7 +1036,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
             function setDatePicker() {
@@ -1054,11 +1070,67 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#date_leave_start').val('');
             });
         });
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            function setDatePicker() {
+                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
+                let startDate = new Date(); // วันที่ปัจจุบัน
+
+                // กำหนดวันที่เริ่มต้นตามประเภทการลา
+                if (leave_type_id === 'L1' || leave_type_id === 'L3') {
+                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
+                } else if (leave_type_id === 'S') {
+                    startDate.setDate(startDate.getDate()); // วันนี้เลือกได้เลย
+                }
+
+                // ทำลาย datepicker ก่อนสร้างใหม่
+                $('#date_leave_start').datepicker('destroy').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้น
+                });
+
+                $('#date_leave_to').datepicker('destroy').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้น
+                });
+
+                console.log("ประเภทการลา: " + leave_type_id + " | วันที่เริ่มต้น: " + startDate);
+            }
+
+            // เมื่อเลือกประเภทการลาให้ตั้งค่า datepicker ใหม่
+            $('#leave_type_id').on('change', function () {
+                setDatePicker();
+            });
+
+            // เมื่อปิด Modal ให้รีเซ็ตวันที่ลา
+            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
+                setDatePicker();
+                $('#date_leave_start').val('');
+            });
+        });
+
     </script>
 
     <script>
         function ReloadDataTable() {
             $('#TableRecordList').DataTable().ajax.reload();
+        }
+    </script>
+
+    <script>
+        function showSelectedValue() {
+            let select = document.getElementById("leave_type_id");
+            let selectedValue = select.value;
+            let selectedText = select.options[select.selectedIndex].text;
+            //alert("ค่า: " + selectedValue + "\nข้อความ: " + selectedText);
         }
     </script>
 
