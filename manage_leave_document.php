@@ -1071,7 +1071,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script-->
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             function setDatePicker() {
                 let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
@@ -1116,7 +1116,59 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             });
         });
 
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            function setDatePicker() {
+                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
+                let startDate = new Date(); // วันที่ปัจจุบัน
+
+                // กำหนดการตั้งค่าเริ่มต้นของวันที่
+                if (leave_type_id === 'L6') {
+                    // ถ้าเลือก leave_type_id = 'L6' สามารถเลือกได้ทุกวันที่ผ่านมาและวันปัจจุบัน
+                    startDate = new Date('2000-01-01'); // ไม่จำกัดวันเริ่มต้น (ให้ย้อนกลับได้)
+                } else if (leave_type_id === 'L1' || leave_type_id === 'L3') {
+                    // ถ้าเลือก L1 หรือ L3 ให้เริ่มเลือกได้จาก 3 วันหลังจากวันนี้
+                    startDate.setDate(startDate.getDate() + 3);
+                } else if (leave_type_id === 'S') {
+                    // ถ้าเลือก S ให้เลือกวันนี้ได้เลย
+                    startDate.setDate(startDate.getDate());
+                }
+
+                // ทำลาย datepicker ก่อนสร้างใหม่
+                $('#date_leave_start').datepicker('destroy').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้น
+                });
+
+                $('#date_leave_to').datepicker('destroy').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้น
+                });
+
+                console.log("ประเภทการลา: " + leave_type_id + " | วันที่เริ่มต้น: " + startDate);
+            }
+
+            // เมื่อเลือกประเภทการลาให้ตั้งค่า datepicker ใหม่
+            $('#leave_type_id').on('change', function () {
+                setDatePicker();
+            });
+
+            // เมื่อปิด Modal ให้รีเซ็ตวันที่ลา
+            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
+                setDatePicker();
+                $('#date_leave_start').val('');
+            });
+        });
     </script>
+
 
     <script>
         function ReloadDataTable() {
