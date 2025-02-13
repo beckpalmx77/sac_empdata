@@ -16,11 +16,19 @@ $doc_date_to = $_POST["doc_date_to"];
 $employeeSelect = $_POST["employeeSelect"];
 
 // แปลงวันที่จาก DD-MM-YYYY เป็น YYYY-MM-DD
-$doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-$doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+//$doc_date_start = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+//$doc_date_to = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+
+$start_date = $doc_date_start;
+$end_date = $doc_date_to;
 
 // สร้างเงื่อนไขการกรองข้อมูล
-$search_Query = " WHERE STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$doc_date_start' AND '$doc_date_to'";
+// $search_Query = " WHERE STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$doc_date_start' AND '$doc_date_to'";
+
+$search_Query = " WHERE STR_TO_DATE(date_leave_start, '%d-%m-%Y') BETWEEN STR_TO_DATE('$start_date', '%d-%m-%Y') AND STR_TO_DATE('$end_date', '%d-%m-%Y')
+OR STR_TO_DATE(date_leave_to, '%d-%m-%Y') BETWEEN STR_TO_DATE('$start_date', '%d-%m-%Y') AND STR_TO_DATE('$end_date', '%d-%m-%Y')
+OR STR_TO_DATE('$start_date', '%d-%m-%Y') BETWEEN STR_TO_DATE(date_leave_start, '%d-%m-%Y') AND STR_TO_DATE(date_leave_to, '%d-%m-%Y') ";
+
 if (!empty($employeeSelect) && $employeeSelect !== '-') {
     $search_Query .= " AND emp_id = '$employeeSelect'";
 }
