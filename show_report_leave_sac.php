@@ -10,8 +10,11 @@ $employeeSelect = $_POST["employeeSelect"];
 $where_emp = "";
 
 // แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
-$start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
-$end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+//$start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
+//$end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
+
+$start_date = $doc_date_start;
+$end_date = $doc_date_to;
 
 if ($employeeSelect !== '-') {
     $where_emp = " emp_id = '" . $employeeSelect . "'";
@@ -24,11 +27,38 @@ $holiday_data = fetchLeaveData($conn, 'vdholiday_event', $start_date, $end_date,
 
 function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
 {
+    $sql = "
+    SELECT * FROM $table 
+    WHERE " . $where_emp . " 
+    AND (
+    STR_TO_DATE(date_leave_start, '%d-%m-%Y') BETWEEN STR_TO_DATE('$start_date', '%d-%m-%Y') AND STR_TO_DATE('$end_date', '%d-%m-%Y')
+    OR STR_TO_DATE(date_leave_to, '%d-%m-%Y') BETWEEN STR_TO_DATE('$start_date', '%d-%m-%Y') AND STR_TO_DATE('$end_date', '%d-%m-%Y')
+    OR STR_TO_DATE('$start_date', '%d-%m-%Y') BETWEEN STR_TO_DATE(date_leave_start, '%d-%m-%Y') AND STR_TO_DATE(date_leave_to, '%d-%m-%Y')
+    )
+    ORDER BY STR_TO_DATE(date_leave_start, '%d-%m-%Y');
+    ";
+
+/*
+    $txt = $sql ;
+    $my_file = fopen("leave_a.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $txt);
+    fclose($my_file);
+*/
+
+    $query = $conn->prepare($sql);
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_OBJ);
+}
+
+function fetchLeaveData_BAK($conn, $table, $start_date, $end_date, $where_emp)
+{
     $sql = "SELECT * FROM $table WHERE " . $where_emp . " AND STR_TO_DATE(doc_date, '%d-%m-%Y') BETWEEN '$start_date' AND '$end_date' ORDER BY STR_TO_DATE(doc_date, '%d-%m-%Y')";
     $query = $conn->prepare($sql);
     $query->execute();
     return $query->fetchAll(PDO::FETCH_OBJ);
 }
+
+
 ?>
 
 <!DOCTYPE html>
