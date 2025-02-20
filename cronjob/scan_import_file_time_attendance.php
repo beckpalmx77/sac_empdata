@@ -52,7 +52,7 @@ if (is_dir($directory)) {
                 // อ่านข้อมูลจากไฟล์และเรียงลำดับย้อนกลับ
                 $fileContent = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
                 $fileContent = array_reverse($fileContent); // กลับลำดับจากท้าย
-                $fileContent = array_slice($fileContent, 0, 1000); // อ่านเฉพาะ 300 บรรทัดสุดท้าย
+                $fileContent = array_slice($fileContent, 0, 500); // อ่านเฉพาะ 300 บรรทัดสุดท้าย
 
                 try {
                     // เตรียมคำสั่ง SQL สำหรับเพิ่มข้อมูล
