@@ -15,6 +15,7 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="vendor/alertify/css/alertify.core.css" rel="stylesheet">
     <link href="vendor/alertify/css/alertify.default.css" rel="stylesheet">
     <link href="../css/select2_4010.css" rel="stylesheet">
