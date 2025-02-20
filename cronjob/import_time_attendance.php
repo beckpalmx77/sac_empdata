@@ -7,7 +7,7 @@ $startTime = microtime(true);
 // ดึงข้อมูลจาก view v_ims_time_attendance
 $sql_main = "SELECT * FROM v_ims_time_attendance 
              ORDER BY work_date DESC, start_time DESC 
-             LIMIT 400";
+             LIMIT 4000";
 
 $statement = $conn->query($sql_main);
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
