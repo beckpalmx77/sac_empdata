@@ -498,7 +498,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
 
             let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
@@ -564,6 +564,66 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             `)
                 .appendTo('head');
         });
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
+
+            let dataRecords = $('#TableRecordList').DataTable({
+                'lengthMenu': [[8, 10, 20, 50, 100], [8, 10, 20, 50, 100]],
+                'language': {
+                    search: 'ค้นหา',
+                    lengthMenu: 'แสดง _MENU_ รายการ',
+                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                    infoEmpty: 'ไม่มีข้อมูล',
+                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                    paginate: {previous: 'ก่อนหน้า', last: 'สุดท้าย', next: 'ต่อไป'}
+                },
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'post',
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้ Responsive ดีขึ้น
+                'searching': true,
+                'scrollX': true, // ✅ เปิดใช้งาน scrollX เพื่อให้ Scroll ได้ในมือถือ
+                'ajax': {
+                    'url': 'model/manage_holiday_process.php',
+                    'type': 'POST', // ✅ ระบุ Type ของ Request ชัดเจน
+                    'data': formData
+                },
+                'columns': [
+                    {data: 'doc_year'},
+                    {data: 'doc_date'},
+                    {data: 'full_name'},
+                    {data: 'department_id'},
+                    {data: 'date_leave_start'},
+                    {data: 'leave_type_detail'},
+                    {data: 'remark'},
+                    {data: 'status'},
+                    {data: 'image'},
+                    {data: 'update'},
+                ],
+                'drawCallback': function (settings) {
+                    $('#TableRecordList .image').each(function () {
+                        let picture = $(this).data('picture');
+                        if (picture) {
+                            $(this).addClass('blink');
+                        }
+                    });
+                }
+            });
+
+            // ✅ ปรับให้ Table รองรับ Responsive และ Scroll ได้ดีขึ้น
+            $('#TableRecordList_wrapper').addClass('table-responsive');
+
+            // ✅ CSS สำหรับกระพริบ
+            $('<style>').prop('type', 'text/css').html(`
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    `).appendTo('head');
+        });
+
     </script>
 
     <script>

@@ -621,7 +621,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         }
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
             let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
             let dataRecords = $('#TableRecordList').DataTable({
@@ -688,6 +688,66 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             `)
                 .appendTo('head');
         });
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
+
+            let dataRecords = $('#TableRecordList').DataTable({
+                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
+                'language': {
+                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
+                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
+                    infoEmpty: 'ไม่มีข้อมูล',
+                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
+                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
+                    paginate: {previous: 'ก่อนหน้า', last: 'สุดท้าย', next: 'ต่อไป'}
+                },
+                'processing': true,
+                'serverSide': true,
+                'serverMethod': 'post',
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้รองรับ Responsive ดีขึ้น
+                'searching': true,
+                'scrollX': true, // ✅ เปิด scrollX เพื่อให้ Scroll ได้ในมือถือ
+                'ajax': {
+                    'url': 'model/manage_leave_document_process.php',
+                    'data': formData
+                },
+                'columns': [
+                    {data: 'doc_year'},
+                    {data: 'doc_date'},
+                    {data: 'full_name'},
+                    {data: 'department_id'},
+                    {data: 'leave_type_detail'},
+                    {data: 'dt_leave_start'},
+                    {data: 'dt_leave_to'},
+                    {data: 'leave_day'},
+                    {data: 'leave_hour'},
+                    {data: 'status'},
+                    {data: 'image'},
+                    {data: 'update'},
+                ],
+                'drawCallback': function (settings) {
+                    $('#TableRecordList .image').each(function () {
+                        let picture = $(this).data('picture');
+                        if (picture) {
+                            $(this).addClass('blink');
+                        }
+                    });
+                }
+            });
+
+            // ✅ ปรับปรุงการทำให้ Table สามารถ Scroll ได้ในมือถือ
+            $('#TableRecordList_wrapper').addClass('table-responsive');
+
+            // CSS สำหรับกระพริบ
+            $('<style>').prop('type', 'text/css').html(`
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    `).appendTo('head');
+        });
+
     </script>
 
     <script>
