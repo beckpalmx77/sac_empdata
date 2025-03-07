@@ -559,12 +559,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
-                'autoWidth': true,
-                <?php if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                } ?>
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้ Responsive ดีขึ้น
+                'searching': true,
+                'scrollX': true, // ✅ เปิดใช้งาน scrollX เพื่อให้ Scroll ได้ในมือถือ
                 'ajax': {
                     'url': 'model/manage_holiday_admin_approve_process.php',
+                    'type': 'POST', // ✅ ระบุ Type ของ Request ชัดเจน
                     'data': formData
                 },
                 'columns': [
