@@ -134,6 +134,14 @@ if (strlen($_SESSION['alogin']) == "") {
 
                             </div>
 
+                            <span class="icon-input-btn">
+                                <input class="btn btn-success" type="submit" value="Upload">
+                            </span>
+                            <button type="button" class="btn btn-danger"
+                                    id="btnClose">Close <i
+                                        class="fa fa-window-close"></i>
+                            </button>
+
                         </div>
 
                         <div class="modal-footer">
@@ -149,13 +157,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
                             <input type="hidden" name="id" id="id"/>
                             <input type="hidden" name="action" id="action" value=""/>
-                            <span class="icon-input-btn">
-                                <input class="btn btn-success" type="submit" value="Upload">
-                            </span>
-                            <button type="button" class="btn btn-danger"
-                                    id="btnClose">Close <i
-                                        class="fa fa-window-close"></i>
-                            </button>
                         </div>
                     </form>
 

@@ -128,18 +128,29 @@ if (strlen($_SESSION['alogin']) == "") {
                                         <input class="form-control" type="file" id="uploadImage" accept="image/*"
                                                name="image"
                                                onchange="readURL(this)" multiple/>
-                                        <div>Upload File (ไฟล์ .jpg , .png เท่านั้น) ชี้ที่รูปเพื่อขยาย หรือ Click เพื่อเปิดดูภาพ</div>
+                                        <div>Upload File (ไฟล์ .jpg , .png เท่านั้น) ชี้ที่รูปเพื่อขยาย หรือ Click
+                                            เพื่อเปิดดูภาพ
+                                        </div>
                                     </div>
                                 </div>
 
                             </div>
+
+                            <span class="icon-input-btn">
+                                <input class="btn btn-success" type="submit" value="Upload">
+                            </span>
+                            <button type="button" class="btn btn-danger"
+                                    id="btnClose">Close <i
+                                        class="fa fa-window-close"></i>
+                            </button>
 
                         </div>
 
                         <div class="modal-footer">
 
                             <div class='preview'>
-                                <img class="enlarge" src="" id="img" width="200" height="200" onclick="openImageInNewTab()">
+                                <img class="enlarge" src="" id="img" width="200" height="200"
+                                     onclick="openImageInNewTab()">
                             </div>
 
                             <!--div class='preview'>
@@ -149,13 +160,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                             <input type="hidden" name="id" id="id"/>
                             <input type="hidden" name="action" id="action" value=""/>
-                            <span class="icon-input-btn">
-                                <input class="btn btn-success" type="submit" value="Upload">
-                            </span>
-                            <button type="button" class="btn btn-danger"
-                                    id="btnClose">Close <i
-                                        class="fa fa-window-close"></i>
-                            </button>
+
                         </div>
                     </form>
 
