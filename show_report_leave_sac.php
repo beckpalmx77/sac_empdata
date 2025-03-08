@@ -9,6 +9,13 @@ $doc_date_to = $_POST["doc_date_to"];
 $employeeSelect = $_POST["employeeSelect"];
 $where_emp = "";
 
+/*
+$txt = "Date ";
+$my_file = fopen("leave_b.txt", "w") or die("Unable to open file!");
+fwrite($my_file, $txt);
+fclose($my_file);
+*/
+
 // แปลงวันที่จาก dd-mm-yyyy เป็น yyyy-mm-dd
 //$start_date = DateTime::createFromFormat('d-m-Y', $doc_date_start)->format('Y-m-d');
 //$end_date = DateTime::createFromFormat('d-m-Y', $doc_date_to)->format('Y-m-d');
@@ -39,7 +46,7 @@ function fetchLeaveData($conn, $table, $start_date, $end_date, $where_emp)
     ";
 
 /*
-    $txt = $sql ;
+    $txt = $sql . " | " .$start_date . " | " .  $end_date;
     $my_file = fopen("leave_a.txt", "w") or die("Unable to open file!");
     fwrite($my_file, $txt);
     fclose($my_file);

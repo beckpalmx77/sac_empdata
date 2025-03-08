@@ -289,6 +289,14 @@ if (strlen($_SESSION['alogin']) == "") {
             // แสดง loader
             document.getElementById('spinner').style.display = 'block';
 
+            // ดึงค่าทั้งหมดจากฟอร์ม
+            let formData = new FormData(document.forms['from_data']);
+
+            // แสดงค่าที่จะถูกส่งไปใน Console
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
             // ตั้งค่าการส่งแบบฟอร์ม
             document.forms['from_data'].target = '_blank'; // กำหนดให้ form ส่งไปที่หน้าต่างใหม่
             document.forms['from_data'].action = 'show_report_leave_sac';

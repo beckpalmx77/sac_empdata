@@ -251,46 +251,18 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <!--script>
-        $(document).ready(function() {
-            // เรียกข้อมูลพนักงานจาก PHP
-            $.ajax({
-                url: 'model/get_employee_report.php', // ชี้ไปยังไฟล์ PHP ที่ดึงข้อมูล
-                method: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.error) {
-                        console.error(response.error);
-                        return;
-                    }
-
-                    // เพิ่มตัวเลือกลงใน Select2
-                    $.each(response, function(index, employee) {
-                        $('#employeeSelect').append(
-                            $('<option>', {
-                                value: employee.emp_id,
-                                text: `${employee.emp_id} ${employee.f_name} ${employee.l_name} (${employee.department_id})`
-                            })
-                        );
-                    });
-
-                    // เรียกใช้ Select2
-                    $('#employeeSelect').select2({
-                        placeholder: '-- เลือกพนักงาน --',
-                        allowClear: true
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching employee data:', error);
-                }
-            });
-        });
-    </script-->
-
     <script>
         function Print_Data() {
             // แสดง loader
             document.getElementById('spinner').style.display = 'block';
+
+            // ดึงค่าทั้งหมดจากฟอร์ม
+            let formData = new FormData(document.forms['from_data']);
+
+            // แสดงค่าที่จะถูกส่งไปใน Console
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
 
             // ตั้งค่าการส่งแบบฟอร์ม
             document.forms['from_data'].target = '_blank'; // กำหนดให้ form ส่งไปที่หน้าต่างใหม่
@@ -306,10 +278,19 @@ if (strlen($_SESSION['alogin']) == "") {
         }
     </script>
 
+
     <script>
         function Export_Data() {
             // แสดง loader
             document.getElementById('spinner').style.display = 'block';
+
+            // ดึงค่าทั้งหมดจากฟอร์ม
+            let formData = new FormData(document.forms['from_data']);
+
+            // แสดงค่าที่จะถูกส่งไปใน Console
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
 
             // ตั้งค่าการส่งแบบฟอร์ม
             document.forms['from_data'].target = '_blank'; // กำหนดให้ form ส่งไปที่หน้าต่างใหม่
