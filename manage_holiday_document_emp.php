@@ -817,7 +817,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             + '&status=' + status
                             + '&action=UPDATE';
 
-                        OpenPopupCenter(originalURL, "", "");
+                        //OpenPopupCenter(originalURL, "", "");
+                        window.open(originalURL, '_blank');
 
                     }
                 },
