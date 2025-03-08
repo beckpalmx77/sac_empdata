@@ -50,11 +50,12 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
     $searchQuery = " ";
     if ($searchValue != '') {
         $searchQuery = " AND (emp_id LIKE :emp_id or f_name LIKE :f_name or
-        l_name LIKE :l_name or work_date LIKE :work_date) ";
+        l_name LIKE :l_name or department_id LIKE :department_id or work_date LIKE :work_date) ";
         $searchArray = array(
             'emp_id' => "%$searchValue%",
             'f_name' => "%$searchValue%",
             'l_name' => "%$searchValue%",
+            'department_id' => "%$searchValue%",
             'work_date' => "%$searchValue%",
         );
     }
