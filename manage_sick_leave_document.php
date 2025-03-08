@@ -295,7 +295,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                                                 <div class="form-group row" id="uploadSection">
                                                                     <div class="col-sm-6">
-                                                                        <label for="upload_image" class="control-label">เอกสารแนบบ (Upload รูปภาพ)</label>
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบ (Upload รูปภาพ)</label>
                                                                         <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
                                                                     </div>
                                                                     <div class="col-sm-6">
