@@ -109,14 +109,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                         <div class="modal-body">
                                                             <div class="modal-body">
 
-                                                                <div class="form-group">
+                                                                <!--div class="form-group">
                                                                     <label for="doc_id"
                                                                            class="control-label">เลขที่เอกสาร</label>
                                                                     <input type="text" class="form-control"
                                                                            id="doc_id" name="doc_id"
                                                                            readonly="true"
                                                                            placeholder="สร้างอัตโนมัติ">
-                                                                </div>
+                                                                </div-->
+
+                                                                <input type="hidden" class="form-control"
+                                                                       id="doc_id" name="doc_id"
+                                                                       readonly="true"
+                                                                       placeholder="สร้างอัตโนมัติ">
 
 
                                                                 <input type="hidden" class="form-control"
@@ -195,16 +200,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                placeholder="วันที่เอกสาร">
                                                                     </div>
 
-                                                                </div>
+                                                                <!--/div>
 
 
-                                                                <div class="form-group row">
+                                                                <div class="form-group row"-->
                                                                     <input type="hidden" class="form-control"
                                                                            id="leave_type_id"
                                                                            required="required"
                                                                            name="leave_type_id"
                                                                            value="'L2">
-                                                                    <div class="col-sm-8">
+                                                                    <div class="col-sm-6">
                                                                         <label for="leave_type_detail"
                                                                                class="control-label">ประเภทการลา</label>
                                                                         <input type="text" class="form-control"
@@ -285,6 +290,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     <div class="col-sm-9">
                                                                         <label for="remark" class="control-label">หมายเหตุ</label>
                                                                         <textarea class="form-control" id="remark" name="remark" rows="1"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row" id="uploadSection">
+                                                                    <div class="col-sm-6">
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบบ (Upload รูปภาพ)</label>
+                                                                        <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                                                        <br>
+                                                                        <img id="preview" src="" alt="Preview" style="max-width: 100px; cursor: pointer; display: none;" data-toggle="modal" data-target="#imageModal">
                                                                     </div>
                                                                 </div>
 
@@ -468,6 +485,23 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             </div>
                                         </div>
 
+                                        <!-- Modal แสดงภาพ -->
+                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">เอกสารแนบ</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img id="modalImage" src="" alt="Full Image" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -570,74 +604,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         }
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
-            let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
-                'language': {
-                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
-                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
-                    infoEmpty: 'ไม่มีข้อมูล',
-                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
-                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
-                },
-                'processing': true,
-                'serverSide': true,
-                'serverMethod': 'post',
-                'autoWidth': true,
-                'searching': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
-                'ajax': {
-                    'url': 'model/manage_sick_leave_document_process.php',
-                    'data': formData
-                },
-                'columns': [
-                    {data: 'doc_year'},
-                    {data: 'doc_date'},
-                    {data: 'full_name'},
-                    {data: 'department_id'},
-                    {data: 'leave_type_detail'},
-                    {data: 'dt_leave_start'},
-                    {data: 'dt_leave_to'},
-                    {data: 'leave_day'},
-                    {data: 'status'},
-                    {data: 'image'},
-                    {data: 'update'},
-                ],
-                'drawCallback': function (settings) {
-                    // ตรวจสอบและเพิ่ม class 'blink'
-                    $('#TableRecordList .image').each(function () {
-                        let picture = $(this).data('picture'); // ดึงค่าจาก data-picture
-                        if (picture) { // หากมีค่า picture
-                            $(this).addClass('blink');
-                        }
-                    });
-                }
-            });
-
-            // สร้าง animation กระพริบ
-            $('<style>')
-                .prop('type', 'text/css')
-                .html(`
-                .blink {
-                    animation: blinker 1s linear infinite;
-                }
-                @keyframes blinker {
-                    50% { opacity: 0; }
-                }
-            `)
-                .appendTo('head');
-        });
-    </script-->
-
     <script>
         $(document).ready(function () {
             let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
@@ -697,7 +663,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     </script>
 
-    <script>
+    <!--script>
         $(document).ready(function () {
 
             $("#recordModal").on('submit', '#recordForm', function (event) {
@@ -753,6 +719,56 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
         });
 
+    </script-->
+
+    <script>
+        $(document).ready(function () {
+            $("#recordModal").on('submit', '#recordForm', function (event) {
+                event.preventDefault();
+
+                if (chkTime($('#time_leave_start').val()) && chkTime($('#time_leave_to').val())) {
+
+                    if ($('#date_leave_start').val() !== '' && $('#date_leave_to').val() !== '' && ($('#leave_day').val() !== '' || $('#leave_day').val() !== '0')) {
+
+                        let date_leave_1 = $('#doc_date').val().substr(3, 2) + "/" + $('#doc_date').val().substr(0, 2) + "/" + $('#doc_date').val().substr(6, 10);
+                        let date_leave_2 = $('#date_leave_start').val().substr(3, 2) + "/" + $('#date_leave_start').val().substr(0, 2) + "/" + $('#date_leave_start').val().substr(6, 10);
+
+                        let check_day = CalDay(date_leave_1, date_leave_2); // Check Date
+                        let l_before = $('#leave_before').val();
+
+                        let formData = new FormData(this); // ใช้ FormData เพื่ออัปโหลดไฟล์
+                        formData.append("filename", $('#image_upload')[0].files[0]); // เพิ่มไฟล์ลงใน FormData
+
+                        $.ajax({
+                            url: 'model/manage_sick_leave_document_process.php',
+                            method: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+
+                                if (data.includes("Over")) {
+                                    alertify.error(data);
+                                } else {
+                                    alertify.success(data);
+                                }
+
+                                $('#recordForm')[0].reset();
+                                $('#recordModal').modal('hide');
+                                $('#save').attr('disabled', false);
+                                ReloadDataTable();
+                            }
+                        });
+
+                    } else {
+                        alertify.error("กรุณาป้อนวันที่ต้องการลา !!!");
+                    }
+                } else {
+                    alertify.error("กรุณาป้อนวันที่ - เวลา ให้ถูกต้อง !!!");
+                }
+            });
+        });
+
     </script>
 
     <script>
@@ -781,16 +797,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
-
+                $('#uploadSection').show();
             });
         });
     </script>
 
     <script>
-
         $("#TableRecordList").on('click', '.update', function () {
             let id = $(this).attr("id");
-            //alert(id);
             let formData = {action: "GET_DATA", id: id};
             $.ajax({
                 type: "POST",
@@ -839,15 +853,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
+                        $('#uploadSection').hide();
                     }
                 },
                 error: function (response) {
-                    alertify.error("error : " + response);
+                    alertify.error("Error: " + response);
                 }
             });
         });
-
     </script>
+
 
     <script>
 
@@ -1057,6 +1072,25 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
 
+    <script>
+        function previewImage(event) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function() {
+                let preview = document.getElementById('preview');
+                let modalImage = document.getElementById('modalImage');
+
+                preview.src = reader.result;
+                modalImage.src = reader.result;
+
+                preview.style.display = "block";
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
+    </script>
 
     </body>
     </html>

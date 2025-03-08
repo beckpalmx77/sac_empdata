@@ -113,14 +113,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                         <div class="modal-body">
                                                             <div class="modal-body">
 
-                                                                <div class="form-group">
+                                                                <!--div class="form-group">
                                                                     <label for="doc_id"
                                                                            class="control-label">เลขที่เอกสาร</label>
                                                                     <input type="text" class="form-control"
                                                                            id="doc_id" name="doc_id"
                                                                            readonly="true"
                                                                            placeholder="สร้างอัตโนมัติ">
-                                                                </div>
+                                                                </div-->
+
+                                                                <input type="hidden" class="form-control"
+                                                                       id="doc_id" name="doc_id"
+                                                                       readonly="true"
+                                                                       placeholder="สร้างอัตโนมัติ">
 
 
                                                                 <input type="hidden" class="form-control"
@@ -331,6 +336,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="form-group row" id="uploadSection">
+                                                                    <div class="col-sm-6">
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบบ (Upload รูปภาพ)</label>
+                                                                        <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                                                        <br>
+                                                                        <img id="preview" src="" alt="Preview" style="max-width: 100px; cursor: pointer; display: none;" data-toggle="modal" data-target="#imageModal">
+                                                                    </div>
+                                                                </div>
+
                                                                 <?php if ($_SESSION['approve_permission'] === 'Y') { ?>
                                                                     <div class="form-group">
                                                                         <label for="status"
@@ -511,6 +528,23 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             </div>
                                         </div>
 
+                                        <!-- Modal แสดงภาพ -->
+                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">เอกสารแนบ</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img id="modalImage" src="" alt="Full Image" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -621,75 +655,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         }
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
-            let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
-                'language': {
-                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
-                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
-                    infoEmpty: 'ไม่มีข้อมูล',
-                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
-                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
-                },
-                'processing': true,
-                'serverSide': true,
-                'serverMethod': 'post',
-                'autoWidth': true,
-                'searching': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
-                'ajax': {
-                    'url': 'model/manage_leave_document_process.php',
-                    'data': formData
-                },
-                'columns': [
-                    {data: 'doc_year'},
-                    {data: 'doc_date'},
-                    {data: 'full_name'},
-                    {data: 'department_id'},
-                    {data: 'leave_type_detail'},
-                    {data: 'dt_leave_start'},
-                    {data: 'dt_leave_to'},
-                    {data: 'leave_day'},
-                    {data: 'leave_hour'},
-                    {data: 'status'},
-                    {data: 'image'},
-                    {data: 'update'},
-                ],
-                'drawCallback': function (settings) {
-                    // ตรวจสอบและเพิ่ม class 'blink'
-                    $('#TableRecordList .image').each(function () {
-                        let picture = $(this).data('picture'); // ดึงค่าจาก data-picture
-                        if (picture) { // หากมีค่า picture
-                            $(this).addClass('blink');
-                        }
-                    });
-                }
-            });
-
-            // สร้าง animation กระพริบ
-            $('<style>')
-                .prop('type', 'text/css')
-                .html(`
-                .blink {
-                    animation: blinker 1s linear infinite;
-                }
-                @keyframes blinker {
-                    50% { opacity: 0; }
-                }
-            `)
-                .appendTo('head');
-        });
-    </script-->
-
     <script>
         $(document).ready(function () {
             let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
@@ -752,13 +717,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
-                //$('#save').attr('disabled', 'disabled');
+                $('#save').attr('disabled', 'disabled'); // Disable the save button while processing
 
                 if (chkTime($('#time_leave_start').val()) && chkTime($('#time_leave_to').val())) {
-
                     if ($('#date_leave_start').val() !== '' && $('#date_leave_to').val() !== '' && ($('#leave_day').val() !== '' || $('#leave_day').val() !== '0')) {
 
                         let date_leave_1 = $('#doc_date').val().substr(3, 2) + "/" + $('#doc_date').val().substr(0, 2) + "/" + $('#doc_date').val().substr(6, 10);
@@ -767,18 +730,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let check_day = CalDay(date_leave_1, date_leave_2); // Check Date
                         let l_before = $('#leave_before').val();
 
-                        $('#filename').val($('#ImgFile').val());
-
-                        let formData = $(this).serialize();
-
-                        //alert(formData);
+                        let formData = new FormData(this); // ใช้ FormData เพื่ออัปโหลดไฟล์
+                        formData.append("filename", $('#image_upload')[0].files[0]); // เพิ่มไฟล์ลงใน FormData
 
                         $.ajax({
                             url: 'model/manage_leave_document_process.php',
                             method: "POST",
                             data: formData,
+                            contentType: false, // ต้องการแจ้งว่าไม่ใช้การส่งแบบ content-type แบบปกติ
+                            processData: false, // ป้องกันการแปลงข้อมูล FormData
                             success: function (data) {
-
                                 if (data.includes("Over")) {
                                     alertify.error(data);
                                 } else {
@@ -787,24 +748,25 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                 $('#recordForm')[0].reset();
                                 $('#recordModal').modal('hide');
-                                $('#save').attr('disabled', false);
+                                $('#save').attr('disabled', false); // เปิดปุ่ม save เมื่อเสร็จสิ้น
                                 ReloadDataTable();
-                                //dataRecords.ajax.reload();
-
+                            },
+                            error: function (xhr, status, error) {
+                                // การจัดการกับข้อผิดพลาด
+                                alertify.error("เกิดข้อผิดพลาดในการส่งข้อมูล: " + error);
+                                $('#save').attr('disabled', false); // เปิดปุ่ม save หากเกิดข้อผิดพลาด
                             }
-                        })
-
+                        });
                     } else {
                         alertify.error("กรุณาป้อนวันที่ต้องการลา !!!");
+                        $('#save').attr('disabled', false); // เปิดปุ่ม save ถ้าไม่ครบเงื่อนไข
                     }
                 } else {
                     alertify.error("กรุณาป้อนวันที่ - เวลา ให้ถูกต้อง !!!");
+                    $('#save').attr('disabled', false); // เปิดปุ่ม save ถ้าเวลาไม่ถูกต้อง
                 }
-
             });
-
         });
-
     </script>
 
     <script>
@@ -834,6 +796,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
+                $('#uploadSection').show();
 
             });
         });
@@ -894,6 +857,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
+                        $('#uploadSection').hide();
                     }
                 },
                 error: function (response) {
@@ -1095,89 +1059,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script>
 
-    <!--script>
-        $(document).ready(function () {
-            // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
-            function setDatePicker() {
-                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าจาก hidden input ที่ผู้ใช้เลือก
-                let startDate = new Date(); // วันที่ปัจจุบัน
-
-                // ตรวจสอบประเภทการลา และกำหนดวันที่เริ่มต้น
-                if (leave_type_id === 'L1') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
-                } else if (leave_type_id === 'L3') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
-                } else if (leave_type_id === 'S') {
-                    startDate.setDate(startDate.getDate());
-                }
-
-
-                // ตั้งค่า datepicker
-                $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
-                $('#date_leave_start').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
-                });
-            }
-
-            // เรียกฟังก์ชันเมื่อ modal ปิด (หลังจากเลือกประเภทการลา)
-            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
-                setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
-                $('#date_leave_start').val('');
-            });
-        });
-    </script-->
-
-    <!--script>
-        $(document).ready(function () {
-            function setDatePicker() {
-                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
-                let startDate = new Date(); // วันที่ปัจจุบัน
-
-                // กำหนดวันที่เริ่มต้นตามประเภทการลา
-                if (leave_type_id === 'L1' || leave_type_id === 'L3') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
-                } else if (leave_type_id === 'S') {
-                    startDate.setDate(startDate.getDate()); // วันนี้เลือกได้เลย
-                }
-
-                // ทำลาย datepicker ก่อนสร้างใหม่
-                $('#date_leave_start').datepicker('destroy').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้น
-                });
-
-                $('#date_leave_to').datepicker('destroy').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้น
-                });
-
-                console.log("ประเภทการลา: " + leave_type_id + " | วันที่เริ่มต้น: " + startDate);
-            }
-
-            // เมื่อเลือกประเภทการลาให้ตั้งค่า datepicker ใหม่
-            $('#leave_type_id').on('change', function () {
-                setDatePicker();
-            });
-
-            // เมื่อปิด Modal ให้รีเซ็ตวันที่ลา
-            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
-                setDatePicker();
-                $('#date_leave_start').val('');
-            });
-        });
-
-    </script-->
-
     <script>
         $(document).ready(function () {
             function setDatePicker() {
@@ -1244,6 +1125,27 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             //alert("ค่า: " + selectedValue + "\nข้อความ: " + selectedText);
         }
     </script>
+
+    <script>
+        function previewImage(event) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function() {
+                let preview = document.getElementById('preview');
+                let modalImage = document.getElementById('modalImage');
+
+                preview.src = reader.result;
+                modalImage.src = reader.result;
+
+                preview.style.display = "block";
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
+    </script>
+
 
     </body>
     </html>

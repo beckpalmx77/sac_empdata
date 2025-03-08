@@ -263,15 +263,29 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                value="0"
                                                                                placeholder="เวลาสิ้นสุด">
                                                                     </div>
-                                                                </div>
+                                                                <!--/div>
 
-                                                                <div class="form-group">
+                                                                <div class="form-group"-->
+                                                                    <div class="col-sm-3">
                                                                     <label for="remark"
                                                                            class="control-label">หมายเหตุ</label>
                                                                     <textarea class="form-control"
                                                                               id="remark"
                                                                               name="remark"
-                                                                              rows="3"></textarea>
+                                                                              rows="1"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row" id="uploadSection">
+                                                                    <div class="col-sm-6">
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบบ (Upload รูปภาพ)</label>
+                                                                        <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                                                        <br>
+                                                                        <img id="preview" src="" alt="Preview" style="max-width: 100px; cursor: pointer; display: none;" data-toggle="modal" data-target="#imageModal">
+                                                                    </div>
                                                                 </div>
 
                                                                 <?php if ($_SESSION['approve_permission'] === 'Y') { ?>
@@ -412,6 +426,24 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- Modal แสดงภาพ -->
+                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">เอกสารแนบ</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img id="modalImage" src="" alt="Full Image" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -628,33 +660,39 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            <!-- *** FOR SUBMIT FORM *** -->
+            // *** FOR SUBMIT FORM ***
             $("#recordModal").on('submit', '#recordForm', function (event) {
 
-                //alert($('#status').val());
+                event.preventDefault();  // ป้องกันการ submit แบบปกติ
+                $('#save').attr('disabled', 'disabled'); // ปิดการใช้งานปุ่ม Save เพื่อไม่ให้กดหลายครั้ง
 
-                event.preventDefault();
-                $('#save').attr('disabled', 'disabled');
-                let formData = $(this).serialize();
-                //alert(formData);
+                let formData = new FormData(this);  // ใช้ FormData เพื่อส่งข้อมูลที่มีไฟล์
+                formData.append("filename", $('#image_upload')[0].files[0]); // เพิ่มไฟล์ลงใน FormData
+
                 $.ajax({
-                    url: 'model/manage_holiday_process.php',
-                    method: "POST",
-                    data: formData,
+                    url: 'model/manage_holiday_process.php',  // URL ที่จะส่งข้อมูลไป
+                    method: "POST",  // Method เป็น POST
+                    data: formData,  // ข้อมูลที่จะส่งไป
+                    contentType: false,  // ไม่ต้องตั้งค่า contentType เพราะ FormData จะจัดการให้เอง
+                    processData: false,  // ไม่ต้องให้ jQuery ประมวลผลข้อมูลแบบพิเศษ
                     success: function (data) {
-                        alertify.success(data);
-                        $('#recordForm')[0].reset();
-                        $('#recordModal').modal('hide');
-                        $('#save').attr('disabled', false);
-                        ReloadDataTable();
-                        //dataRecords.ajax.reload();
+                        alertify.success(data);  // แสดงข้อความเมื่อบันทึกสำเร็จ
+                        $('#recordForm')[0].reset();  // รีเซ็ตฟอร์มหลังจากส่งข้อมูลเสร็จ
+                        $('#recordModal').modal('hide');  // ปิด Modal
+                        $('#save').attr('disabled', false);  // เปิดปุ่ม Save ให้ใช้ได้อีกครั้ง
+                        ReloadDataTable();  // รีเฟรช DataTable ถ้ามี
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);  // แสดงข้อผิดพลาดถ้ามี
+                        alertify.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                        $('#save').attr('disabled', false);  // เปิดปุ่ม Save
                     }
-                })
+                });
             });
-            <!-- *** FOR SUBMIT FORM *** -->
+            // *** END OF SUBMIT FORM ***
         });
-
     </script>
+
 
     <script>
         $(document).ready(function () {
@@ -671,6 +709,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
+                $('#uploadSection').show();
             });
         });
     </script>
@@ -720,6 +759,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
+                        $('#uploadSection').hide();
                     }
                 },
                 error: function (response) {
@@ -829,6 +869,26 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         function ReloadDataTable() {
             $('#TableRecordList').DataTable().ajax.reload();
         }
+    </script>
+
+    <script>
+        function previewImage(event) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function() {
+                let preview = document.getElementById('preview');
+                let modalImage = document.getElementById('modalImage');
+
+                preview.src = reader.result;
+                modalImage.src = reader.result;
+
+                preview.style.display = "block";
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
     </script>
 
     </body>

@@ -124,6 +124,24 @@ if ($_POST["action"] === 'ADD') {
         fclose($my_file);
 */
 
+        $filename = "";
+        $picture = "";
+
+        if (!empty($_FILES['image_upload']['name'])) {
+            $uploadDir = "../img_doc/";
+            $filename = time() . "_" . basename($_FILES['image_upload']['name']);
+            $uploadFile = $uploadDir . $filename;
+
+            if (move_uploaded_file($_FILES['image_upload']['tmp_name'], $uploadFile)) {
+                $picture = $filename;
+                echo "บันทึกสำเร็จ: " . $filename;
+            } else {
+                echo "อัปโหลดไฟล์ล้มเหลว";
+            }
+        } else {
+            echo "ไม่มีไฟล์ที่ถูกอัปโหลด";
+        }
+
         $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
         if ($cnt_total_day_hour >= $day_hour_max) {
             echo $Error_Over;
@@ -133,8 +151,8 @@ if ($_POST["action"] === 'ADD') {
             if ($nRows > 0) {
                 echo $dup;
             } else {
-                $sql = "INSERT INTO dholiday_event (doc_id,doc_year,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,remark,dept_id,create_by) 
-                    VALUES (:doc_id,:doc_year,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:remark,:dept_id,:create_by)";
+                $sql = "INSERT INTO dholiday_event (doc_id,doc_year,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,remark,picture,dept_id,create_by) 
+                    VALUES (:doc_id,:doc_year,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:remark,:picture,:dept_id,:create_by)";
                 $query = $conn->prepare($sql);
                 $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
                 $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
@@ -146,6 +164,7 @@ if ($_POST["action"] === 'ADD') {
                 $query->bindParam(':date_leave_to', $date_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
                 $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+                $query->bindParam(':picture', $picture, PDO::PARAM_STR);
                 $query->bindParam(':dept_id', $_SESSION['department_id'], PDO::PARAM_STR);
                 $query->bindParam(':create_by', $create_by, PDO::PARAM_STR);
                 $query->execute();
