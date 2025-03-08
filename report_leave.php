@@ -81,8 +81,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="form-group row mb-3">
-                                                                    <div class="col-sm-3">
+                                                                <div class="form-group row mb-6">
+                                                                    <div class="col-sm-6">
                                                                         <label for="employeeSelect" class="control-label">เลือกรหัสพนักงาน</label>
                                                                         <!-- Select Element -->
                                                                         <select id="employeeSelect" name="employeeSelect" class="form-control"
