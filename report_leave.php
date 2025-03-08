@@ -87,7 +87,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                         <!-- Select Element -->
                                                                         <select id="employeeSelect" name="employeeSelect" class="form-control"
                                                                                 style="width: 100%;">
-                                                                            <option value="-">-- เลือกพนักงาน --</option>
+                                                                            <option value="-"></option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -273,7 +273,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                     // เรียกใช้ Select2
                     $('#employeeSelect').select2({
-                        placeholder: '-- เลือกพนักงาน --',
+                        placeholder: '',
                         allowClear: true
                     });
                 },
@@ -286,6 +286,15 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <script>
         function Print_Data() {
+            // ดึงค่า employeeSelect
+            let employeeSelect = document.getElementById('employeeSelect').value;
+
+            // ตรวจสอบว่าผู้ใช้ยังไม่ได้เลือกค่า
+            if (employeeSelect === '-') {
+                alertify.error("กรุณาเลือกรหัสพนักงาน");
+                return false; // ยกเลิกการทำงาน
+            }
+
             // แสดง loader
             document.getElementById('spinner').style.display = 'block';
 
@@ -310,6 +319,7 @@ if (strlen($_SESSION['alogin']) == "") {
             return true;
         }
     </script>
+
 
     </body>
 
