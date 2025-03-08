@@ -274,7 +274,13 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#date_leave_to').val(queryString["date_leave_to"]);
                 $('#leave_type_detail').val(queryString["leave_type_detail"]);
 
-                let image_load = "img_doc/" + queryString["picture"];
+                let image_load = "";
+
+                if (queryString["picture"] === null || queryString["picture"] === 'null' || queryString["picture"] === '') {
+                    image_load = "img_doc/image_doc.png";
+                } else {
+                    image_load = "img_doc/" + queryString["picture"];
+                }
 
                 $("#img").attr("src", image_load);
 
