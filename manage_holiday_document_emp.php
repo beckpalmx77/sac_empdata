@@ -266,7 +266,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <!--/div>
 
                                                                 <div class="form-group"-->
-                                                                    <div class="col-sm-3">
+                                                                    <div class="col-sm-6">
                                                                     <label for="remark"
                                                                            class="control-label">หมายเหตุ</label>
                                                                     <textarea class="form-control"
