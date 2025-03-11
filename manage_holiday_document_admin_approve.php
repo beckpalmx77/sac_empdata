@@ -94,211 +94,205 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     </div>
                                                     <form method="post" id="recordForm">
                                                         <div class="modal-body">
-                                                            <div class="modal-body">
 
-                                                                <div class="form-group">
-                                                                    <label for="doc_id"
-                                                                           class="control-label"></label>
-                                                                    <input type="hidden" class="form-control"
-                                                                           id="doc_id" name="doc_id"
+
+                                                            <div class="form-group">
+                                                                <label for="doc_id"
+                                                                       class="control-label"></label>
+                                                                <input type="hidden" class="form-control"
+                                                                       id="doc_id" name="doc_id"
+                                                                       readonly="true"
+                                                                       placeholder="สร้างอัตโนมัติ">
+                                                            </div>
+
+                                                            <input type="hidden" class="form-control"
+                                                                   id="page_manage" name="page_manage"
+                                                                   readonly="true"
+                                                                   value="USER"
+                                                                   placeholder="page_manage">
+
+                                                            <input type="hidden" class="form-control"
+                                                                   id="department" name="department"
+                                                                   readonly="true"
+                                                                   value="<?php echo $_SESSION['department_id'] ?>"
+                                                                   placeholder="department">
+
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-3">
+                                                                    <label for="doc_date"
+                                                                           class="control-label">วันที่เอกสาร</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="doc_date"
+                                                                           name="doc_date"
+                                                                           required="required"
                                                                            readonly="true"
-                                                                           placeholder="สร้างอัตโนมัติ">
+                                                                           value="<?php echo $curr_date ?>"
+                                                                           placeholder="วันที่เอกสาร">
                                                                 </div>
+                                                            </div>
 
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-4">
+                                                                    <label for="text"
+                                                                           class="control-label">รหัสพนักงาน</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="emp_id" name="emp_id"
+                                                                           readonly="true"
+                                                                           required="required"
+                                                                           value="<?php echo $_SESSION['emp_id']; ?>"
+                                                                           placeholder="">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <label for="text"
+                                                                           class="control-label">ชื่อ -
+                                                                        นามสกุล</label>
+                                                                    <input type="hidden" id="f_name" name="f_name"
+                                                                           value="<?php echo $_SESSION['first_name']; ?>">
+                                                                    <input type="hidden" id="l_name" name="l_name"
+                                                                           value="<?php echo $_SESSION['last_name']; ?>">
+                                                                    <input type="text" class="form-control"
+                                                                           id="full_name" name="full_name"
+                                                                           readonly="true"
+                                                                           value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
+                                                                           placeholder="">
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <label for="emp_id"
+                                                                           class="control-label">เลือก</label>
+                                                                    <a data-toggle="modal"
+                                                                       href="#SearchEmployeeModal"
+                                                                       class="btn btn-primary">
+                                                                        Click <i class="fa fa-search"
+                                                                                 aria-hidden="true"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
                                                                 <input type="hidden" class="form-control"
-                                                                       id="page_manage" name="page_manage"
-                                                                       readonly="true"
-                                                                       value="USER"
-                                                                       placeholder="page_manage">
+                                                                       id="leave_type_id"
+                                                                       name="leave_type_id"
+                                                                       value="<?php echo $leave_type_id ?>">
+                                                                <div class="col-sm-10">
+                                                                    <label for="leave_type_detail"
+                                                                           class="control-label">ประเภทวันหยุด</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="leave_type_detail"
+                                                                           name="leave_type_detail"
+                                                                           required="required"
+                                                                           readonly="true"
+                                                                           value="<?php echo $leave_type_detail ?>"
+                                                                           placeholder="ประเภทวันหยุด">
+                                                                </div>
 
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-3">
+                                                                    <label for="date_leave_start"
+                                                                           class="control-label">วันที่ต้องการหยุด</label>
+                                                                    <i class="fa fa-calendar"
+                                                                       aria-hidden="true"></i>
+                                                                    <input type="text" class="form-control"
+                                                                           id="date_leave_start"
+                                                                           name="date_leave_start"
+                                                                           value="<?php //echo $curr_date ?>"
+                                                                           required="required"
+                                                                           readonly="true"
+                                                                           placeholder="วันที่ต้องการหยุด">
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <label for="date_leave_start"
+                                                                           class="control-label">เวลาเริ่มต้น</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="time_leave_start"
+                                                                           name="time_leave_start"
+                                                                           value="<?php echo $_SESSION['work_time_start'] ?>"
+                                                                           required="required"
+                                                                           placeholder="hh:mm">
+                                                                </div>
                                                                 <input type="hidden" class="form-control"
-                                                                       id="department" name="department"
+                                                                       id="date_leave_to"
+                                                                       name="date_leave_to"
+                                                                       value="<?php //echo $curr_date ?>"
+                                                                       required="required"
                                                                        readonly="true"
-                                                                       value="<?php echo $_SESSION['department_id'] ?>"
-                                                                       placeholder="department">
+                                                                       placeholder="วันที่ลาสิ้นสุด">
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-3">
-                                                                        <label for="doc_date"
-                                                                               class="control-label">วันที่เอกสาร</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="doc_date"
-                                                                               name="doc_date"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               value="<?php echo $curr_date ?>"
-                                                                               placeholder="วันที่เอกสาร">
-                                                                    </div>
+                                                                <div class="col-sm-3">
+                                                                    <label for="time_leave_to"
+                                                                           class="control-label">เวลาสิ้นสุด</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="time_leave_to"
+                                                                           name="time_leave_to"
+                                                                           required="required"
+                                                                           value="<?php echo $_SESSION['work_time_stop'] ?>"
+                                                                           placeholder="hh:mm">
                                                                 </div>
+                                                            </div>
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-4">
-                                                                        <label for="text"
-                                                                               class="control-label">รหัสพนักงาน</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="emp_id" name="emp_id"
-                                                                               readonly="true"
-                                                                               required="required"
-                                                                               value="<?php echo $_SESSION['emp_id']; ?>"
-                                                                               placeholder="">
-                                                                    </div>
-                                                                    <div class="col-sm-6">
-                                                                        <label for="text"
-                                                                               class="control-label">ชื่อ -
-                                                                            นามสกุล</label>
-                                                                        <input type="hidden" id="f_name" name="f_name"
-                                                                               value="<?php echo $_SESSION['first_name']; ?>">
-                                                                        <input type="hidden" id="l_name" name="l_name"
-                                                                               value="<?php echo $_SESSION['last_name']; ?>">
-                                                                        <input type="text" class="form-control"
-                                                                               id="full_name" name="full_name"
-                                                                               readonly="true"
-                                                                               value="<?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>"
-                                                                               placeholder="">
-                                                                    </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label for="emp_id"
-                                                                               class="control-label">เลือก</label>
-                                                                        <a data-toggle="modal"
-                                                                           href="#SearchEmployeeModal"
-                                                                           class="btn btn-primary">
-                                                                            Click <i class="fa fa-search"
-                                                                                     aria-hidden="true"></i>
-                                                                        </a>
-                                                                    </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-3">
+                                                                    <label for="leave_day"
+                                                                           class="control-label">จำนวนวัน</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="leave_day"
+                                                                           name="leave_day"
+                                                                           value="1"
+                                                                           placeholder="">
                                                                 </div>
-
-                                                                <div class="form-group row">
-                                                                    <input type="hidden" class="form-control"
-                                                                           id="leave_type_id"
-                                                                           name="leave_type_id"
-                                                                           value="<?php echo $leave_type_id ?>">
-                                                                    <div class="col-sm-10">
-                                                                        <label for="leave_type_detail"
-                                                                               class="control-label">ประเภทวันหยุด</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="leave_type_detail"
-                                                                               name="leave_type_detail"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               value="<?php echo $leave_type_detail ?>"
-                                                                               placeholder="ประเภทวันหยุด">
-                                                                    </div>
-
+                                                                <div class="col-sm-3">
+                                                                    <label for="leave_hour"
+                                                                           class="control-label">จำนวนชั่วโมง</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="leave_hour"
+                                                                           name="leave_hour"
+                                                                           value="0"
+                                                                           placeholder="เวลาสิ้นสุด">
                                                                 </div>
-
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-3">
-                                                                        <label for="date_leave_start"
-                                                                               class="control-label">วันที่ต้องการหยุด</label>
-                                                                        <i class="fa fa-calendar"
-                                                                           aria-hidden="true"></i>
-                                                                        <input type="text" class="form-control"
-                                                                               id="date_leave_start"
-                                                                               name="date_leave_start"
-                                                                               required="required"
-                                                                               value="<?php echo $curr_date ?>"
-                                                                               readonly="true"
-                                                                               placeholder="วันที่หยุด">
-                                                                    </div>
-                                                                    <div class="col-sm-3">
-                                                                        <label for="date_leave_start"
-                                                                               class="control-label"></label>
-                                                                        <input type="hidden" class="form-control"
-                                                                               id="time_leave_start"
-                                                                               name="time_leave_start"
-                                                                               value="<?php echo $_SESSION['work_time_start'] ?>"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               placeholder="">
-                                                                    </div>
-                                                                    <div class="col-sm-3">
-                                                                        <label for="date_leave_start"
-                                                                               class="control-label"></label>
-                                                                        <!--i class="fa fa-calendar"
-                                                                           aria-hidden="true"></i-->
-                                                                        <input type="hidden" class="form-control"
-                                                                               id="date_leave_to"
-                                                                               name="date_leave_to"
-                                                                               required="required"
-                                                                               readonly="true"
-                                                                               placeholder="">
-                                                                    </div>
-                                                                    <div class="col-sm-3">
-                                                                        <label for="time_leave_to"
-                                                                               class="control-label"></label>
-                                                                        <input type="hidden" class="form-control"
-                                                                               id="time_leave_to"
-                                                                               name="time_leave_to"
-                                                                               required="required"
-                                                                               value="<?php echo $_SESSION['work_time_stop'] ?>"
-                                                                               placeholder="เวลาสิ้นสุด">
-                                                                    </div>
+                                                                <div class="col-sm-6">
+                                                                <label for="remark"
+                                                                       class="control-label">หมายเหตุ</label>
+                                                                <textarea class="form-control"
+                                                                          id="remark"
+                                                                          name="remark"
+                                                                          rows="1"></textarea>
                                                                 </div>
+                                                            </div>
 
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-3">
-                                                                        <label for="leave_day"
-                                                                               class="control-label">จำนวนวัน</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="leave_day"
-                                                                               name="leave_day"
-                                                                               value="1"
-                                                                               placeholder="">
-                                                                    </div>
-                                                                    <div class="col-sm-3">
-                                                                        <label for="leave_hour"
-                                                                               class="control-label">จำนวนชั่วโมง</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="leave_hour"
-                                                                               name="leave_hour"
-                                                                               value="0"
-                                                                               placeholder="เวลาสิ้นสุด">
-                                                                    </div>
-                                                                </div>
-
+                                                            <?php if ($_SESSION['approve_permission'] === 'Y') { ?>
                                                                 <div class="form-group">
-                                                                    <label for="remark"
-                                                                           class="control-label">หมายเหตุ</label>
-                                                                    <textarea class="form-control"
-                                                                              id="remark"
-                                                                              name="remark"
-                                                                              rows="1"></textarea>
-                                                                </div>
-
-                                                                <?php if ($_SESSION['approve_permission'] === 'Y') { ?>
-                                                                    <div class="form-group">
-                                                                        <label for="status"
-                                                                               class="control-label">สถานะเอกสาร</label>
-                                                                        <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
-                                                                        <select id="status" name="status"
-                                                                                class="form-control"
-                                                                                data-live-search="true"
-                                                                                title="Please select">
-                                                                            <option value="N">รอพิจารณา</option>
-                                                                            <option value="A">อนุมัติ</option>
-                                                                            <option value="R">ไม่อนุมัติ</option>
-                                                                        </select>
-                                                                    </div>
-                                                                <?php } else { ?>
-                                                                    <div class="form-group">
-                                                                        <label for="status" class="control-label">สถานะเอกสาร</label>
-                                                                        <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
-                                                                        <select id="status" name="status"
-                                                                                class="form-control"
-                                                                                data-live-search="true"
-                                                                                disabled="true"
-                                                                        <!-- ใช้ disabled แทน readonly -->
-                                                                        title="Please select">
+                                                                    <label for="status"
+                                                                           class="control-label">สถานะเอกสาร</label>
+                                                                    <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
+                                                                    <select id="status" name="status"
+                                                                            class="form-control"
+                                                                            data-live-search="true"
+                                                                            title="Please select">
                                                                         <option value="N">รอพิจารณา</option>
                                                                         <option value="A">อนุมัติ</option>
                                                                         <option value="R">ไม่อนุมัติ</option>
-                                                                        </select>
-                                                                    </div>
+                                                                    </select>
+                                                                </div>
+                                                            <?php } else { ?>
+                                                                <div class="form-group">
+                                                                    <label for="status" class="control-label">สถานะเอกสาร</label>
+                                                                    <!--N = รอพิจารณา , A = อนุมัติ , R = ไม่อนุมัติ -->
+                                                                    <select id="status" name="status"
+                                                                            class="form-control"
+                                                                            data-live-search="true"
+                                                                            disabled="true"
+                                                                    <!-- ใช้ disabled แทน readonly -->
+                                                                    title="Please select">
+                                                                    <option value="N">รอพิจารณา</option>
+                                                                    <option value="A">อนุมัติ</option>
+                                                                    <option value="R">ไม่อนุมัติ</option>
+                                                                    </select>
+                                                                </div>
 
-                                                                <?php } ?>
+                                                            <?php } ?>
 
-                                                            </div>
+
                                                         </div>
 
                                                         <div class="modal-footer">
@@ -513,9 +507,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'serverSide': true,
                 'serverMethod': 'post',
                 'autoWidth': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
+                <?php if ($_SESSION['deviceType'] !== 'computer') {
+        echo "'scrollX': true,";
+    } ?>
                 'ajax': {
                     'url': 'model/manage_holiday_admin_approve_process.php',
                     'data': formData

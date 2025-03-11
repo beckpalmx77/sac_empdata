@@ -263,28 +263,36 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                value="0"
                                                                                placeholder="เวลาสิ้นสุด">
                                                                     </div>
-                                                                <!--/div>
+                                                                    <!--/div>
 
-                                                                <div class="form-group"-->
+                                                                    <div class="form-group"-->
                                                                     <div class="col-sm-6">
-                                                                    <label for="remark"
-                                                                           class="control-label">หมายเหตุ</label>
-                                                                    <textarea class="form-control"
-                                                                              id="remark"
-                                                                              name="remark"
-                                                                              rows="1"></textarea>
+                                                                        <label for="remark"
+                                                                               class="control-label">หมายเหตุ</label>
+                                                                        <textarea class="form-control"
+                                                                                  id="remark"
+                                                                                  name="remark"
+                                                                                  rows="1"></textarea>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="form-group row" id="uploadSection">
                                                                     <div class="col-sm-6">
-                                                                        <label for="upload_image" class="control-label">เอกสารแนบ (Upload รูปภาพ)</label>
-                                                                        <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบ
+                                                                            (Upload รูปภาพ)</label>
+                                                                        <input type="file" class="form-control-file"
+                                                                               id="image_upload" name="image_upload"
+                                                                               accept="image/*"
+                                                                               onchange="previewImage(event)">
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                                                        <label class="control-label">เอกสารที่แนบ (Click
+                                                                            ที่รูปเพื่อขยาย)</label>
                                                                         <br>
-                                                                        <img id="preview" src="" alt="Preview" style="max-width: 100px; cursor: pointer; display: none;" data-toggle="modal" data-target="#imageModal">
+                                                                        <img id="preview" src="" alt="Preview"
+                                                                             style="max-width: 100px; cursor: pointer; display: none;"
+                                                                             data-toggle="modal"
+                                                                             data-target="#imageModal">
                                                                     </div>
                                                                 </div>
 
@@ -428,12 +436,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                         </div>
 
                                         <!-- Modal แสดงภาพ -->
-                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="imageModal" tabindex="-1"
+                                             aria-labelledby="imageModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">เอกสารแนบ</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -553,9 +563,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'serverSide': true,
                 'serverMethod': 'post',
                 'autoWidth': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
+                <?php if ($_SESSION['deviceType'] !== 'computer') {
+        echo "'scrollX': true,";
+    } ?>
                 'ajax': {
                     'url': 'model/manage_holiday_process.php',
                     'data': formData
@@ -877,7 +887,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let input = event.target;
             let reader = new FileReader();
 
-            reader.onload = function() {
+            reader.onload = function () {
                 let preview = document.getElementById('preview');
                 let modalImage = document.getElementById('modalImage');
 
