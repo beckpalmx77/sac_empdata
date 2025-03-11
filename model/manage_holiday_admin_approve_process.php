@@ -230,7 +230,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
+if ($_POST["action"] === 'GET_HOLIDAY_DOCUMENT') {
 
     ## Read value
     $draw = $_POST['draw'];

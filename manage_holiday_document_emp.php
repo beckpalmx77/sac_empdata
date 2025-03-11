@@ -600,7 +600,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
+            let formData = {action: "GET_HOLIDAY_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
 
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[8, 10, 20, 50, 100], [8, 10, 20, 50, 100]],

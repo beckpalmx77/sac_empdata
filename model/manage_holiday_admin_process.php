@@ -142,7 +142,7 @@ if ($_POST["action"] === 'GET_HOLIDAY_DOCUMENT') {
 
 ## Search
     $searchQuery = " ";
-    if ($_POST["page_manage"] === "ADMIN") {
+    if ($_POST["page_manage"] !== "ADMIN") {
         $searchQuery = " AND emp_id = '" . $_POST['emp_id'] . "'";
     }
 
