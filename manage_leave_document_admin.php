@@ -238,7 +238,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                               id="remark"
                                                                               name="remark"
                                                                               readonly="true"
-                                                                              rows="3"></textarea>
+                                                                              rows="1"></textarea>
                                                                 </div>
 
                                                                 <?php if ($_SESSION['approve_permission'] === 'Y') { ?>
