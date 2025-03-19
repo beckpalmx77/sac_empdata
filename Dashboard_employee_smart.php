@@ -7,15 +7,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         /* ตั้งค่าหน้าจอให้จัดตรงกลาง */
-        body {
+        html, body {
+            height: 100%;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* ให้ body มีความสูงเต็มหน้าจอ */
-            margin: 0;
         }
 
         .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
         }
 
@@ -23,8 +26,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            justify-content: center;
-            margin-top: 50px;
+            margin-top: 30px;
         }
 
         .icon-box {
