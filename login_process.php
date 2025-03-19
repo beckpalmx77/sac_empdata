@@ -119,11 +119,15 @@ if ($query->rowCount() == 1) {
             }
             //echo $result->dashboard_page . ".php";
 
-            if ($_SESSION['deviceType']==='computer' || $_SESSION['deviceType']==='tablet') {
+            echo $result->dashboard_page;
+
+            /*
+             if ($_SESSION['deviceType']==='computer' || $_SESSION['deviceType']==='tablet') {
                 echo $result->dashboard_page;
             } else {
                 echo "Dashboard_employee_smart";
             }
+            */
 
         } else {
             echo 0;
