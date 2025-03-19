@@ -24,6 +24,10 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 background-color: #f8f9fa;
             }
 
+            .container img {
+                margin-top: 20px;  /* เพิ่มระยะห่างจากด้านบน */
+            }
+
             .container {
                 display: flex;
                 flex-direction: column;
@@ -77,7 +81,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </head>
     <body>
     <div class="container text-center">
-        <br>
         <div><img src="img/logo/logo text-01.png" width="200" height="79"/></div>
         <div class="icon-container">
             <a href="employees.html" class="icon-box">
