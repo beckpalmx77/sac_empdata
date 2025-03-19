@@ -77,7 +77,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </head>
     <body>
     <div class="container text-center">
-        <div><img src="img/logo/blank.png" width="100" height="20"/></div>
+        <div><img src="img/logo/blank.png" width="100" height="10"/></div>
         <div><img src="img/logo/logo text-01.png" width="200" height="79"/></div>
         <div class="icon-container">
             <a href="employees.html" class="icon-box">
