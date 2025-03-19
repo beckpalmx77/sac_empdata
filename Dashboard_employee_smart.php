@@ -59,7 +59,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </head>
     <body>
     <div class="container text-center">
-        <h2 class="my-4">เมนู HR</h2>
+        <div><img src="img/logo/logo text-01.png" width="200" height="79"/></div>
         <div class="icon-container">
             <a href="employees.html" class="icon-box">
                 <i class="fas fa-users"></i>
