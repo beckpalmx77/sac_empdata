@@ -13,7 +13,25 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         <title>Icon Navigation</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
         <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f8f9fa;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
             .icon-container {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -110,7 +128,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <?php
     include('includes/Modal-Logout.php');
-    include('includes/Footer.php');
+    //include('includes/Footer.php');
     ?>
     <!-- Scroll to top -->
     <a class="scroll-to-top rounded" href="#page-top">
