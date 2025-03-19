@@ -95,12 +95,12 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
         $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
     }
 
-
+/*
         $txt = $sql_record . " | " . (int)$row . " | " . (int)$rowperpage;
         $my_file = fopen("msg.txt", "w") or die("Unable to open file!");
         fwrite($my_file, $txt);
         fclose($my_file);
-
+*/
 
     $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
     $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
@@ -110,6 +110,8 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
 
     foreach ($empRecords as $row) {
 
+        $work_date = new DateTime($row['work_date']);
+
         if ($_POST['sub_action'] === "GET_MASTER") {
             $data[] = array(
                 "id" => $row['id'],
@@ -118,7 +120,7 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
                 "l_name" => $row['l_name'],
                 "department_id" => $row['department_id'],
                 "dept_id_approve" => $row['dept_id_approve'],
-                "work_date" => $row['work_date'],
+                "work_date" => $work_date->format('d-m-Y'),
                 "start_time" => $row['start_time'],
                 "end_time" => $row['end_time'],
                 "device" => $row['device'],
