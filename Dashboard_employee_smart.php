@@ -6,13 +6,14 @@
     <title>Icon Navigation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        /* ตั้งค่าหน้าจอให้จัดตรงกลาง */
         html, body {
             height: 100%;
             margin: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
+            padding-top: 20px; /* ลดระยะห่างด้านบน */
         }
 
         .container {
@@ -20,13 +21,14 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            flex-grow: 1;
         }
 
         .icon-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .icon-box {
@@ -69,21 +71,17 @@
 <div class="container">
     <div><img src="img/logo/logo text-01.png" width="200" height="79"/></div>
     <div class="icon-container">
-        <a href="employees.html" class="icon-box">
-            <img src="img/icon_app/L1.png" alt="ลาป่วย">
+        <a href="manage_sick_leave_document" class="icon-box">
+            <img src="img/icon_app/L2.png" alt="ลาป่วย">
             <span>ลาป่วย</span>
         </a>
-        <a href="attendance.html" class="icon-box">
-            <img src="img/icon_app/L2.png" alt="การเข้าออกงาน">
-            <span>การเข้าออกงาน</span>
-        </a>
         <a href="payroll.html" class="icon-box">
-            <img src="img/icon_app/L3.png" alt="เงินเดือน">
-            <span>เงินเดือน</span>
+            <img src="img/icon_app/L3.png" alt="ลาอื่นๆ">
+            <span>ลาอื่นๆ</span>
         </a>
         <a href="recruitment.html" class="icon-box">
-            <img src="img/icon_app/H2.png" alt="การรับสมัคร">
-            <span>การรับสมัคร</span>
+            <img src="img/icon_app/H2.png" alt="วันหยุดนักขัตฤกษ์-ประจำปี">
+            <span>ใช้วันหยุด</span>
         </a>
     </div>
 </div>
