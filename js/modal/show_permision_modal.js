@@ -35,57 +35,63 @@ $("#TablePermissionList").on('click', '.select', function () {
     $('#permission_id').val(data[0]);
     $('#permission_detail').val(data[1]);
 
-    //document.getElementById("myDIV").innerHTML = "";
-
     let permission_id = data[0];
     let formData = {action: "LOAD_PERMISSION", permission_id: permission_id};
+
     $.ajax({
         type: "POST",
         url: 'model/manage_permission.php',
         dataType: "json",
         data: formData,
         success: function (response) {
-            let len = response.length;
-            for (let i = 0; i < len; i++) {
-                let main_menu = response[i].main_menu;
-                let sub_menu = response[i].sub_menu;
-                let dashboard_page = response[i].dashboard_page;
+            console.log("Response:", response); // ตรวจสอบข้อมูลที่ได้รับ
 
-                $('#dashboard_page').val(dashboard_page);
-
-                let main_menu_array = main_menu.split(",");
-                let sub_menu_array = sub_menu.split(",");
-
-                let main_list = document.getElementsByName("menu_main");
-                let sub_list = document.getElementsByName("menu_sub");
-
-                for (let ml = 0; ml < main_list.length; ml++) {
-                    document.getElementsByName("menu_main")[ml].checked = false;
-                }
-
-                for (let sl = 0; sl < sub_list.length; sl++) {
-                    document.getElementsByName("menu_sub")[sl].checked = false;
-                }
-
-                for (let m = 0; m < main_menu_array.length; m++) {
-                    let m_main = main_menu_array[m];
-                    if (m_main!=="") {
-                    document.getElementById(m_main).checked = true;
-                    }
-                }
-
-                for (let s = 0; s < sub_menu_array.length; s++) {
-                    let m_sub = sub_menu_array[s];
-                    if (m_sub!=="") {
-                        document.getElementById(m_sub).checked = true;
-                    }
-                }
-
+            if (!response || response.length === 0) {
+                alertify.error("No data received.");
+                return;
             }
 
+            let main_menu = response[0].main_menu || "";
+            let sub_menu = response[0].sub_menu || "";
+            let dashboard_page = response[0].dashboard_page || "";
+
+            $('#dashboard_page').val(dashboard_page);
+
+            let main_menu_array = main_menu.split(",");
+            let sub_menu_array = sub_menu.split(",");
+
+            let main_list = document.getElementsByName("menu_main");
+            let sub_list = document.getElementsByName("menu_sub");
+
+            // เคลียร์ค่าทุก checkbox ก่อน
+            main_list.forEach(item => item.checked = false);
+            sub_list.forEach(item => item.checked = false);
+
+            // ตรวจสอบว่า ID มีอยู่จริงก่อนกำหนดค่า checked
+            main_menu_array.forEach(m_main => {
+                let mainCheckbox = document.getElementById(m_main);
+                if (m_main.trim() !== "" && mainCheckbox) {
+                    console.log("Checking main menu:", m_main);
+                    mainCheckbox.checked = true;
+                } else {
+                    console.warn("Main menu ID not found:", m_main);
+                }
+            });
+
+            sub_menu_array.forEach(m_sub => {
+                let subCheckbox = document.getElementById(m_sub);
+                if (m_sub.trim() !== "" && subCheckbox) {
+                    console.log("Checking sub menu:", m_sub);
+                    subCheckbox.checked = true;
+                } else {
+                    console.warn("Sub menu ID not found:", m_sub);
+                }
+            });
+
         },
-        error: function (response) {
-            alertify.error("error : " + response);
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: ", status, error);
+            alertify.error("Error loading permissions.");
         }
     });
 

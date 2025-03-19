@@ -49,6 +49,7 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
         ),
         'C' => 
         array (
+            'Composer\\Pcre\\' => 14,
             'Complex\\' => 8,
         ),
     );
@@ -118,6 +119,10 @@ class ComposerStaticInit81749a0b49ac44f05f3399940816f0e6
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
         'Complex\\' => 
         array (

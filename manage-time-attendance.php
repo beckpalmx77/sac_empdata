@@ -49,7 +49,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่</th>
                                                     <th>เวลาเข้า</th>
                                                     <th>เวลาออก</th>
-                                                    <th>action</th>
                                                 </tr>
                                                 </thead>
                                                 <tfoot>
@@ -61,7 +60,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่</th>
                                                     <th>เวลาเข้า</th>
                                                     <th>เวลาออก</th>
-                                                    <th>action</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>
@@ -284,8 +282,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'department_id'},
                     {data: 'work_date'},
                     {data: 'start_time'},
-                    {data: 'end_time'},
-                    {data: 'detail'}
+                    {data: 'end_time'}
                 ]
             });
         });

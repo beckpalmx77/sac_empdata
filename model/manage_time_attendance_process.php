@@ -46,8 +46,18 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
 
     $searchArray = array();
 
-## Search
     $searchQuery = " ";
+
+    if ($_SESSION['role'] === "SUPERVISOR") {
+        $searchQuery = " AND dept_id_approve = '" . $_SESSION['dept_id_approve'] . "' ";
+    } else if ($_SESSION['role'] === "HR" || $_SESSION['role'] === "ADMIN") {
+        $searchQuery = " ";
+    } else {
+        $searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "' ";
+    }
+
+## Search
+
     if ($searchValue != '') {
         $searchQuery = " AND (emp_id LIKE :emp_id or f_name LIKE :f_name or
         l_name LIKE :l_name or department_id LIKE :department_id or work_date LIKE :work_date) ";
@@ -85,12 +95,12 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
         $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
     }
 
-    /*
+
         $txt = $sql_record . " | " . (int)$row . " | " . (int)$rowperpage;
         $my_file = fopen("msg.txt", "w") or die("Unable to open file!");
         fwrite($my_file, $txt);
         fclose($my_file);
-    */
+
 
     $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
     $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);

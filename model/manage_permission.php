@@ -77,7 +77,7 @@ if ($_POST["action"] === 'SAVE') {
 
     //$myfile = fopen("permission-param.txt", "w") or die("Unable to open file!");
     //fwrite($myfile, $permission_id  . " | " . $permission_detail . " | " . $dashboard_page
-        //. " | " . $main_list_value . " | " . $sub_list_value );
+    //. " | " . $main_list_value . " | " . $sub_list_value );
     //fclose($myfile);
 
     if ($permission_id !=="" && $permission_detail !=="" && $main_list_value !=="" && $sub_list_value !=="") {
@@ -166,12 +166,6 @@ if ($_POST["action"] === 'GET_PERMISSION') {
         $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
     }
 
-/*
-    $myfile = fopen("job-getdata_permission.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, " Row Record = " . $row . " Row Record Per Page = " . $rowperpage);
-    fclose($myfile);
-*/
-
     $stmt->bindValue(':limit', (int)$row, PDO::PARAM_INT);
     $stmt->bindValue(':offset', (int)$rowperpage, PDO::PARAM_INT);
     $stmt->execute();
@@ -208,6 +202,7 @@ if ($_POST["action"] === 'GET_PERMISSION') {
         "iTotalDisplayRecords" => $totalRecordwithFilter,
         "aaData" => $data
     );
+
     echo json_encode($response);
 }
 
