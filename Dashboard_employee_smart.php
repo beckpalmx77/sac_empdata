@@ -67,7 +67,6 @@
 </head>
 <body>
 <div class="container">
-    <div><img src="img/logo/blank.png" width="100" height="10"/></div>
     <div><img src="img/logo/logo text-01.png" width="200" height="79"/></div>
     <div class="icon-container">
         <a href="employees.html" class="icon-box">
