@@ -88,14 +88,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 <i class="fas fa-calendar-check"></i>
                 <span>การเข้าออกงาน</span>
             </a>
-            <a href="payroll.html" class="icon-box">
-                <i class="fas fa-money-check-alt"></i>
-                <span>เงินเดือน</span>
-            </a>
-            <a href="recruitment.html" class="icon-box">
-                <i class="fas fa-user-plus"></i>
-                <span>การรับสมัคร</span>
-            </a>
             <a href="training.html" class="icon-box">
                 <i class="fas fa-chalkboard-teacher"></i>
                 <span>การฝึกอบรม</span>
