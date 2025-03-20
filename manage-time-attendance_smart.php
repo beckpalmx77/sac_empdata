@@ -46,6 +46,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
+                                                    <th>ชื่อ-นามสกุล</th>
                                                     <th>วันที่</th>
                                                     <th>เวลาเข้า</th>
                                                     <th>เวลาออก</th>
@@ -268,6 +269,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     'data': formData
                 },
                 'columns': [
+                    {data: 'full_name'},
                     {data: 'work_date'},
                     {data: 'start_time'},
                     {data: 'end_time'}

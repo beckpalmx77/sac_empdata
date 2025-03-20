@@ -118,6 +118,7 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
                 "emp_id" => $row['emp_id'],
                 "f_name" => $row['f_name'],
                 "l_name" => $row['l_name'],
+                "full_name" => $row['f_name'] . " " . $row['l_name'],
                 "department_id" => $row['department_id'],
                 "dept_id_approve" => $row['dept_id_approve'],
                 "work_date" => $work_date->format('d-m-Y'),
