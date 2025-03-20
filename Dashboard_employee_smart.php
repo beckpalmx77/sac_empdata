@@ -94,6 +94,10 @@
             <img src="img/icon_app/report_leave_holiday.png" alt="รายละเอียดการลา">
             <span>รายละเอียดการลา</span>
         </a>
+        <a href="manage-time-attendance_smart?m=รายงาน&s=การบันทึกเวลา+เข้า-ออก+พนักงาน" class="icon-box">
+            <img src="img/icon_app/time_attendance.png" alt="เวลา เข้า-ออก พนักงาน">
+            <span>เวลา เข้า-ออก</span>
+        </a>
         <a href="manage_employee_self_smart?m=ทะเบียนหลัก&s=ประวัติพนักงาน" class="icon-box">
             <img src="img/icon_app/emp_info.png" alt="ประวัติพนักงาน">
             <span>ประวัติพนักงาน</span>
