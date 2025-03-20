@@ -247,7 +247,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let formData = {action: "GET_TIME_ATTENDANCE", sub_action: "GET_MASTER"};
 
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[9, 20, 50, 100], [9, 20, 50, 100]],
+                'lengthMenu': [[5, 10, 15, 20,50,100], [5, 10, 15, 20,50,100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',
@@ -263,6 +263,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้ Responsive ดีขึ้น
+                'searching': true,
+                'scrollX': true, // ✅ เปิดใช้งาน scrollX เพื่อให้ Scroll ได้ในมือถือ
                 'ajax': {
                     'url': 'model/manage_time_attendance_process.php',
                     'data': formData
