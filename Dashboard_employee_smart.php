@@ -84,13 +84,21 @@
             <img src="img/icon_app/L1.png" alt="ลาอื่นๆ">
             <span>ลาอื่นๆ</span>
         </a>
-        <a href="manage_holiday_document_emp?m=บันทึกข้อมูลหลัก&s=บันทึกวันหยุด+(นักขัตฤกษ์-ประจำปี)" class="icon-box">
+        <a href="manage_holiday_document_emp_smart?m=บันทึกข้อมูลหลัก&s=บันทึกวันหยุด+(นักขัตฤกษ์-ประจำปี)" class="icon-box">
             <img src="img/icon_app/H2.png" alt="วันหยุดนักขัตฤกษ์-ประจำปี">
             <span>ใช้วันหยุด</span>
         </a>
-        <a href="display_data_emp_leave_document_sac?m=รายงาน&s=รายละเอียดการลางาน+-+การใช้วันหยุด+พนักงาน" class="icon-box">
-            <img src="img/icon_app/--2.png" alt="รายละเอียดการลา">
+        <a href="display_data_emp_leave_document_sac_smart?m=รายงาน&s=รายละเอียดการลางาน+-+การใช้วันหยุด+พนักงาน" class="icon-box">
+            <img src="img/icon_app/report_leave_holiday.png" alt="รายละเอียดการลา">
             <span>รายละเอียดการลา</span>
+        </a>
+        <a href="manage_employee_self_smart?m=ทะเบียนหลัก&s=ประวัติพนักงาน" class="icon-box">
+            <img src="img/icon_app/emp_info.png" alt="ประวัติพนักงาน">
+            <span>ประวัติพนักงาน</span>
+        </a>
+        <a href="index" class="icon-box">
+            <img src="img/icon_app/exit.png" alt="ออกจากระบบ">
+            <span>ออกจากระบบ</span>
         </a>
     </div>
 </div>
