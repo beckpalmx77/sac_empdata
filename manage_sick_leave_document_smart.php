@@ -62,17 +62,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             </button>
                                         </div>
 
-                                        <!--div class="col-md-12 col-md-offset-2">
+                                        <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
                                                     <th>ปี</th>
-                                                    <th>วันที่เอกสาร</th>
-                                                    <th>ชื่อ-นามสกุล</th>
-                                                    <th>หน่วยงาน</th>
-                                                    <th>ประเภทการลา</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
+                                                    <th>ประเภทการลา</th>
                                                     <th>จำนวนวัน</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
@@ -82,12 +79,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 <tfoot>
                                                 <tr>
                                                     <th>ปี</th>
-                                                    <th>วันที่เอกสาร</th>
-                                                    <th>ชื่อ-นามสกุล</th>
-                                                    <th>หน่วยงาน</th>
-                                                    <th>ประเภทการลา</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
+                                                    <th>ประเภทการลา</th>
                                                     <th>จำนวนวัน</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
@@ -98,7 +92,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                             <div id="result"></div>
 
-                                        </div-->
+                                        </div>
 
                                         <div class="modal fade" id="recordModal">
                                             <div class="modal-dialog modal-lg">
@@ -634,12 +628,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 },
                 'columns': [
                     {data: 'doc_year'},
-                    {data: 'doc_date'},
-                    {data: 'full_name'},
-                    {data: 'department_id'},
-                    {data: 'leave_type_detail'},
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
+                    {data: 'leave_type_detail'},
                     {data: 'leave_day'},
                     {data: 'status'},
                     {data: 'image'},
