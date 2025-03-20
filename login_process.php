@@ -117,17 +117,16 @@ if ($query->rowCount() == 1) {
                 setcookie("password", $_POST["password"], time() + (86400 * 10000), "/");
                 setcookie("remember_chk", "check", time() + (86400 * 10000), "/");
             }
+
             //echo $result->dashboard_page . ".php";
+            //echo $result->dashboard_page;
 
-            echo $result->dashboard_page;
-
-            /*
              if ($_SESSION['deviceType']==='computer' || $_SESSION['deviceType']==='tablet') {
                 echo $result->dashboard_page;
             } else {
                 echo "Dashboard_employee_smart";
             }
-            */
+
 
         } else {
             echo 0;
