@@ -50,12 +50,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                     <section class="container-fluid">
 
                                         <div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
+                                            <!--label for="name_t"
+                                                   class="control-label"><b><?php echo urldecode($_GET['s']) ?></b></label-->
                                             <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
+                                                    class='btn btn-primary btn-xs'>สร้างเอกสาร
                                                 <i class="fa fa-plus"></i>
-                                            </button><br><button type='button' name='backBtn' id='backBtn'
+                                            </button>
+                                            <button type='button' name='backBtn' id='backBtn'
                                                     class='btn btn-danger btn-xs'>กลับหน้าแรก
                                                 <i class="fa fa-reply"></i>
                                             </button>
