@@ -113,12 +113,15 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
         $work_date = new DateTime($row['work_date']);
 
         if ($_POST['sub_action'] === "GET_MASTER") {
+
+            $full_name = $row['f_name'] . " " . $row['l_name'];
+
             $data[] = array(
                 "id" => $row['id'],
                 "emp_id" => $row['emp_id'],
                 "f_name" => $row['f_name'],
                 "l_name" => $row['l_name'],
-                "full_name" => $row['f_name'] . " " . $row['l_name'],
+                "full_name" => $full_name,
                 "department_id" => $row['department_id'],
                 "dept_id_approve" => $row['dept_id_approve'],
                 "work_date" => $work_date->format('d-m-Y'),
