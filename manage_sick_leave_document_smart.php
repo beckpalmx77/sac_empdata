@@ -168,7 +168,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                placeholder="">
                                                                     </div>
                                                                     <?php if ($_SESSION['role'] !== "EMPLOYEE") { ?>
-                                                                        <div class="col-sm-2">
+                                                                        <!--div class="col-sm-2">
                                                                             <label for="emp_id"
                                                                                    class="control-label">เลือก</label>
                                                                             <a data-toggle="modal"
@@ -177,7 +177,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                 Click <i class="fa fa-search"
                                                                                          aria-hidden="true"></i>
                                                                             </a>
-                                                                        </div>
+                                                                        </div-->
                                                                     <?php } ?>
                                                                 </div>
 
