@@ -19,15 +19,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <html lang="th">
     <body id="page-top">
     <div id="wrapper">
-        <?php
+        <!--?php
         include('includes/Side-Bar.php');
-        ?>
+        ?-->
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <?php
+                <!--?php
                 include('includes/Top-Bar.php');
-                ?>
+                ?-->
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -55,6 +55,10 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <button type='button' name='btnAdd' id='btnAdd'
                                                     class='btn btn-primary btn-xs'>Add
                                                 <i class="fa fa-plus"></i>
+                                            </button>
+                                            <button type='button' name='backBtn' id='backBtn'
+                                                    class='btn btn-danger btn-xs'>กลับหน้าแรก
+                                                <i class="fa fa-reply"></i>
                                             </button>
                                         </div>
 
@@ -1091,6 +1095,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             reader.readAsDataURL(input.files[0]);
         }
 
+    </script>
+
+    <script>
+        $('#backBtn').click(function () {
+            window.location.href = "Dashboard_employee_smart";
+        });
     </script>
 
     </body>
