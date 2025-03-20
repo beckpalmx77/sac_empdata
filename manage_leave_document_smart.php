@@ -1068,6 +1068,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script>
 
+    <script>
+        $('#backBtn').click(function () {
+            window.location.href = "Dashboard_employee_smart";
+        });
+    </script>
+
     </body>
     </html>
 
