@@ -75,7 +75,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
-                                                <tfoot>
+                                                <!--tfoot>
                                                 <tr>
                                                     <th>ปี</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
@@ -85,7 +85,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
                                                 </tr>
-                                                </tfoot>
+                                                </tfoot-->
                                             </table>
 
                                             <div id="result"></div>
