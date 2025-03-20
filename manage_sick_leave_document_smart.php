@@ -55,7 +55,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <button type='button' name='btnAdd' id='btnAdd'
                                                     class='btn btn-primary btn-xs'>Add
                                                 <i class="fa fa-plus"></i>
-                                            </button>&nbsp;<button type='button' name='backBtn' id='backBtn'
+                                            </button><br><button type='button' name='backBtn' id='backBtn'
                                                     class='btn btn-danger btn-xs'>กลับหน้าแรก
                                                 <i class="fa fa-reply"></i>
                                             </button>
