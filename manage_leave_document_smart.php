@@ -32,13 +32,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
-                        <ol class="breadcrumb">
+                        <!--ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
                             </li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
-                        </ol>
+                        </ol-->
                     </div>
 
                     <div class="row">
@@ -50,11 +50,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                     <section class="container-fluid">
 
                                         <div class="col-md-12 col-md-offset-2">
-                                            <label for="name_t"
-                                                   class="control-label"><b>เพิ่ม <?php echo urldecode($_GET['s']) ?></b></label>
+                                            <!--label for="name_t"
+                                                   class="control-label"><b><?php echo urldecode($_GET['s']) ?></b></label-->
                                             <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>Add
+                                                    class='btn btn-primary btn-xs'>สร้างเอกสาร
                                                 <i class="fa fa-plus"></i>
+                                            </button>
+                                            <button type='button' name='backBtn' id='backBtn'
+                                                    class='btn btn-danger btn-xs'>กลับหน้าแรก
+                                                <i class="fa fa-reply"></i>
                                             </button>
                                         </div>
 
