@@ -98,6 +98,10 @@
             <img src="img/icon_app/emp_info.png" alt="ประวัติพนักงาน">
             <span>ประวัติพนักงาน</span>
         </a>
+        <a href="change-password?m=กำหนดระบบ&s=เปลี่ยนรหัสผ่าน" class="icon-box">
+            <img src="img/icon_app/change_password.png" alt="เปลี่ยนรหัสผ่าน">
+            <span>เปลี่ยนรหัสผ่าน</span>
+        </a>
         <a href="index" class="icon-box">
             <img src="img/icon_app/exit.png" alt="ออกจากระบบ">
             <span>ออกจากระบบ</span>
