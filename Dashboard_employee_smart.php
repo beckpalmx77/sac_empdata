@@ -18,7 +18,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: 10px; /* ลดระยะห่างด้านบน */
+            padding-top: 5px; /* ลดระยะห่างด้านบน */
         }
 
         .container {
