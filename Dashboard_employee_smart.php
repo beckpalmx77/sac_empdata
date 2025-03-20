@@ -18,7 +18,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: 20px; /* ลดระยะห่างด้านบน */
+            padding-top: 10px; /* ลดระยะห่างด้านบน */
         }
 
         .container {
@@ -75,7 +75,7 @@
 <body>
 <div class="container">
     <div>
-        <img src="img/logo/logo text-02.png" style="width: auto; height: 59px;">
+        <img src="img/logo/logo text-02.png" style="width: auto; height: 49px;">
     </div>
     <div class="icon-container">
         <a href="manage_sick_leave_document_smart?m=บันทึกข้อมูลหลัก&s=เอกสารการลาป่วย" class="icon-box">
