@@ -19,9 +19,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <html lang="th">
     <body id="page-top">
     <div id="wrapper">
-        <?php
+        <!--?php
         include('includes/Side-Bar.php');
-        ?>
+        ?-->
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">

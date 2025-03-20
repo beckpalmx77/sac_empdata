@@ -25,9 +25,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <!--?php
+                <?php
                 include('includes/Top-Bar.php');
-                ?-->
+                ?>
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
