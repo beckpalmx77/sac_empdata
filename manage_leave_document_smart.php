@@ -10,6 +10,8 @@ $l_pak_ron_max = $_SESSION['L3'];
 $l_holiday_max = $_SESSION['H3'];
 
 include('includes/Header.php');
+include('config/connect_db.php');
+
 if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "") {
     header("Location: index.php");
 } else {
@@ -67,6 +69,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 <thead>
                                                 <tr>
                                                     <th>ปี</th>
+                                                    <th>วันที่เอกสาร</th>
+                                                    <th>ชื่อ-นามสกุล</th>
+                                                    <th>หน่วยงาน</th>
                                                     <th>ประเภทการลา</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
@@ -77,6 +82,22 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
+                                                <tfoot>
+                                                <tr>
+                                                    <th>ปี</th>
+                                                    <th>วันที่เอกสาร</th>
+                                                    <th>ชื่อ-นามสกุล</th>
+                                                    <th>หน่วยงาน</th>
+                                                    <th>ประเภทการลา</th>
+                                                    <th>วันที่ลาเริ่มต้น</th>
+                                                    <th>วันที่ลาสิ้นสุด</th>
+                                                    <th>จำนวนวัน</th>
+                                                    <th>จำนวน ช.ม.</th>
+                                                    <th>สถานะ</th>
+                                                    <th>รูปภาพ</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </tfoot>
                                             </table>
 
                                             <div id="result"></div>
@@ -96,14 +117,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                         <div class="modal-body">
                                                             <div class="modal-body">
 
-                                                                <div class="form-group">
+                                                                <!--div class="form-group">
                                                                     <label for="doc_id"
                                                                            class="control-label">เลขที่เอกสาร</label>
                                                                     <input type="text" class="form-control"
                                                                            id="doc_id" name="doc_id"
                                                                            readonly="true"
                                                                            placeholder="สร้างอัตโนมัติ">
-                                                                </div>
+                                                                </div-->
+
+                                                                <input type="hidden" class="form-control"
+                                                                       id="doc_id" name="doc_id"
+                                                                       readonly="true"
+                                                                       placeholder="สร้างอัตโนมัติ">
 
 
                                                                 <input type="hidden" class="form-control"
@@ -156,7 +182,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                placeholder="">
                                                                     </div>
                                                                     <?php if ($_SESSION['role'] !== "EMPLOYEE") { ?>
-                                                                        <!--div class="col-sm-2">
+                                                                        <div class="col-sm-2">
                                                                             <label for="emp_id"
                                                                                    class="control-label">เลือก</label>
                                                                             <a data-toggle="modal"
@@ -165,7 +191,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                 Click <i class="fa fa-search"
                                                                                          aria-hidden="true"></i>
                                                                             </a>
-                                                                        </div-->
+                                                                        </div>
                                                                     <?php } ?>
 
                                                                 </div>
@@ -184,37 +210,63 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                readonly="true"
                                                                                placeholder="วันที่เอกสาร">
                                                                     </div>
-
-                                                                </div>
-
-                                                                <div class="form-group row">
-
-                                                                    <div class="form-group row">
-                                                                        <label for="leave_type_id"
-                                                                               class="control-label mb-2">ประเภทการลา&nbsp;</label>
-                                                                        <select class="form-control select2"
-                                                                                id="leave_type_id" name="leave_type_id"
-                                                                                required="required">
-                                                                        </select>
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-12">
+                                                                    <div class="col-sm-9">
                                                                         <label for="leave_case" class="control-label">
                                                                             <span style="color: darkred;">* ลากิจ/ลาพักผ่อน ต้องลาไม่น้อยกว่าครึ่งวัน 8.30-12.00 หรือ 13.00-17.30</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row">
-                                                                    <div class="col-sm-12">
-                                                                        <label for="leave_case" class="control-label">
+                                                                            <br>
                                                                             <span style="color: blue;">* ลาไม่รับค่าจ้าง ลาแบบเป็นครึ่งชั่วโมงได้ เช่น 8.30-9.00 / 10.30-11.00</span>
                                                                         </label>
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="form-group row">
+                                                                    <!--input type="hidden" class="form-control"
+                                                                           id="leave_type_id"
+                                                                           required="required"
+                                                                           name="leave_type_id">
+                                                                    <div class="col-sm-8">
+                                                                        <label for="leave_type_detail"
+                                                                               class="control-label">ประเภทการลา</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_type_detail"
+                                                                               name="leave_type_detail"
+                                                                               required="required"
+                                                                               readonly="true"
+                                                                               placeholder="">
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <label for="leave_type_id"
+                                                                               class="control-label">เลือก</label>
+                                                                        <a data-toggle="modal"
+                                                                           href="#SearchLeaveTypeModal"
+                                                                           class="btn btn-primary">
+                                                                            Click <i class="fa fa-search"
+                                                                                     aria-hidden="true"></i>
+                                                                        </a>
+                                                                    </div-->
+                                                                    <div class="col-sm-8">
+                                                                        <label for="date_leave_start"
+                                                                               class="control-label">ประเภทการลา (เลือก)</label>
+                                                                        <select class="form-control" id="leave_type_id" name="leave_type_id" required onchange="showSelectedValue()">
+                                                                            <?php
+                                                                            $sql = "SELECT leave_type_id, leave_type_detail FROM mleave_type WHERE day_flag = 'L' AND leave_type_id <> 'L2' ORDER BY leave_type_id ";
+                                                                            $stmt = $conn->query($sql);
+                                                                            while ($row = $stmt->fetch()) {
+                                                                                echo "<option value='{$row['leave_type_id']}'>{$row['leave_type_detail']}</option>";
+                                                                            }
+                                                                            ?>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-sm-2">
+                                                                        <label for="search_data"
+                                                                               class="control-label">ข้อมูลการลา</label>
+                                                                        <button type="button" class="btn btn-info"
+                                                                                id="search_data" name="search_data">
+                                                                            Click
+                                                                        </button>
+                                                                    </div>
+
+                                                                </div>
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-3">
                                                                         <label for="date_leave_start"
@@ -285,6 +337,18 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                         <label for="remark" class="control-label">หมายเหตุ</label>
                                                                         <textarea class="form-control" id="remark"
                                                                                   name="remark" rows="1"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row" id="uploadSection">
+                                                                    <div class="col-sm-6">
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบ (Upload รูปภาพ)</label>
+                                                                        <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                                                        <br>
+                                                                        <img id="preview" src="" alt="Preview" style="max-width: 100px; cursor: pointer; display: none;" data-toggle="modal" data-target="#imageModal">
                                                                     </div>
                                                                 </div>
 
@@ -468,6 +532,23 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             </div>
                                         </div>
 
+                                        <!-- Modal แสดงภาพ -->
+                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">เอกสารแนบ</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img id="modalImage" src="" alt="Full Image" class="img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -513,13 +594,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
-
-    <!-- Select2 CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet"/>
-
-    <!-- Select2 JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
-
 
     <script src="js/popup.js"></script>
 
@@ -587,7 +661,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
+            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER"};
+
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -596,26 +671,23 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     infoEmpty: 'ไม่มีข้อมูล',
                     zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
                     infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
+                    paginate: {previous: 'ก่อนหน้า', last: 'สุดท้าย', next: 'ต่อไป'}
                 },
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
-                'autoWidth': true,
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้รองรับ Responsive ดีขึ้น
                 'searching': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
+                'scrollX': true, // ✅ เปิด scrollX เพื่อให้ Scroll ได้ในมือถือ
                 'ajax': {
                     'url': 'model/manage_leave_document_process.php',
                     'data': formData
                 },
                 'columns': [
                     {data: 'doc_year'},
+                    {data: 'doc_date'},
+                    {data: 'full_name'},
+                    {data: 'department_id'},
                     {data: 'leave_type_detail'},
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
@@ -626,40 +698,34 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'update'},
                 ],
                 'drawCallback': function (settings) {
-                    // ตรวจสอบและเพิ่ม class 'blink'
                     $('#TableRecordList .image').each(function () {
-                        let picture = $(this).data('picture'); // ดึงค่าจาก data-picture
-                        if (picture) { // หากมีค่า picture
+                        let picture = $(this).data('picture');
+                        if (picture) {
                             $(this).addClass('blink');
                         }
                     });
                 }
             });
 
-            // สร้าง animation กระพริบ
-            $('<style>')
-                .prop('type', 'text/css')
-                .html(`
-                .blink {
-                    animation: blinker 1s linear infinite;
-                }
-                @keyframes blinker {
-                    50% { opacity: 0; }
-                }
-            `)
-                .appendTo('head');
+            // ✅ ปรับปรุงการทำให้ Table สามารถ Scroll ได้ในมือถือ
+            $('#TableRecordList_wrapper').addClass('table-responsive');
+
+            // CSS สำหรับกระพริบ
+            $('<style>').prop('type', 'text/css').html(`
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    `).appendTo('head');
         });
+
     </script>
 
     <script>
         $(document).ready(function () {
-
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
-                //$('#save').attr('disabled', 'disabled');
+                $('#save').attr('disabled', 'disabled'); // Disable the save button while processing
 
                 if (chkTime($('#time_leave_start').val()) && chkTime($('#time_leave_to').val())) {
-
                     if ($('#date_leave_start').val() !== '' && $('#date_leave_to').val() !== '' && ($('#leave_day').val() !== '' || $('#leave_day').val() !== '0')) {
 
                         let date_leave_1 = $('#doc_date').val().substr(3, 2) + "/" + $('#doc_date').val().substr(0, 2) + "/" + $('#doc_date').val().substr(6, 10);
@@ -668,18 +734,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let check_day = CalDay(date_leave_1, date_leave_2); // Check Date
                         let l_before = $('#leave_before').val();
 
-                        $('#filename').val($('#ImgFile').val());
-
-                        let formData = $(this).serialize();
-
-                        alert(formData);
+                        let formData = new FormData(this); // ใช้ FormData เพื่ออัปโหลดไฟล์
+                        formData.append("filename", $('#image_upload')[0].files[0]); // เพิ่มไฟล์ลงใน FormData
 
                         $.ajax({
-                            url: 'model/manage_leave_document_process-bak001.php',
+                            url: 'model/manage_leave_document_process.php',
                             method: "POST",
                             data: formData,
+                            contentType: false, // ต้องการแจ้งว่าไม่ใช้การส่งแบบ content-type แบบปกติ
+                            processData: false, // ป้องกันการแปลงข้อมูล FormData
                             success: function (data) {
-
                                 if (data.includes("Over")) {
                                     alertify.error(data);
                                 } else {
@@ -688,24 +752,25 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                 $('#recordForm')[0].reset();
                                 $('#recordModal').modal('hide');
-                                $('#save').attr('disabled', false);
+                                $('#save').attr('disabled', false); // เปิดปุ่ม save เมื่อเสร็จสิ้น
                                 ReloadDataTable();
-                                //dataRecords.ajax.reload();
-
+                            },
+                            error: function (xhr, status, error) {
+                                // การจัดการกับข้อผิดพลาด
+                                alertify.error("เกิดข้อผิดพลาดในการส่งข้อมูล: " + error);
+                                $('#save').attr('disabled', false); // เปิดปุ่ม save หากเกิดข้อผิดพลาด
                             }
-                        })
-
+                        });
                     } else {
                         alertify.error("กรุณาป้อนวันที่ต้องการลา !!!");
+                        $('#save').attr('disabled', false); // เปิดปุ่ม save ถ้าไม่ครบเงื่อนไข
                     }
                 } else {
                     alertify.error("กรุณาป้อนวันที่ - เวลา ให้ถูกต้อง !!!");
+                    $('#save').attr('disabled', false); // เปิดปุ่ม save ถ้าเวลาไม่ถูกต้อง
                 }
-
             });
-
         });
-
     </script>
 
     <script>
@@ -735,6 +800,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
                 $('#action').val('ADD');
                 $('#save').val('Save');
+                $('#uploadSection').show();
 
             });
         });
@@ -795,6 +861,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
                         $('#save').val('Save');
+                        $('#uploadSection').hide();
                     }
                 },
                 error: function (response) {
@@ -806,7 +873,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
-
         $("#TableRecordList").on('click', '.image', function () {
             let id = $(this).attr("id");
             let formData = {action: "GET_DATA", id: id};
@@ -858,8 +924,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             + '&status=' + status
                             + '&action=UPDATE';
 
-                        OpenPopupCenter(originalURL, "", "");
-
+                        // ใช้ window.open แทนการใช้ OpenPopupCenter
+                        window.open(originalURL, '_blank');
                     }
                 },
                 error: function (response) {
@@ -867,8 +933,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 }
             });
         });
-
     </script>
+
 
     <script>
         $(document).ready(function () {
@@ -999,39 +1065,55 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            // ฟังก์ชันสำหรับการตั้งค่า datepicker เมื่อมีการเปลี่ยน leave_type_id
             function setDatePicker() {
-                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าจาก hidden input ที่ผู้ใช้เลือก
+                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
                 let startDate = new Date(); // วันที่ปัจจุบัน
 
-                // ตรวจสอบประเภทการลา และกำหนดวันที่เริ่มต้น
-                if (leave_type_id === 'L1') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
-                } else if (leave_type_id === 'L3') {
-                    startDate.setDate(startDate.getDate() + 3); // เริ่มเลือกได้ตั้งแต่ 3 วันหลังจากวันนี้
+                // กำหนดการตั้งค่าเริ่มต้นของวันที่
+                if (leave_type_id === 'L6') {
+                    // ถ้าเลือก leave_type_id = 'L6' สามารถเลือกได้ทุกวันที่ผ่านมาและวันปัจจุบัน
+                    startDate = new Date('2000-01-01'); // ไม่จำกัดวันเริ่มต้น (ให้ย้อนกลับได้)
+                } else if (leave_type_id === 'L1' || leave_type_id === 'L3') {
+                    // ถ้าเลือก L1 หรือ L3 ให้เริ่มเลือกได้จาก 3 วันหลังจากวันนี้
+                    startDate.setDate(startDate.getDate() + 3);
                 } else if (leave_type_id === 'S') {
+                    // ถ้าเลือก S ให้เลือกวันนี้ได้เลย
                     startDate.setDate(startDate.getDate());
                 }
 
-
-                // ตั้งค่า datepicker
-                $('#date_leave_start').datepicker('destroy'); // ทำลาย datepicker เดิมก่อนเพื่อสร้างใหม่
-                $('#date_leave_start').datepicker({
+                // ทำลาย datepicker ก่อนสร้างใหม่
+                $('#date_leave_start').datepicker('destroy').datepicker({
                     format: "dd-mm-yyyy",
                     todayHighlight: true,
                     language: "th",
                     autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้นตาม leave_type
+                    startDate: startDate // กำหนดวันที่เริ่มต้น
                 });
+
+                $('#date_leave_to').datepicker('destroy').datepicker({
+                    format: "dd-mm-yyyy",
+                    todayHighlight: true,
+                    language: "th",
+                    autoclose: true,
+                    startDate: startDate // กำหนดวันที่เริ่มต้น
+                });
+
+                console.log("ประเภทการลา: " + leave_type_id + " | วันที่เริ่มต้น: " + startDate);
             }
 
-            // เรียกฟังก์ชันเมื่อ modal ปิด (หลังจากเลือกประเภทการลา)
+            // เมื่อเลือกประเภทการลาให้ตั้งค่า datepicker ใหม่
+            $('#leave_type_id').on('change', function () {
+                setDatePicker();
+            });
+
+            // เมื่อปิด Modal ให้รีเซ็ตวันที่ลา
             $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
-                setDatePicker(); // อัปเดต datepicker เมื่อเลือก leave_type_id เสร็จแล้ว
+                setDatePicker();
                 $('#date_leave_start').val('');
             });
         });
     </script>
+
 
     <script>
         function ReloadDataTable() {
@@ -1039,33 +1121,33 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         }
     </script>
 
+    <script>
+        function showSelectedValue() {
+            let select = document.getElementById("leave_type_id");
+            let selectedValue = select.value;
+            let selectedText = select.options[select.selectedIndex].text;
+            //alert("ค่า: " + selectedValue + "\nข้อความ: " + selectedText);
+        }
+    </script>
 
     <script>
-        $(document).ready(function () {
-            // โหลดข้อมูลประเภทการลาสำหรับ Select2
-            $('#leave_type_id').select2({
-                placeholder: '-- กรุณาเลือกประเภทการลา --',
-                allowClear: true,
-                ajax: {
-                    url: 'model/get_leave_data_type.php', // ระบุที่อยู่ไฟล์ PHP
-                    type: 'POST',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            action: 'GET_LEAVE_TYPES', // ใช้ action นี้เพื่อดึงข้อมูลประเภทการลา
-                            search: params.term // ส่งค่าที่ผู้ใช้พิมพ์
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data // ส่งผลลัพธ์กลับให้ Select2
-                        };
-                    },
-                    cache: true
-                }
-            });
-        });
+        function previewImage(event) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function() {
+                let preview = document.getElementById('preview');
+                let modalImage = document.getElementById('modalImage');
+
+                preview.src = reader.result;
+                modalImage.src = reader.result;
+
+                preview.style.display = "block";
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
     </script>
 
     <script>
@@ -1073,6 +1155,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             window.location.href = "Dashboard_employee_smart";
         });
     </script>
+
 
     </body>
     </html>
