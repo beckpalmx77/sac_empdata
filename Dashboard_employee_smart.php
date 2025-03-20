@@ -75,7 +75,7 @@
 <body>
 <div class="container">
     <div>
-        <img src="img/logo/logo text-01.png" style="width: auto; height: 59px;">
+        <img src="img/logo/logo text-02.png" style="width: auto; height: 79px;">
     </div>
     <div class="icon-container">
         <a href="manage_sick_leave_document_smart?m=บันทึกข้อมูลหลัก&s=เอกสารการลาป่วย" class="icon-box">
