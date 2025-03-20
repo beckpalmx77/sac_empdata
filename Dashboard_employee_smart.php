@@ -37,8 +37,8 @@
         }
 
         .icon-box {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -76,7 +76,7 @@
 <div class="container">
     <div><img src="img/logo/logo text-01.png" width="200" height="79"/></div>
     <div class="icon-container">
-        <a href="manage_sick_leave_document_smart?m=บันทึกข้อมูลหลัก&s=เอกสารการลาป่วย" class="icon-box">
+        <a href="manage_sick_leave_document?m=บันทึกข้อมูลหลัก&s=เอกสารการลาป่วย" class="icon-box">
             <img src="img/icon_app/L2.png" alt="ลาป่วย">
             <span>ลาป่วย</span>
         </a>
@@ -87,6 +87,10 @@
         <a href="manage_holiday_document_emp?m=บันทึกข้อมูลหลัก&s=บันทึกวันหยุด+(นักขัตฤกษ์-ประจำปี)" class="icon-box">
             <img src="img/icon_app/H2.png" alt="วันหยุดนักขัตฤกษ์-ประจำปี">
             <span>ใช้วันหยุด</span>
+        </a>
+        <a href="display_data_emp_leave_document_sac?m=รายงาน&s=รายละเอียดการลางาน+-+การใช้วันหยุด+พนักงาน" class="icon-box">
+            <img src="img/icon_app/H2.png" alt="รายละเอียดการลา">
+            <span>รายละเอียดการลา</span>
         </a>
     </div>
 </div>
