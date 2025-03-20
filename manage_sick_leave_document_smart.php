@@ -26,7 +26,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
                 <?php
-                include('includes/Top-Bar.php');
+                include('includes/Top-Bar_Mobile.php');
                 ?>
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">

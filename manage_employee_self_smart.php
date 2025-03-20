@@ -66,17 +66,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
-                                                <tfoot>
-                                                <tr>
-                                                    <th>รหัสพนักงาน</th>
-                                                    <th>ชื่อ-นามสกุล</th>
-                                                    <th>หน่วยงาน</th>
-                                                    <th>ชื่อเล่น</th>
-                                                    <th>วันเริ่มงาน</th>
-                                                    <th>สถานะ</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                                </tfoot>
                                             </table>
 
                                             <div id="result"></div>
@@ -445,6 +434,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้ Responsive ดีขึ้น
+                'searching': true,
+                'scrollX': true, // ✅ เปิดใช้งาน scrollX เพื่อให้ Scroll ได้ในมือถือ
                 'ajax': {
                     'url': 'model/manage_employee_self_process.php',
                     'data': formData

@@ -53,7 +53,9 @@ if (strlen($_SESSION['alogin']) == "") {
 
         <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
-                <?php include('includes/Top-Bar.php'); ?>
+                <?php
+                include('includes/Top-Bar_Mobile.php');
+                ?>
 
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
