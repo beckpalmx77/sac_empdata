@@ -80,7 +80,7 @@
             <img src="img/icon_app/L2.png" alt="ลาป่วย">
             <span>ลาป่วย</span>
         </a>
-        <a href="manage_leave_document?m=บันทึกข้อมูลหลัก&s=เอกสารการลาประเภทอื่น" class="icon-box">
+        <a href="manage_leave_document_smart?m=บันทึกข้อมูลหลัก&s=เอกสารการลาประเภทอื่น" class="icon-box">
             <img src="img/icon_app/L3.png" alt="ลาอื่นๆ">
             <span>ลาอื่นๆ</span>
         </a>

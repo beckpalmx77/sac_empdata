@@ -748,7 +748,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                 $('#recordForm')[0].reset();
                                 $('#recordModal').modal('hide');
                                 $('#save').attr('disabled', false);
-                                //ReloadDataTable();
+                                ReloadDataTable();
                             }
                         });
 

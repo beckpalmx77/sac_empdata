@@ -63,9 +63,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 <thead>
                                                 <tr>
                                                     <th>ปี</th>
-                                                    <th>วันที่เอกสาร</th>
-                                                    <th>ชื่อ-นามสกุล</th>
-                                                    <th>หน่วยงาน</th>
                                                     <th>ประเภทการลา</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
@@ -76,22 +73,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>Action</th>
                                                 </tr>
                                                 </thead>
-                                                <tfoot>
-                                                <tr>
-                                                    <th>ปี</th>
-                                                    <th>วันที่เอกสาร</th>
-                                                    <th>ชื่อ-นามสกุล</th>
-                                                    <th>หน่วยงาน</th>
-                                                    <th>ประเภทการลา</th>
-                                                    <th>วันที่ลาเริ่มต้น</th>
-                                                    <th>วันที่ลาสิ้นสุด</th>
-                                                    <th>จำนวนวัน</th>
-                                                    <th>จำนวน ช.ม.</th>
-                                                    <th>สถานะ</th>
-                                                    <th>รูปภาพ</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                                </tfoot>
                                             </table>
 
                                             <div id="result"></div>
@@ -631,9 +612,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 },
                 'columns': [
                     {data: 'doc_year'},
-                    {data: 'doc_date'},
-                    {data: 'full_name'},
-                    {data: 'department_id'},
                     {data: 'leave_type_detail'},
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
