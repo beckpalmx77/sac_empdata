@@ -81,7 +81,7 @@
             <span>ลาป่วย</span>
         </a>
         <a href="manage_leave_document_smart?m=บันทึกข้อมูลหลัก&s=เอกสารการลาประเภทอื่น" class="icon-box">
-            <img src="img/icon_app/L3.png" alt="ลาอื่นๆ">
+            <img src="img/icon_app/L1.png" alt="ลาอื่นๆ">
             <span>ลาอื่นๆ</span>
         </a>
         <a href="manage_holiday_document_emp?m=บันทึกข้อมูลหลัก&s=บันทึกวันหยุด+(นักขัตฤกษ์-ประจำปี)" class="icon-box">
@@ -89,7 +89,7 @@
             <span>ใช้วันหยุด</span>
         </a>
         <a href="display_data_emp_leave_document_sac?m=รายงาน&s=รายละเอียดการลางาน+-+การใช้วันหยุด+พนักงาน" class="icon-box">
-            <img src="img/icon_app/H2.png" alt="รายละเอียดการลา">
+            <img src="img/icon_app/--2.png" alt="รายละเอียดการลา">
             <span>รายละเอียดการลา</span>
         </a>
     </div>
