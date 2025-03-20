@@ -198,10 +198,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
     <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.0.2/css/fixedColumns.dataTables.min.css">
-    <script src="https://cdn.datatables.net/fixedcolumns/4.0.2/js/dataTables.fixedColumns.min.js"></script>
-
-
     <style>
 
         .icon-input-btn {
@@ -219,12 +215,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             left: 0.65em;
             top: 30%;
         }
-
-        #TableRecordList {
-            table-layout: fixed;
-            width: 100%;
-        }
-
     </style>
 
     <script>
@@ -250,10 +240,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let formData = { action: "GET_TIME_ATTENDANCE", sub_action: "GET_MASTER" };
+
+            let formData = {action: "GET_TIME_ATTENDANCE", sub_action: "GET_MASTER"};
 
             let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 15, 20, 50, 100], [5, 10, 15, 20, 50, 100]],
+                'lengthMenu': [[5, 10, 15, 20,50,100], [5, 10, 15, 20,50,100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
                     info: 'หน้าที่ _PAGE_ จาก _PAGES_',
@@ -269,24 +260,21 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 'processing': true,
                 'serverSide': true,
                 'serverMethod': 'post',
-                'autoWidth': false, // ปิด autoWidth เพื่อให้ Responsive ดีขึ้น
+                'autoWidth': false, // ❌ ปิด autoWidth เพื่อให้ Responsive ดีขึ้น
                 'searching': true,
-                'scrollX': true,  // เปิดใช้งาน scrollX เพื่อให้ Scroll ได้ในมือถือ
-                'scrollCollapse': true, // ช่วยลดขนาด ScrollBar
-                'fixedColumns': {
-                    left: 1 // ❗ Fix คอลัมน์แรก (work_date) ไม่ให้เลื่อน
-                },
+                'scrollX': true, // ✅ เปิดใช้งาน scrollX เพื่อให้ Scroll ได้ในมือถือ
                 'ajax': {
                     'url': 'model/manage_time_attendance_process.php',
                     'data': formData
                 },
                 'columns': [
-                    { data: 'work_date' },
-                    { data: 'start_time' },
-                    { data: 'end_time' }
+                    {data: 'work_date'},
+                    {data: 'start_time'},
+                    {data: 'end_time'}
                 ]
             });
         });
+
     </script>
 
     <script>
