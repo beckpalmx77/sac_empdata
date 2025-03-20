@@ -30,7 +30,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 ?-->
                 <!-- Container Fluid-->
                 <div class="container-fluid" id="container-wrapper">
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <!--div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
@@ -39,7 +39,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
                         </ol>
-                    </div>
+                    </div-->
 
                     <div class="row">
                         <div class="col-lg-12">
