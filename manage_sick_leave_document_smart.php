@@ -69,7 +69,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ปี</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
-                                                    <th>ประเภทการลา</th>
                                                     <th>จำนวนวัน</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
@@ -81,7 +80,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>ปี</th>
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
-                                                    <th>ประเภทการลา</th>
                                                     <th>จำนวนวัน</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
@@ -630,7 +628,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'doc_year'},
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
-                    {data: 'leave_type_detail'},
                     {data: 'leave_day'},
                     {data: 'status'},
                     {data: 'image'},
