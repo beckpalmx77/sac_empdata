@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link href="../img/logo/logo.png" rel="icon">
     <title>สงวนออโต้คาร์ | SANGUAN AUTO CAR</title>
@@ -16,7 +18,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: 5px;
+            padding-top: 5px; /* ลดระยะห่างด้านบน */
         }
 
         .container {
@@ -28,12 +30,10 @@
         }
 
         .icon-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
             margin-top: 20px;
-            max-width: 90%;
         }
 
         .icon-box {
@@ -67,34 +67,7 @@
 
         @media (max-width: 768px) {
             .icon-container {
-                max-width: 100%;
-            }
-
-            .icon-box {
-                width: 100px;
-                height: 100px;
-            }
-
-            .icon-box img {
-                width: 40px;
-                height: 40px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .icon-container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .icon-box {
-                width: 90px;
-                height: 90px;
-            }
-
-            .icon-box img {
-                width: 35px;
-                height: 35px;
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
