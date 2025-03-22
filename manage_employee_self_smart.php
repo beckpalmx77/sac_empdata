@@ -68,6 +68,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>รหัสพนักงาน</th>
                                                     <th>Action</th>
                                                     <th>ชื่อ-นามสกุล</th>
+                                                    <th>สถานะ</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -441,6 +442,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'emp_id'},
                     {data: 'detail'},
                     {data: 'full_name'},
+                    {data: 'status'},
                 ]
             });
         });
