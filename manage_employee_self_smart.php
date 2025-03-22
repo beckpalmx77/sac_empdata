@@ -58,12 +58,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 <thead>
                                                 <tr>
                                                     <th>รหัสพนักงาน</th>
-                                                    <th>ชื่อ-นามสกุล</th>
-                                                    <th>หน่วยงาน</th>
-                                                    <th>ชื่อเล่น</th>
-                                                    <th>วันเริ่มงาน</th>
-                                                    <th>สถานะ</th>
                                                     <th>Action</th>
+                                                    <th>ชื่อ-นามสกุล</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -443,12 +439,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 },
                 'columns': [
                     {data: 'emp_id'},
-                    {data: 'full_name'},
-                    {data: 'department_id'},
-                    {data: 'nick_name'},
-                    {data: 'start_work_date'},
-                    {data: 'status'},
                     {data: 'detail'},
+                    {data: 'full_name'},
                 ]
             });
         });
