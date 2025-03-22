@@ -59,7 +59,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h6 class="h6 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h6>
+                        <h5 class="h5 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h5>
                         <!--ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
                             </li>
