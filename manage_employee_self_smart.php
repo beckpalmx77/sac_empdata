@@ -54,6 +54,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                         </div-->
 
                                         <div class="col-md-12 col-md-offset-2">
+                                            <button type="button" id="backBtn"
+                                                    name="backBtn"
+                                                    class="btn btn-danger mb-3">
+                                                กลับหน้าแรก <i class="fa fa-reply"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
                                                 <tr>
@@ -66,14 +74,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                             <div id="result"></div>
 
-                                        </div>
-
-                                        <div class="col-md-12 col-md-offset-2">
-                                            <button type="button" id="backBtn"
-                                                    name="backBtn"
-                                                    class="btn btn-danger mb-3">
-                                                กลับหน้าแรก <i class="fa fa-reply"></i>
-                                            </button>
                                         </div>
 
                                         <div class="modal fade" id="recordModal">
