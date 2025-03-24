@@ -353,7 +353,7 @@ if (strlen($_SESSION['alogin']) == "") {
                         <link rel="icon" href="img/favicon.ico" type="image/x-icon">
                     </head>
                     <body>
-                        <h2>รูปภาพ</h2>
+                        <h2>เอกสารแนบ</h2>
                         <img src="${imgSrc}" style="width: 100%;">
                     </body>
                     </html>
