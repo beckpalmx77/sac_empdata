@@ -344,12 +344,39 @@ if (strlen($_SESSION['alogin']) == "") {
         });
     </script>
 
-    <script>
+    <!--script>
         function openImageInNewTab() {
             let imgSrc = document.getElementById('img').src; // ดึง URL ของภาพ
             window.open(imgSrc, '_blank'); // เปิดภาพในแท็บใหม่
         }
+    </script-->
+
+    <script>
+        function openImageInNewTab() {
+            let imgSrc = document.getElementById('img').src; // ดึง URL ของภาพ
+            let newTab = window.open("", "_blank"); // เปิดแท็บใหม่
+
+            if (newTab) {
+                newTab.document.write(`
+                    <html>
+                    <head>
+                        <title>เอกสารแนบ</title>
+                        <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+                    </head>
+                    <body>
+                        <h2>รูปภาพ</h2>
+                        <img src="${imgSrc}" style="width: 100%;">
+                    </body>
+                    </html>
+                `);
+                newTab.document.close();
+            } else {
+                alert("Pop-up ถูกบล็อก! กรุณาอนุญาตให้เปิดหน้าต่างใหม่");
+            }
+        }
     </script>
+
+
 
     </body>
     </html>
