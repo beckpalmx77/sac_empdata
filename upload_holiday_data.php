@@ -354,7 +354,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     </head>
                     <body>
                         <h2>เอกสารแนบ</h2>
-                        <img src="${imgSrc}" style="width: 100%;">
+                        <img src="${imgSrc}" style="width: 50%;">
                     </body>
                     </html>
                 `);
