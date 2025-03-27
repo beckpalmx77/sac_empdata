@@ -1,5 +1,6 @@
 <?php
 include('includes/Header.php');
+include('includes/CheckDevice.php');
 ?>
 
 <!DOCTYPE html>
@@ -88,6 +89,7 @@ include('includes/Header.php');
                                                                     Save
                                                             </div>
                                                         </div>
+                                                        <?php  if ($_SESSION['deviceType']=='computer') { ?>
                                                         <div class="form-group has-success">
                                                             <div class="">
                                                                 <!-- Close Button -->
@@ -96,7 +98,9 @@ include('includes/Header.php');
                                                                 </button>
                                                             </div>
                                                         </div>
-
+                                                        <?php } else { ?>
+                                                        <button type="button" class="btn btn-danger btn-block" onclick="goBack();">Close</button>
+                                                        <?php } ?>
                                                         <div>
                                                             <input id="action" name="action" type="hidden"
                                                                    value="CHG">
@@ -196,6 +200,12 @@ include('includes/Header.php');
 <script>
     function closeWindow() {
         window.close();
+    }
+</script>
+
+<script>
+    function goBack() {
+        history.back(); // ย้อนกลับไปยังหน้าก่อนหน้า
     }
 </script>
 
