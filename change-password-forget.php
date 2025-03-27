@@ -89,17 +89,19 @@ include('includes/CheckDevice.php');
                                                                     Save
                                                             </div>
                                                         </div>
-                                                        <?php  if ($_SESSION['deviceType']=='computer') { ?>
-                                                        <div class="form-group has-success">
-                                                            <div class="">
-                                                                <!-- Close Button -->
-                                                                <button type="button" class="btn btn-danger btn-block"
-                                                                        onclick="closeWindow();">Close
-                                                                </button>
+                                                        <?php if ($_SESSION['deviceType'] == 'computer') { ?>
+                                                            <div class="form-group has-success">
+                                                                <div class="">
+                                                                    <button type="button"
+                                                                            class="btn btn-danger btn-block"
+                                                                            onclick="closeWindow();">Close
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
                                                         <?php } else { ?>
-                                                        <button type="button" class="btn btn-danger btn-block" onclick="goBack();">Close</button>
+                                                            <button type="button" class="btn btn-danger btn-block"
+                                                                    onclick="goBack();">Close
+                                                            </button>
                                                         <?php } ?>
                                                         <div>
                                                             <input id="action" name="action" type="hidden"
