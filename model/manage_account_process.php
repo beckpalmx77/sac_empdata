@@ -16,7 +16,7 @@ if ($_POST["action"] === 'GET_DATA') {
     $sql_get = "SELECT im.*,dm.department_desc,lp.permission_detail FROM ims_user im
     left join mdepartment dm on dm.department_id = im.department_id
     left join ims_permission lp on lp.permission_id = im.account_type  
-    WHERE im.id = " . $id ;
+    WHERE im.id = " . $id;
 
     //$myfile = fopen("macc-param.txt", "w") or die("Unable to open file!");
     //fwrite($myfile,  $sql_get);
@@ -42,7 +42,6 @@ if ($_POST["action"] === 'GET_DATA') {
     }
 
 
-
     echo json_encode($return_arr);
 
 }
@@ -64,7 +63,7 @@ if ($_POST["action"] === 'ADD') {
 
         $role = $_POST["role"];
 
-        if ($role==='HR' || $role==='SUPERVISOR' || $role==='ADMIN') {
+        if ($role === 'HR' || $role === 'SUPERVISOR' || $role === 'ADMIN') {
             $document_dept_cond = "A";
         } else {
             $document_dept_cond = "-";
@@ -80,11 +79,11 @@ if ($_POST["action"] === 'ADD') {
         } else {
             $sql = "INSERT INTO ims_user(user_id,email,password,first_name,last_name,account_type,picture,department_id,approve_permission,document_dept_cond,status,role)
             VALUES (:user_id,:email,:password,:first_name,:last_name,:account_type,:picture,:department_id,:approve_permission,:document_dept_cond,:status,:role)";
-/*
-            $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
-            fwrite($myfile, $sql);
-            fclose($myfile);
-*/
+            /*
+                        $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
+                        fwrite($myfile, $sql);
+                        fclose($myfile);
+            */
 
             $query = $conn->prepare($sql);
             $query->bindParam(':user_id', $user_id, PDO::PARAM_STR);
@@ -129,7 +128,7 @@ if ($_POST["action"] === 'UPDATE') {
         $approve_permission = $_POST["approve_permission"];
         $role = $_POST["role"];
 
-        if ($role==='HR' || $role==='SUPERVISOR' || $role==='ADMIN') {
+        if ($role === 'HR' || $role === 'SUPERVISOR' || $role === 'ADMIN') {
             $document_dept_cond = "A";
         } else {
             $document_dept_cond = "-";
@@ -186,24 +185,46 @@ if ($_POST["action"] === 'DELETE') {
 
 if ($_POST["action"] === 'CHG') {
     try {
+        $result = 0;  // Default result value for failure
         $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
         $username = $_POST["username"];
+
+        // ตรวจสอบว่ามี username อยู่หรือไม่
+        $sql_find = "SELECT COUNT(id) FROM ims_user WHERE user_id = :username";
+        $query = $conn->prepare($sql_find);
+        $query->bindParam(':username', $username, PDO::PARAM_STR); // เปลี่ยนจาก PDO::PARAM_INT เป็น PDO::PARAM_STR
+        $query->execute();
+        $nRows = $query->fetchColumn(); // ใช้ fetchColumn() เพื่อดึงค่าจำนวนแถว
+
+        if ($nRows > 0) {
+            try {
+                // Update password if user exists
+                $sql_update = "UPDATE ims_user SET password = :password WHERE user_id = :username";
+                $update_query = $conn->prepare($sql_update);
+                $update_query->bindParam(':password', $password, PDO::PARAM_STR);
+                $update_query->bindParam(':username', $username, PDO::PARAM_STR);
+                $update_query->execute();
+
+                $result = 1;  // Success
+            } catch (Exception $e) {
+                $result = 3;  // Error while updating password
+            }
+        } else {
+            $result = 2;  // User not found
+        }
+    } catch (Exception $e) {
+        $result = 3;  // General error
+    }
+
+    // Log ผลลัพธ์เพื่อ debug
 /*
-        $myfile = fopen("pw-param.txt", "w") or die("Unable to open file!");
-        fwrite($myfile,  $_POST['new_password'] . " | " . $password . " | " . $username);
-        fclose($myfile);
+    $logData = "Result: $result | Rows Found: $nRows | Username: $username\n";
+    file_put_contents("chg-param.txt", $logData, FILE_APPEND); // ใช้ file_put_contents() แทน fopen() + fwrite() เพื่อให้โค้ดสั้นลง
 */
 
-        $sql_update = "UPDATE ims_user SET password=:password WHERE user_id = :username";
-        $query = $conn->prepare($sql_update);
-        $query->bindParam(':password', $password, PDO::PARAM_STR);
-        $query->bindParam(':username', $username, PDO::PARAM_STR);
-        $query->execute();
-        echo 1;
-    } catch (Exception $e) {
-        echo 3;
-    }
+    echo $result;
 }
+
 
 if ($_POST["action"] === 'CHL') {
     try {
