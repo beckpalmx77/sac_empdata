@@ -21,11 +21,19 @@ include('includes/CheckDevice.php');
         z-index: 2;
         color: darkgrey;
     }
+    .forgot-password {
+        display: block;
+        margin-top: 10px;
+        text-align: center;
+        color: blue;
+        text-decoration: none;
+    }
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
 </style>
 
-
 <script>
-
     $(document).ready(function () {
         let username = '<?php if (isset($_COOKIE["username"])) {
             echo $_COOKIE["username"];
@@ -43,7 +51,6 @@ include('includes/CheckDevice.php');
         }
 
     });
-
 </script>
 
 <script>
@@ -52,7 +59,6 @@ include('includes/CheckDevice.php');
             check_login();
         });
     });
-
 </script>
 
 <script>
@@ -69,7 +75,7 @@ include('includes/CheckDevice.php');
             $.ajax
             ({
                 type: 'post',
-                url: 'login_process.php',
+                url: 'login_process',
                 data: {
                     username: username,
                     password: password,
@@ -80,7 +86,7 @@ include('includes/CheckDevice.php');
                         window.location.href = response;
                     } else {
                         alert("เข้าระบบไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง");
-                        window.location.href = "login.php";
+                        window.location.href = "login";
                     }
                 }
             });
@@ -92,11 +98,9 @@ include('includes/CheckDevice.php');
     }
 </script>
 
-
 <script type='text/javascript'>
     $(document).ready(function () {
         $('#togglePassword').click(function () {
-            //alert($(this).is(':checked'));
             $('#password').attr('type') === 'password' ? $('#password').attr('type', 'text') : $('#password').attr('type', 'password');
         });
     });
@@ -145,10 +149,10 @@ include('includes/CheckDevice.php');
                                             <input class="form-check-input" type="checkbox" value="on" id="remember"
                                                    name="remember">
                                             <label class="form-check-label" for="remember">
-                                                 <?php  if ($_SESSION['deviceType']=='computer') {?>
-                                                <p style="color:blue;">Remember Me 30 Days</p>
+                                                <?php  if ($_SESSION['deviceType']=='computer') { ?>
+                                                    <p style="color:blue;">Remember Me 30 Days</p>
                                                 <?php } else { ?>
-                                                <p style="color:red;">Remember Me 30 Days</p>
+                                                    <p style="color:red;">Remember Me 30 Days</p>
                                                 <?php } ?>
                                             </label>
                                         </div>
@@ -161,6 +165,10 @@ include('includes/CheckDevice.php');
                                             <span class="spinner">
                                                 <i class="icon-spin icon-refresh" id="spinner"></i></span> Log In
                                 </div>
+
+                                <!-- Forgot password link -->
+                                <a href="change-password-forget" target="_blank" class="forgot-password">ลืมรหัสผ่าน?</a>
+
                             </div>
                         </div>
                     </div>
@@ -172,5 +180,3 @@ include('includes/CheckDevice.php');
 
 </body>
 </html>
-
-

@@ -4,6 +4,7 @@
         "mpdf/mpdf": "^8.1",
         "php-amqplib/php-amqplib": "^3.5",
         "phpoffice/phpspreadsheet": "^2.0",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "google/apiclient": "^2.18"
     }
 }

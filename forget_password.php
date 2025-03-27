@@ -9,7 +9,7 @@
 <body class="container mt-5">
 
 <h2>ส่งอีเมล</h2>
-<form action="send_email.php" method="post">
+<form action="engine/send_email.php" method="post">
     <div class="mb-3">
         <label for="to_email" class="form-label">อีเมลผู้รับ:</label>
         <input type="email" name="to_email" id="to_email" class="form-control" required>

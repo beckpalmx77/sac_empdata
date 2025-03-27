@@ -34,7 +34,7 @@ include('includes/Header.php');
                                         <div class="col-md-12 col-md-offset-2">
                                             <div class="panel">
                                                 <div class="panel-body">
-
+                                                    <h4>เปลี่ยนรหัสผ่าน</h4>
                                                     <form id="from_data">
 
                                                         <div class="form-group has-success">
@@ -86,6 +86,14 @@ include('includes/Header.php');
                                                                 <button type="submit"
                                                                         class="btn btn-primary btn-block">
                                                                     Save
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group has-success">
+                                                            <div class="">
+                                                                <!-- Close Button -->
+                                                                <button type="button" class="btn btn-danger btn-block"
+                                                                        onclick="closeWindow();">Close
+                                                                </button>
                                                             </div>
                                                         </div>
 
@@ -152,9 +160,9 @@ include('includes/Header.php');
                 if (response == 1) {
                     alertify.success("เปลี่ยนรหัสผ่านเรียบร้อยแล้ว กรุณาเข้าระบบด้วยรหัสผ่านใหม่อีกครั้ง");
                 } else if (response == 2) {
-                    alertify.error("ไม่สามารถบันทึกข้อมูลได้ มี User นี้แล้ว ");
+                    alertify.error("ไม่พบ user name นี้ในระบบ");
                 } else {
-                    alertify.error("ไม่สามารถบันทึกข้อมูลได้ DB Error ");
+                    alertify.error("ไม่สามารถบันทึกข้อมูลได้ ");
                 }
             });
         });
@@ -183,6 +191,12 @@ include('includes/Header.php');
 
     });
 
+</script>
+
+<script>
+    function closeWindow() {
+        window.close();
+    }
 </script>
 
 </body>
