@@ -184,12 +184,16 @@ if ($_POST["action"] === 'ADD') {
                     if ($line_alert === 'Y') {
                         sendLineNotify($sMessage, $sToken);
 
+                        $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR' ");
+                        $stmt->execute();
+                        $line_api_token = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
                         $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE user_id IS NOT NULL");
                         $stmt->execute();
                         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         if (!empty($users)) {
-                            $channelAccessToken = "xbr03Msl+y/QXOeOrtbmKWLxXgbyTqphKWDAm2LTdLrP9jrWzJ8VJstFlw4gW3IbAWn9ZpXO9UDT4u6XSTh1xEI0OCAKNrJRNkuj9eN1IGQeeFyjLyQ9wvEHDGD8Y91uaQpuquZlg5zbHYB6mVT/1AdB04t89/1O/w1cDnyilFU='";
+                            $channelAccessToken = $line_api_token;
 
                             foreach ($users as $user) {
                                 $userId = $user['user_id'];
