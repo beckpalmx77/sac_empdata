@@ -5,6 +5,7 @@ require 'config/connect_db.php'; // เชื่อมต่อฐานข้�
 <!DOCTYPE html>
 <html lang="th">
 <head>
+    <meta charset="UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,6 +20,7 @@ require 'config/connect_db.php'; // เชื่อมต่อฐานข้�
 <body>
 <div class="container-fluid" id="container-wrapper">
     <h2>Manage LINE API</h2>
+    <a href="Dashboard_admin" class="btn btn-outline-danger mb-3">Back to Dashboard</a>
     <form id="alineForm">
         <input type="hidden" id="id" name="id">
         <div class="mb-3">
