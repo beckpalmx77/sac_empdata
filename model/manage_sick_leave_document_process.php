@@ -224,6 +224,22 @@ if ($_POST["action"] === 'ADD') {
                     $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
                     if ($line_alert === 'Y') {
                         sendLineNotify($sMessage, $sToken);
+
+                        $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE user_id IS NOT NULL");
+                        $stmt->execute();
+                        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (!empty($users)) {
+                            $channelAccessToken = "xbr03Msl+y/QXOeOrtbmKWLxXgbyTqphKWDAm2LTdLrP9jrWzJ8VJstFlw4gW3IbAWn9ZpXO9UDT4u6XSTh1xEI0OCAKNrJRNkuj9eN1IGQeeFyjLyQ9wvEHDGD8Y91uaQpuquZlg5zbHYB6mVT/1AdB04t89/1O/w1cDnyilFU='";
+
+                            foreach ($users as $user) {
+                                $userId = $user['user_id'];
+                                sendLineMessage($channelAccessToken, $userId, $sMessage);
+                            }
+                        } else {
+                            error_log("No users found in ims_line_hr_users");
+                        }
+
                     }
 
                     echo $save_success;

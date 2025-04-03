@@ -26,3 +26,38 @@ function sendLineNotify($message,$token)
     }
     curl_close($ch);
 }
+
+function sendLineMessage($channelAccessToken, $userId, $messageText)
+{
+    if (empty($channelAccessToken) || empty($userId) || empty($messageText)) {
+        return ['status' => 'error', 'message' => 'Missing required parameters'];
+    }
+
+    $url = 'https://api.line.me/v2/bot/message/push';
+    $messageData = [
+        'to' => $userId,
+        'messages' => [
+            ['type' => 'text', 'text' => $messageText]
+        ]
+    ];
+
+    $headers = [
+        'Content-Type: application/json',
+        'Authorization: ' . 'Bearer ' . $channelAccessToken
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($messageData));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode == 200) {
+        return ['status' => 'success', 'response' => json_decode($response, true)];
+    } else {
+        return ['status' => 'error', 'message' => 'Failed to send message'];
+    }
+}
