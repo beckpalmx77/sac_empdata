@@ -144,7 +144,7 @@ if ($_POST["action"] === 'ADD') {
 
                     $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
                     if ($line_alert==='Y') {
-                        sendLineNotify($sMessage, $sToken);
+                        //sendLineNotify($sMessage, $sToken);
                     }
 
                     echo $save_success;

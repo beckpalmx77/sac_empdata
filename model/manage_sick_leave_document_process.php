@@ -223,19 +223,22 @@ if ($_POST["action"] === 'ADD') {
 
                     $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
                     if ($line_alert === 'Y') {
-                        sendLineNotify($sMessage, $sToken);
+
+                        //sendLineNotify($sMessage, $sToken);
 
                         $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR' ");
                         $stmt->execute();
-                        $line_api_token = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        foreach ($line_api_tokens as $line_api_token) {
+                            $channelAccessToken = $line_api_token['line_api_token'];
+                        }
 
                         $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE user_id IS NOT NULL");
                         $stmt->execute();
                         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         if (!empty($users)) {
-                            $channelAccessToken = $line_api_token;
-
                             foreach ($users as $user) {
                                 $userId = $user['user_id'];
                                 sendLineMessage($channelAccessToken, $userId, $sMessage);

@@ -160,7 +160,7 @@ if ($_POST["action"] === 'ADD') {
                         . "\n\r" . "ผู้ขอ : " . $emp_full_name  . " " .  $dept_desc;
 
                     echo $sMessage ;
-                    sendLineNotify($sMessage,$sToken);
+                    //sendLineNotify($sMessage, $sToken);
                     echo $save_success;
 
                 } else {
