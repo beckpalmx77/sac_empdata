@@ -234,20 +234,14 @@ if ($_POST["action"] === 'ADD') {
                         ]
                     ];
 
-
-
                     echo $sMessage;
 
-                    $line_alert = GET_VALUE($conn, "select line_alert as data from mleave_type where leave_type_id ='LA' ");
-                    if ($line_alert === 'Y') {
-                        //sendLineNotify($sMessage, $sToken);
-
-// ดึง line_api_token สำหรับ doc_type = 'HR'
+                        // ดึง line_api_token สำหรับ doc_type = 'HR'
                         $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
                         $stmt->execute();
                         $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ดึง user_id จาก ims_line_hr_users
+                        // ดึง user_id จาก ims_line_hr_users
                         $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE user_id IS NOT NULL");
                         $stmt->execute();
                         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -264,10 +258,6 @@ if ($_POST["action"] === 'ADD') {
                         } else {
                             error_log("No users or no line_api_tokens found.");
                         }
-
-
-
-                    }
 
                     echo $save_success;
 

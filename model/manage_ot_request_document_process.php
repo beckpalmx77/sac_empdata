@@ -223,14 +223,13 @@ if ($_POST["action"] === 'ADD') {
 
 
                     echo $sMessage ;
-                    //sendLineNotify($sMessage, $sToken);
 
-// ดึง line_api_token สำหรับ doc_type = 'HR'
+                    // ดึง line_api_token สำหรับ doc_type = 'HR'
                     $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
                     $stmt->execute();
                     $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ดึง user_id จาก ims_line_hr_users
+                    // ดึง user_id จาก ims_line_hr_users
                     $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE user_id IS NOT NULL");
                     $stmt->execute();
                     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
