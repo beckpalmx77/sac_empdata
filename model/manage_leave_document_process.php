@@ -242,7 +242,7 @@ if ($_POST["action"] === 'ADD') {
                                     // เพิ่มการแสดงโลโก้
                                     [
                                         "type" => "image",
-                                        "url" => "https://yourlogo.url/logo.png",  // ใส่ URL ของโลโก้ที่นี่
+                                        "url" => "https://syycp.com/sac_lotto/img/logo/sac_application.png",  // ใส่ URL ของโลโก้ที่นี่
                                         "size" => "sm",  // ขนาดโลโก้
                                         "align" => "center",  // จัดโลโก้ให้ตรงกลาง
                                         "margin" => "md"  // กำหนดระยะห่างจากส่วนอื่น
