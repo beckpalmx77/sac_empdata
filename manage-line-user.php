@@ -225,6 +225,7 @@ if (strlen($_SESSION['alogin']) == "") {
             top: 30%;
         }
     </style>
+
     <script>
         $(document).ready(function () {
             $(".icon-input-btn").each(function () {
