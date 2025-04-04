@@ -214,10 +214,19 @@ if ($_POST["action"] === 'ADD') {
                 if ($lastInsertId) {
                     $sToken = "";
                     $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+/*
                     $sMessage = "มีเอกสารการลา " . $leave_type_desc
                         . "\n\r" . "เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
                         . "\n\r" . "วันที่ขอลา : " . $date_leave_start . " - " . $time_leave_start . " ถึง : " . $date_leave_to . " - " . $time_leave_to
                         . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
+*/
+
+                    $sMessage = "🌟 **เอกสารการลา:** " . $leave_type_desc . "\n\n";
+                    $sMessage .= "🔖 **เลขที่เอกสาร:** " . $doc_id . "\n";
+                    $sMessage .= "📅 **วันที่เอกสาร:** " . $doc_date . "\n\n";
+                    $sMessage .= "📅 **วันที่ขอลา:** " . $date_leave_start . " - " . $time_leave_start . " ถึง " . $date_leave_to . " - " . $time_leave_to . "\n\n";
+                    $sMessage .= "👤 **ผู้ขอ:** " . $emp_full_name . "\n";
+                    $sMessage .= "🏢 **แผนก:** " . $dept_desc . "\n";
 
                     echo $sMessage;
 

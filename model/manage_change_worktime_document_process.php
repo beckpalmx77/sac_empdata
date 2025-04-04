@@ -161,11 +161,21 @@ if ($_POST["action"] === 'ADD') {
 
                     $sToken = "";
                     $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+/*
                     $sMessage = "มีเอกสารการ " . $leave_type_desc
                         . "\n\r" . "เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
                         . "\n\r" . "วันที่ทำงานปกติ : " . $date_leave_start . " " .  $time_leave_start . " - " . $time_leave_to
                         . "\n\r" . "เปลี่ยนเป็นวันที่ : " . $date_leave_start_c . " " .  $time_leave_start_c . " - " . $time_leave_to_c
                         . "\n\r" . "ผู้ขอ : " . $emp_full_name  . " " .  $dept_desc;
+*/
+
+                    $sMessage = "🌟 **เอกสารการ:** " . $leave_type_desc . "\n\n";
+                    $sMessage .= "🔖 **เลขที่เอกสาร:** " . $doc_id . "\n";
+                    $sMessage .= "📅 **วันที่เอกสาร:** " . $doc_date . "\n\n";
+                    $sMessage .= "🕓 **วันที่ทำงานปกติ:** " . $date_leave_start . " " . $time_leave_start . " - " . $time_leave_to . "\n";
+                    $sMessage .= "🔄 **เปลี่ยนเป็นวันที่:** " . $date_leave_start_c . " " . $time_leave_start_c . " - " . $time_leave_to_c . "\n\n";
+                    $sMessage .= "👤 **ผู้ขอ:** " . $emp_full_name . "\n";
+                    $sMessage .= "🏢 **แผนก:** " . $dept_desc . "\n";
 
                     echo $sMessage ;
                     //sendLineNotify($sMessage, $sToken);
