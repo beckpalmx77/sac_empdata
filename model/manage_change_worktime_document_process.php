@@ -239,7 +239,7 @@ if ($_POST["action"] === 'ADD') {
                     $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ดึง user_id จาก ims_line_hr_users
-                    $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE user_id IS NOT NULL");
+                    $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
                     $stmt->execute();
                     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
