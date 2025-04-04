@@ -234,6 +234,13 @@ if ($_POST["action"] === 'ADD') {
                                         "layout" => "vertical",
                                         "contents" => [
                                             [
+                                                "type" => "image",
+                                                "url" => "https://syycp.com/sac_lotto/img/logo/sac_application.png",  // ใส่ URL ของโลโก้ที่นี่
+                                                "size" => "sm",
+                                                "align" => "center",  // จัดโลโก้ให้ตรงกลาง
+                                                "margin" => "md"  // กำหนดระยะห่าง
+                                            ],
+                                            [
                                                 "type" => "text",
                                                 "text" => "🌟 **เอกสารการลา:** " . $leave_type_desc,
                                                 "weight" => "bold",
@@ -265,6 +272,7 @@ if ($_POST["action"] === 'ADD') {
                             ]
                         ]
                     ];
+
 
                     echo $sMessage;
 
