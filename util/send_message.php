@@ -4,8 +4,6 @@
 
 function sendLineNotify($message,$token)
 {
-
-
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://notify-api.line.me/api/notify");
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -21,13 +19,14 @@ function sendLineNotify($message,$token)
         echo 'error:' . curl_error($ch);
     } else {
         $res = json_decode($result, true);
-        echo "status : " . $res['status'];
-        echo "message : " . $res['message'];
+        echo "\n\r". "status : " . $res['status'];
+        echo "\n\r". "message : " . $res['message'];
     }
     curl_close($ch);
 }
 
-function sendLineMessage($channelAccessToken, $userId, $messageText)
+
+function sendLineMessage($conn, $channelAccessToken, $userId, $messageText)
 {
     if (empty($channelAccessToken) || empty($userId) || empty($messageText)) {
         return ['status' => 'error', 'message' => 'Missing required parameters'];
@@ -56,8 +55,25 @@ function sendLineMessage($channelAccessToken, $userId, $messageText)
     curl_close($ch);
 
     if ($httpCode == 200) {
+        $result = "Success " . $httpCode;
+        logLineSend($conn,$channelAccessToken,$result,$messageText);
         return ['status' => 'success', 'response' => json_decode($response, true)];
     } else {
+        $result = "Error " . $httpCode ;
+        logLineSend($conn,$channelAccessToken,$result,$messageText);
         return ['status' => 'error', 'message' => 'Failed to send message'];
+    }
+}
+
+function logLineSend($conn, $api, $result , $msg)
+{
+    try {
+        $stmt = $conn->prepare("INSERT INTO log_line_send (line_api, msg , result) VALUES (:api, :msg , :result)");
+        $stmt->bindParam(':api', $api);
+        $stmt->bindParam(':msg', $msg);
+        $stmt->bindParam(':result', $result);
+        $stmt->execute();
+    } catch (PDOException $e) {
+        error_log("Log Line Send Error: " . $e->getMessage());
     }
 }
