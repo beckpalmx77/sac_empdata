@@ -221,7 +221,7 @@ if ($_POST["action"] === 'ADD') {
                                             . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
                     */
 
-                    $sMessage = "🌟 เอกสารการลา: " . $leave_type_desc . "\n\n";
+                    $sMessage = "🌟 เอกสารการลา: " . "ป่วย" . "\n\n";
                     $sMessage .= "🔖 เลขที่เอกสาร: " . $doc_id . "\n";
                     $sMessage .= "📅 วันที่เอกสาร: " . $doc_date . "\n\n";
                     $sMessage .= "📅 วันที่ขอลา: " . $date_leave_start . " - " . $time_leave_start . " ถึง " . $date_leave_to . " - " . $time_leave_to . "\n\n";

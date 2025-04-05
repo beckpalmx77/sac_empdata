@@ -135,6 +135,10 @@ if ($_POST["action"] === 'ADD') {
 
         $day_max = GET_VALUE($conn, $sql_get_max);
 
+        $sql_leave_type = "SELECT leave_type_detail AS data FROM mleave_type WHERE leave_type_id ='" . $leave_type_id . "'";
+
+        $leave_type_desc = GET_VALUE($conn, $sql_leave_type);
+
         $table = "v_dleave_event";
 
         $cnt_day = "";
