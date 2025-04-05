@@ -39,7 +39,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "time_leave_to" => $result['time_leave_to'],
             "f_name" => $result['f_name'],
             "l_name" => $result['l_name'],
-            "full_name" => $result['f_name'] . " " .  $result['l_name'],
+            "full_name" => $result['f_name'] . " " . $result['l_name'],
             "approve_1_id" => $result['approve_1_id'],
             "approve_1_status" => $result['approve_1_status'],
             "approve_2_id" => $result['approve_2_id'],
@@ -68,13 +68,13 @@ if ($_POST["action"] === 'SEARCH') {
 
 if ($_POST["action"] === 'ADD') {
 
-    if ($_POST["doc_date"] !== '' && $_POST["emp_id"] !== '' && $_POST["leave_type_id"]!== '') {
+    if ($_POST["doc_date"] !== '' && $_POST["emp_id"] !== '' && $_POST["leave_type_id"] !== '') {
 
         $table = "v_ot_request";
         $dept_id = $_POST["department"];
         $doc_date = $_POST["doc_date"];
         $doc_year = substr($_POST["date_leave_start"], 6);
-        $doc_month = substr($_POST["date_leave_start"], 3,2);
+        $doc_month = substr($_POST["date_leave_start"], 3, 2);
         $filed = "id";
 
         $sql_get_dept = "SELECT mp.dept_ids AS data FROM memployee em LEFT JOIN mdepartment mp ON mp.department_id = em.dept_id WHERE em.emp_id = '" . $_POST["emp_id"] . "'";
@@ -89,9 +89,9 @@ if ($_POST["action"] === 'ADD') {
 
         $leave_type_desc = $_POST["leave_type_detail"];
 
-        $condition = " WHERE doc_year = '" . $doc_year . "' AND doc_month = '" . $doc_month . "' AND dept_id = '" . $_SESSION['department_id'] .  "'";
+        $condition = " WHERE doc_year = '" . $doc_year . "' AND doc_month = '" . $doc_month . "' AND dept_id = '" . $_SESSION['department_id'] . "'";
 
-        $last_number = LAST_DOCUMENT_NUMBER($conn,$filed,$table,$condition);
+        $last_number = LAST_DOCUMENT_NUMBER($conn, $filed, $table, $condition);
 
         $doc_id = "O-" . $_SESSION['department_id'] . "-" . substr($doc_date, 3) . "-" . sprintf('%04s', $last_number);
 
@@ -108,8 +108,8 @@ if ($_POST["action"] === 'ADD') {
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 
-        $sql_time = "SELECT TIMEDIFF('". $time_leave_to . "','" . $time_leave_start ."') AS total_time ";
-        foreach ($conn->query($sql_time) AS $row) {
+        $sql_time = "SELECT TIMEDIFF('" . $time_leave_to . "','" . $time_leave_start . "') AS total_time ";
+        foreach ($conn->query($sql_time) as $row) {
             $total_time = $row['total_time'];
         }
 
@@ -117,150 +117,97 @@ if ($_POST["action"] === 'ADD') {
 
         $cnt_day = "";
         $sql_cnt = "SELECT COUNT(*) AS days FROM dholiday_event WHERE doc_year = '" . $doc_year . "' AND emp_id = '" . $emp_id . "'";
-        foreach ($conn->query($sql_cnt) AS $row) {
+        foreach ($conn->query($sql_cnt) as $row) {
             $cnt_day = $row['days'];
         }
-            $sql_find = "SELECT * FROM v_ot_request ot WHERE ot.date_leave_start = '" . $date_leave_start . "' AND ot.emp_id = '" . $emp_id . "' ";
+        $sql_find = "SELECT * FROM v_ot_request ot WHERE ot.date_leave_start = '" . $date_leave_start . "' AND ot.emp_id = '" . $emp_id . "' ";
 
-            $nRows = $conn->query($sql_find)->fetchColumn();
-            if ($nRows > 0) {
-                echo $dup;
-            } else {
-                $sql = "INSERT INTO ot_request (doc_id,doc_year,doc_month,dept_id,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,total_time,remark) 
+        $nRows = $conn->query($sql_find)->fetchColumn();
+        if ($nRows > 0) {
+            echo $dup;
+        } else {
+            $sql = "INSERT INTO ot_request (doc_id,doc_year,doc_month,dept_id,doc_date,leave_type_id,emp_id,date_leave_start,time_leave_start,date_leave_to,time_leave_to,total_time,remark) 
                     VALUES (:doc_id,:doc_year,:doc_month,:dept_id,:doc_date,:leave_type_id,:emp_id,:date_leave_start,:time_leave_start,:date_leave_to,:time_leave_to,:total_time,:remark)";
 
-                //$myfile = fopen("condition-param.txt", "w") or die("Unable to open file!");
-                //fwrite($myfile,  $sql);
-                //fclose($myfile);
+            //$myfile = fopen("condition-param.txt", "w") or die("Unable to open file!");
+            //fwrite($myfile,  $sql);
+            //fclose($myfile);
 
-                $query = $conn->prepare($sql);
-                $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
-                $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
-                $query->bindParam(':doc_month', $doc_month, PDO::PARAM_STR);
-                $query->bindParam(':dept_id', $_SESSION['department_id'], PDO::PARAM_STR);
-                $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
-                $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
-                $query->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
-                $query->bindParam(':date_leave_start', $date_leave_start, PDO::PARAM_STR);
-                $query->bindParam(':time_leave_start', $time_leave_start, PDO::PARAM_STR);
-                $query->bindParam(':date_leave_to', $date_leave_to, PDO::PARAM_STR);
-                $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
-                $query->bindParam(':total_time', $total_time, PDO::PARAM_STR);
-                $query->bindParam(':remark', $remark, PDO::PARAM_STR);
+            $query = $conn->prepare($sql);
+            $query->bindParam(':doc_id', $doc_id, PDO::PARAM_STR);
+            $query->bindParam(':doc_year', $doc_year, PDO::PARAM_STR);
+            $query->bindParam(':doc_month', $doc_month, PDO::PARAM_STR);
+            $query->bindParam(':dept_id', $_SESSION['department_id'], PDO::PARAM_STR);
+            $query->bindParam(':doc_date', $doc_date, PDO::PARAM_STR);
+            $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
+            $query->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
+            $query->bindParam(':date_leave_start', $date_leave_start, PDO::PARAM_STR);
+            $query->bindParam(':time_leave_start', $time_leave_start, PDO::PARAM_STR);
+            $query->bindParam(':date_leave_to', $date_leave_to, PDO::PARAM_STR);
+            $query->bindParam(':time_leave_to', $time_leave_to, PDO::PARAM_STR);
+            $query->bindParam(':total_time', $total_time, PDO::PARAM_STR);
+            $query->bindParam(':remark', $remark, PDO::PARAM_STR);
 
-                $query->execute();
-                $lAStInsertId = $conn->lAStInsertId();
+            $query->execute();
+            $lAStInsertId = $conn->lAStInsertId();
 
-                if ($lAStInsertId) {
+            if ($lAStInsertId) {
 
-                    $sToken = "";
-                    $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
+                $sToken = "";
+                $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
 
-/*
-                    $sMessage = "มีเอกสารการขอล่วงเวลา เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
-                        . "\n\r" . "วันที่ขอทำงานล่วงเวลา : " . $date_leave_start . " เวลา : " . $time_leave_start . " - " .  $time_leave_to
-                        . "\n\r" . "ผู้ขอ : " . $emp_full_name  . " " .  $dept_desc;
-*/
+                /*
+                                    $sMessage = "มีเอกสารการขอล่วงเวลา เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
+                                        . "\n\r" . "วันที่ขอทำงานล่วงเวลา : " . $date_leave_start . " เวลา : " . $time_leave_start . " - " .  $time_leave_to
+                                        . "\n\r" . "ผู้ขอ : " . $emp_full_name  . " " .  $dept_desc;
+                */
 
-                    $sMessage = [
-                        "type" => "flex",
-                        "altText" => "เอกสารการขอล่วงเวลา",
-                        "contents" => [
-                            "type" => "bubble",
-                            "body" => [
-                                "type" => "box",
-                                "layout" => "vertical",
-                                "contents" => [
-                                    // เพิ่มการแสดงโลโก้
-                                    [
-                                        "type" => "image",
-                                        "url" => "https://syycp.com/sac_lotto/img/logo/sac_application.png",  // URL โลโก้ที่ต้องการแสดง
-                                        "size" => "sm",  // ขนาดโลโก้
-                                        "align" => "center",  // จัดโลโก้ให้ตรงกลาง
-                                        "margin" => "md"  // กำหนดระยะห่างจากส่วนอื่น
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "📄 **เอกสารการขอล่วงเวลา**",
-                                        "weight" => "bold",
-                                        "size" => "lg",
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "🔖 **เลขที่เอกสาร**: " . $doc_id,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "📅 **วันที่เอกสาร**: " . $doc_date,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "🕓 **วันที่ขอทำงานล่วงเวลา**: " . $date_leave_start,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "⏰ **เวลา**: " . $time_leave_start . " - " . $time_leave_to,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "👤 **ผู้ขอ**: " . $emp_full_name,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "🏢 **แผนก**: " . $dept_desc,
-                                        "margin" => "md"
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ];
+                $sMessage = "📄 เอกสารการขอล่วงเวลา\n\n";
+                $sMessage .= "🔖 เลขที่เอกสาร: " . $doc_id . "\n";
+                $sMessage .= "📅 วันที่เอกสาร: " . $doc_date . "\n\n";
+                $sMessage .= "🕓 วันที่ขอทำงานล่วงเวลา: " . $date_leave_start . "\n";
+                $sMessage .= "⏰ เวลา: " . $time_leave_start . " - " . $time_leave_to . "\n\n";
+                $sMessage .= "👤 ผู้ขอ: " . $emp_full_name . "\n";
+                $sMessage .= "🏢 แผนก: " . $dept_desc . "\n";
 
+                echo $sMessage;
 
-                    echo $sMessage ;
+                // ดึง line_api_token สำหรับ doc_type = 'HR'
+                $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
+                $stmt->execute();
+                $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    // ดึง line_api_token สำหรับ doc_type = 'HR'
-                    $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
-                    $stmt->execute();
-                    $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // ดึง user_id จาก ims_line_hr_users
+                $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
+                $stmt->execute();
+                $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    // ดึง user_id จาก ims_line_hr_users
-                    $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
-                    $stmt->execute();
-                    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (!empty($users) && !empty($line_api_tokens)) {
+                    foreach ($line_api_tokens as $line_api_token) {
+                        $channelAccessToken = $line_api_token['line_api_token'];
 
-                    if (!empty($users) && !empty($line_api_tokens)) {
-                        foreach ($line_api_tokens as $line_api_token) {
-                            $channelAccessToken = $line_api_token['line_api_token'];
-
-                            foreach ($users as $user) {
-                                $userId = $user['user_id'];
-                                sendLineMessage($channelAccessToken, $userId, $sMessage);
-                            }
+                        foreach ($users as $user) {
+                            $userId = $user['user_id'];
+                            sendLineMessage($channelAccessToken, $userId, $sMessage);
                         }
-                    } else {
-                        error_log("No users or no line_api_tokens found.");
                     }
-
-
-                    echo $save_success;
-
                 } else {
-                    echo $error;
+                    error_log("No users or no line_api_tokens found.");
                 }
 
+
+                echo $save_success;
+
+            } else {
+                echo $error;
             }
+
+        }
 
     } else {
         echo $error;
     }
 }
-
 
 
 if ($_POST["action"] === 'UPDATE') {
@@ -269,7 +216,7 @@ if ($_POST["action"] === 'UPDATE') {
         $id = $_POST["id"];
         $doc_id = $_POST["doc_id"];
         $doc_date = $_POST["doc_date"];
-        $doc_year = substr($_POST["date_leave_start"],6);
+        $doc_year = substr($_POST["date_leave_start"], 6);
         $dept_id = $_POST["department"];
         $leave_type_id = $_POST["leave_type_id"];
         $emp_id = $_POST["emp_id"];
@@ -280,8 +227,8 @@ if ($_POST["action"] === 'UPDATE') {
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 
-        $sql_time = "SELECT TIMEDIFF('". $time_leave_to . "','" . $time_leave_start ."') AS total_time ";
-        foreach ($conn->query($sql_time) AS $row) {
+        $sql_time = "SELECT TIMEDIFF('" . $time_leave_to . "','" . $time_leave_start . "') AS total_time ";
+        foreach ($conn->query($sql_time) as $row) {
             $total_time = $row['total_time'];
         }
 
@@ -289,7 +236,7 @@ if ($_POST["action"] === 'UPDATE') {
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
 
-            if ($_SESSION['approve_permission']==="Y") {
+            if ($_SESSION['approve_permission'] === "Y") {
                 $sql_update = "UPDATE ot_request SET status=:status,leave_type_id=:leave_type_id
                 ,date_leave_start=:date_leave_start,date_leave_to=:date_leave_to
                 ,time_leave_start=:time_leave_start,time_leave_to=:time_leave_to,remark=:remark,doc_year=:doc_year,total_time=:total_time     
@@ -372,7 +319,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
 ## Search
     $searchQuery = " ";
 
-    if ($_SESSION['document_dept_cond']!=="A") {
+    if ($_SESSION['document_dept_cond'] !== "A") {
         $searchQuery = " AND ot.dept_id = '" . $_SESSION['department_id'] . "'";
     }
 
@@ -399,7 +346,6 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
-
 
 
 ## Fetch records
@@ -437,11 +383,11 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "date_leave_to" => $row['date_leave_to'],
                 "time_leave_start" => $row['time_leave_start'],
                 "time_leave_to" => $row['time_leave_to'],
-                "dt_leave_start" => $row['date_leave_start'] . " " .  $row['time_leave_start'],
-                "dt_leave_to" => $row['date_leave_to'] . " " .  $row['time_leave_to'],
+                "dt_leave_start" => $row['date_leave_start'] . " " . $row['time_leave_start'],
+                "dt_leave_to" => $row['date_leave_to'] . " " . $row['time_leave_to'],
                 "department_id" => $row['department_id'],
                 "remark" => $row['remark'],
-                "full_name" => $row['f_name'] . " " .  $row['l_name'],
+                "full_name" => $row['f_name'] . " " . $row['l_name'],
                 "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
                 "approve" => "<button type='button' name='approve' id='" . $row['id'] . "' class='btn btn-success btn-xs approve' data-toggle='tooltip' title='Approve'>Approve</button>",
                 "status" => $row['status'] === 'A' ? "<div class='text-success'>" . $row['status_doc_desc'] . "</div>" : "<div class='text-muted'> " . $row['status_doc_desc'] . "</div>",

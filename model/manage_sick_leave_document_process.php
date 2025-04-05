@@ -221,57 +221,12 @@ if ($_POST["action"] === 'ADD') {
                         . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
 */
 
-                    $sMessage = [
-                        "type" => "flex",
-                        "altText" => "เอกสารการลา",
-                        "contents" => [
-                            "type" => "carousel",
-                            "contents" => [
-                                [
-                                    "type" => "bubble",
-                                    "body" => [
-                                        "type" => "box",
-                                        "layout" => "vertical",
-                                        "contents" => [
-                                            [
-                                                "type" => "image",
-                                                "url" => "https://syycp.com/sac_lotto/img/logo/sac_application.png",  // ใส่ URL ของโลโก้ที่นี่
-                                                "size" => "sm",
-                                                "align" => "center",  // จัดโลโก้ให้ตรงกลาง
-                                                "margin" => "md"  // กำหนดระยะห่าง
-                                            ],
-                                            [
-                                                "type" => "text",
-                                                "text" => "🌟 **เอกสารการลา:** " . $leave_type_desc,
-                                                "weight" => "bold",
-                                                "size" => "lg"
-                                            ],
-                                            [
-                                                "type" => "text",
-                                                "text" => "🔖 **เลขที่เอกสาร:** " . $doc_id
-                                            ],
-                                            [
-                                                "type" => "text",
-                                                "text" => "📅 **วันที่เอกสาร:** " . $doc_date
-                                            ],
-                                            [
-                                                "type" => "text",
-                                                "text" => "📅 **วันที่ขอลา:** " . $date_leave_start . " - " . $time_leave_start . " ถึง " . $date_leave_to . " - " . $time_leave_to
-                                            ],
-                                            [
-                                                "type" => "text",
-                                                "text" => "👤 **ผู้ขอ:** " . $emp_full_name
-                                            ],
-                                            [
-                                                "type" => "text",
-                                                "text" => "🏢 **แผนก:** " . $dept_desc
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ];
+                    $sMessage = "🌟 เอกสารการลา: " . $leave_type_desc . "\n\n";
+                    $sMessage .= "🔖 เลขที่เอกสาร: " . $doc_id . "\n";
+                    $sMessage .= "📅 วันที่เอกสาร: " . $doc_date . "\n\n";
+                    $sMessage .= "📅 วันที่ขอลา: " . $date_leave_start . " - " . $time_leave_start . " ถึง " . $date_leave_to . " - " . $time_leave_to . "\n\n";
+                    $sMessage .= "👤 ผู้ขอ: " . $emp_full_name . "\n";
+                    $sMessage .= "🏢 แผนก: " . $dept_desc . "\n";
 
                     echo $sMessage;
 

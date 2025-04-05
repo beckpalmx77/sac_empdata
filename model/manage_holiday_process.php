@@ -117,12 +117,12 @@ if ($_POST["action"] === 'ADD') {
         } else {
             $day_hour_max = ($day_max * 8);
         }
-/*
-        $txt = substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
-        $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-*/
+        /*
+                $txt = substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
+                $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+        */
 
         $filename = "";
         $picture = "";
@@ -172,92 +172,45 @@ if ($_POST["action"] === 'ADD') {
                 if ($lastInsertId) {
                     $sToken = "";
                     $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
-/*
-                    $sMessage = "มีเอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี "
-                        . "\n\r" . "เลขที่เอกสาร = " . $doc_id
-                        . "\n\r" . "วันที่เอกสาร = " . $currentDate
-                        . "\n\r" . "วันที่ขอใช้ : " . $date_leave_start
-                        . "\n\r" . "ผู้ขอ : " . $full_name . " " . $dept_desc;
-*/
+                    /*
+                                        $sMessage = "มีเอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี "
+                                            . "\n\r" . "เลขที่เอกสาร = " . $doc_id
+                                            . "\n\r" . "วันที่เอกสาร = " . $currentDate
+                                            . "\n\r" . "วันที่ขอใช้ : " . $date_leave_start
+                                            . "\n\r" . "ผู้ขอ : " . $full_name . " " . $dept_desc;
+                    */
 
-                    $sMessage = [
-                        "type" => "flex",
-                        "altText" => "เอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี",
-                        "contents" => [
-                            "type" => "bubble",
-                            "body" => [
-                                "type" => "box",
-                                "layout" => "vertical",
-                                "contents" => [
-                                    // เพิ่มการแสดงโลโก้
-                                    [
-                                        "type" => "image",
-                                        "url" => "https://syycp.com/sac_lotto/img/logo/sac_application.png",  // URL โลโก้ที่ต้องการแสดง
-                                        "size" => "sm",  // ขนาดโลโก้
-                                        "align" => "center",  // จัดโลโก้ให้ตรงกลาง
-                                        "margin" => "md"  // กำหนดระยะห่างจากส่วนอื่น
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "🌟 **เอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี**",
-                                        "weight" => "bold",
-                                        "size" => "lg",
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "🔖 **เลขที่เอกสาร**: " . $doc_id,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "📅 **วันที่เอกสาร**: " . $currentDate,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "📅 **วันที่ขอใช้**: " . $date_leave_start,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "👤 **ผู้ขอ**: " . $full_name,
-                                        "margin" => "md"
-                                    ],
-                                    [
-                                        "type" => "text",
-                                        "text" => "🏢 **แผนก**: " . $dept_desc,
-                                        "margin" => "md"
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ];
+                    $sMessage = "🌟 เอกสารการขอใช้วันหยุดนักขัตฤกษ์-ประจำปี\n\n";
+                    $sMessage .= "🔖 เลขที่เอกสาร: " . $doc_id . "\n";
+                    $sMessage .= "📅 วันที่เอกสาร: " . $currentDate . "\n\n";
+                    $sMessage .= "📅 วันที่ขอใช้: " . $date_leave_start . "\n\n";
+                    $sMessage .= "👤 ผู้ขอ: " . $full_name . "\n";
+                    $sMessage .= "🏢 แผนก: " . $dept_desc . "\n";
 
                     echo $sMessage;
 
-                        // ดึง line_api_token สำหรับ doc_type = 'HR'
-                        $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
-                        $stmt->execute();
-                        $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    // ดึง line_api_token สำหรับ doc_type = 'HR'
+                    $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
+                    $stmt->execute();
+                    $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        // ดึง user_id จาก ims_line_hr_users
-                        $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
-                        $stmt->execute();
-                        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    // ดึง user_id จาก ims_line_hr_users
+                    $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
+                    $stmt->execute();
+                    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        if (!empty($users) && !empty($line_api_tokens)) {
-                            foreach ($line_api_tokens as $line_api_token) {
-                                $channelAccessToken = $line_api_token['line_api_token'];
+                    if (!empty($users) && !empty($line_api_tokens)) {
+                        foreach ($line_api_tokens as $line_api_token) {
+                            $channelAccessToken = $line_api_token['line_api_token'];
 
-                                foreach ($users as $user) {
-                                    $userId = $user['user_id'];
-                                    sendLineMessage($channelAccessToken, $userId, $sMessage);
-                                }
+                            foreach ($users as $user) {
+                                $userId = $user['user_id'];
+                                sendLineMessage($channelAccessToken, $userId, $sMessage);
                             }
-                        } else {
-                            error_log("No users or no line_api_tokens found.");
                         }
+                    } else {
+                        error_log("No users or no line_api_tokens found.");
+                    }
 
                     echo $save_success;
 
@@ -274,12 +227,12 @@ if ($_POST["action"] === 'UPDATE') {
 
     if ($_POST["doc_id"] != '') {
 
-/*
-        $txt = "status = " .  $_POST["status"] ;
-        $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-*/
+        /*
+                $txt = "status = " .  $_POST["status"] ;
+                $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+        */
 
         $id = $_POST["id"];
         $doc_id = $_POST["doc_id"];
@@ -429,7 +382,7 @@ if ($_POST["action"] === 'GET_HOLIDAY_DOCUMENT') {
     $empRecords = $stmt->fetchAll();
     $data = array();
 
-    $colors = ['DarkRed', 'DarkGreen', 'DarkBlue', 'DarkOrange', 'Indigo', 'DarkSlateGray', 'BlueViolet' , 'DarkCyan' , 'Chocolate' , 'DarkMagenta']; // รายการสีที่ใช้สุ่ม
+    $colors = ['DarkRed', 'DarkGreen', 'DarkBlue', 'DarkOrange', 'Indigo', 'DarkSlateGray', 'BlueViolet', 'DarkCyan', 'Chocolate', 'DarkMagenta']; // รายการสีที่ใช้สุ่ม
     $nameColorMap = []; // แมปชื่อกับสี
 
     foreach ($empRecords as $row) {
