@@ -46,6 +46,7 @@ function sendLineMessage($conn, $channelAccessToken, $userId, $messageText)
     ];
 
     $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($messageData));
@@ -56,22 +57,23 @@ function sendLineMessage($conn, $channelAccessToken, $userId, $messageText)
 
     if ($httpCode == 200) {
         $result = "Success " . $httpCode;
-        logLineSend($conn,$channelAccessToken,$result,$messageText);
+        logLineSend($conn,$channelAccessToken,$result,$userId,$messageText);
         return ['status' => 'success', 'response' => json_decode($response, true)];
     } else {
         $result = "Error " . $httpCode ;
-        logLineSend($conn,$channelAccessToken,$result,$messageText);
+        logLineSend($conn,$channelAccessToken,$result,$userId,$messageText);
         return ['status' => 'error', 'message' => 'Failed to send message'];
     }
 }
 
-function logLineSend($conn, $api, $result , $msg)
+function logLineSend($conn, $api, $result ,$userId, $msg)
 {
     try {
-        $stmt = $conn->prepare("INSERT INTO log_line_send (line_api, msg , result) VALUES (:api, :msg , :result)");
+        $stmt = $conn->prepare("INSERT INTO log_line_send (line_api, msg , result,line_user_id) VALUES (:api, :msg , :result,:line_user_id)");
         $stmt->bindParam(':api', $api);
         $stmt->bindParam(':msg', $msg);
         $stmt->bindParam(':result', $result);
+        $stmt->bindParam(':line_user_id', $userId);
         $stmt->execute();
     } catch (PDOException $e) {
         error_log("Log Line Send Error: " . $e->getMessage());

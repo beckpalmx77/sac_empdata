@@ -214,12 +214,12 @@ if ($_POST["action"] === 'ADD') {
                 if ($lastInsertId) {
                     $sToken = "";
                     $sToken = "gf0Sx2unVFgz7u81vqrU6wcUA2XLLVoPOo2d0Dlvdlr";
-/*
-                    $sMessage = "มีเอกสารการลา " . $leave_type_desc
-                        . "\n\r" . "เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
-                        . "\n\r" . "วันที่ขอลา : " . $date_leave_start . " - " . $time_leave_start . " ถึง : " . $date_leave_to . " - " . $time_leave_to
-                        . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
-*/
+                    /*
+                                        $sMessage = "มีเอกสารการลา " . $leave_type_desc
+                                            . "\n\r" . "เลขที่เอกสาร = " . $doc_id . " วันที่เอกสาร = " . $doc_date
+                                            . "\n\r" . "วันที่ขอลา : " . $date_leave_start . " - " . $time_leave_start . " ถึง : " . $date_leave_to . " - " . $time_leave_to
+                                            . "\n\r" . "ผู้ขอ : " . $emp_full_name . " " . $dept_desc;
+                    */
 
                     $sMessage = "🌟 เอกสารการลา: " . $leave_type_desc . "\n\n";
                     $sMessage .= "🔖 เลขที่เอกสาร: " . $doc_id . "\n";
@@ -230,28 +230,27 @@ if ($_POST["action"] === 'ADD') {
 
                     echo $sMessage;
 
-                        // ดึง line_api_token สำหรับ doc_type = 'HR'
-                        $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
-                        $stmt->execute();
-                        $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    // ดึง line_api_token สำหรับ doc_type = 'HR'
+                    $stmt = $conn->prepare("SELECT line_api_token FROM aline_api WHERE doc_type = 'HR'");
+                    $stmt->execute();
+                    $line_api_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        // ดึง user_id จาก ims_line_hr_users
-                        $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
-                        $stmt->execute();
-                        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    // ดึง user_id จาก ims_line_hr_users
+                    $stmt = $conn->prepare("SELECT user_id FROM ims_line_hr_users WHERE status = 'Y'");
+                    $stmt->execute();
+                    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        if (!empty($users) && !empty($line_api_tokens)) {
-                            foreach ($line_api_tokens as $line_api_token) {
-                                $channelAccessToken = $line_api_token['line_api_token'];
-
-                                foreach ($users as $user) {
-                                    $userId = $user['user_id'];
-                                    sendLineMessage($conn, $channelAccessToken, $userId, $sMessage);
-                                }
+                    if (!empty($users) && !empty($line_api_tokens)) {
+                        foreach ($line_api_tokens as $line_api_token) {
+                            $channelAccessToken = $line_api_token['line_api_token'];
+                            foreach ($users as $user) {
+                                $userId = $user['user_id'];
+                                sendLineMessage($conn, $channelAccessToken, $userId, $sMessage);
                             }
-                        } else {
-                            error_log("No users or no line_api_tokens found.");
                         }
+                    } else {
+                        error_log("No users or no line_api_tokens found.");
+                    }
 
                     echo $save_success;
 
@@ -463,7 +462,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
     $empRecords = $stmt->fetchAll();
     $data = array();
 
-    $colors = ['DarkRed', 'DarkGreen', 'DarkBlue', 'DarkOrange', 'Indigo', 'DarkSlateGray', 'BlueViolet' , 'DarkCyan' , 'Chocolate' , 'DarkMagenta']; // รายการสีที่ใช้สุ่ม
+    $colors = ['DarkRed', 'DarkGreen', 'DarkBlue', 'DarkOrange', 'Indigo', 'DarkSlateGray', 'BlueViolet', 'DarkCyan', 'Chocolate', 'DarkMagenta']; // รายการสีที่ใช้สุ่ม
     $nameColorMap = []; // แมปชื่อกับสี
 
     foreach ($empRecords as $row) {
