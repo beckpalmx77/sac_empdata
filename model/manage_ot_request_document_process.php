@@ -188,7 +188,7 @@ if ($_POST["action"] === 'ADD') {
 
                         foreach ($users as $user) {
                             $userId = $user['user_id'];
-                            sendLineMessage($channelAccessToken, $userId, $sMessage);
+                            sendLineMessage($conn, $channelAccessToken, $userId, $sMessage);
                         }
                     }
                 } else {
