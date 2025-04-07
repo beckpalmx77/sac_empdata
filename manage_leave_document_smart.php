@@ -598,7 +598,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+          rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.th.min.js"></script>
 
@@ -606,7 +607,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
-
 
 
     <script src="js/popup.js"></script>
@@ -1120,55 +1120,52 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
-        $(document).ready(function () {
 
-            function setDatePicker() {
-                let leave_type_id = $('#leave_type_id').val();
-                let startDate = new Date();
+        function setDatePicker() {
+            let leave_type_id = $('#leave_type_id').val();
+            let startDate = new Date();
 
-                if (leave_type_id === 'L6') {
-                    startDate = new Date('2000-01-01');
-                } else if (leave_type_id === 'L1' || leave_type_id === 'L3') {
-                    startDate.setDate(startDate.getDate() + 3);
-                } else if (leave_type_id === 'S') {
-                    // ปัจจุบันเลย
-                }
-
-                $('#date_leave_start').datepicker('destroy').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate
-                });
-
-                $('#date_leave_to').datepicker('destroy').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate
-                });
-
-                console.log("setDatePicker เรียกแล้ว: " + leave_type_id);
+            if (leave_type_id === 'L6') {
+                startDate = new Date('2000-01-01');
+            } else if (leave_type_id === 'L1' || leave_type_id === 'L3') {
+                startDate.setDate(startDate.getDate() + 3);
+            } else if (leave_type_id === 'S') {
+                // ปัจจุบันเลย
             }
 
-            // ✅ ใช้แบบ .on เพื่อรองรับ element ภายใน modal
-            $(document).on('change', '#leave_type_id', function () {
-                console.log("เลือกประเภทการลาใหม่");
-                $('#date_leave_start').val('');
-                $('#date_leave_to').val('');
-                setDatePicker();
+            $('#date_leave_start').datepicker('destroy').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true,
+                startDate: startDate
             });
 
-            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
-                setDatePicker();
-                $('#date_leave_start').val('');
+            $('#date_leave_to').datepicker('destroy').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true,
+                startDate: startDate
             });
 
+            console.log("setDatePicker เรียกแล้ว: " + leave_type_id);
+        }
+
+        // ✅ ใช้แบบ .on เพื่อรองรับ element ภายใน modal
+        $(document).on('change', '#leave_type_id', function () {
+            console.log("เลือกประเภทการลาใหม่");
+            $('#date_leave_start').val('');
+            $('#date_leave_to').val('');
+            setDatePicker();
         });
-    </script>
 
+        $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
+            setDatePicker();
+            $('#date_leave_start').val('');
+        });
+
+    </script>
 
 
     </body>
