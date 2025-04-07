@@ -246,8 +246,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     </div-->
                                                                     <div class="col-sm-8">
                                                                         <label for="date_leave_start"
-                                                                               class="control-label">ประเภทการลา (เลือก)</label>
-                                                                        <select class="form-control" id="leave_type_id" name="leave_type_id" required onchange="showSelectedValue()">
+                                                                               class="control-label">ประเภทการลา
+                                                                            (เลือก)</label>
+                                                                        <select class="form-control" id="leave_type_id"
+                                                                                name="leave_type_id" required
+                                                                                onchange="showSelectedValue()">
                                                                             <?php
                                                                             $sql = "SELECT leave_type_id, leave_type_detail FROM mleave_type WHERE day_flag = 'L' AND leave_type_id <> 'L2' ORDER BY leave_type_id ";
                                                                             $stmt = $conn->query($sql);
@@ -342,13 +345,21 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                                                                 <div class="form-group row" id="uploadSection">
                                                                     <div class="col-sm-6">
-                                                                        <label for="upload_image" class="control-label">เอกสารแนบ (Upload รูปภาพ)</label>
-                                                                        <input type="file" class="form-control-file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage(event)">
+                                                                        <label for="upload_image" class="control-label">เอกสารแนบ
+                                                                            (Upload รูปภาพ)</label>
+                                                                        <input type="file" class="form-control-file"
+                                                                               id="image_upload" name="image_upload"
+                                                                               accept="image/*"
+                                                                               onchange="previewImage(event)">
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                                                        <label class="control-label">เอกสารที่แนบ (Click
+                                                                            ที่รูปเพื่อขยาย)</label>
                                                                         <br>
-                                                                        <img id="preview" src="" alt="Preview" style="max-width: 100px; cursor: pointer; display: none;" data-toggle="modal" data-target="#imageModal">
+                                                                        <img id="preview" src="" alt="Preview"
+                                                                             style="max-width: 100px; cursor: pointer; display: none;"
+                                                                             data-toggle="modal"
+                                                                             data-target="#imageModal">
                                                                     </div>
                                                                 </div>
 
@@ -533,12 +544,14 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                         </div>
 
                                         <!-- Modal แสดงภาพ -->
-                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="imageModal" tabindex="-1"
+                                             aria-labelledby="imageModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">เอกสารแนบ</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -789,8 +802,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#id').val("");
                 $('#doc_id').val("");
                 $('#doc_date').val(formattedDate);
-                $('#leave_type_id').val("");
-                $('#leave_type_detail').val("");
+                $('#leave_type_id').val("L1");
+                $('#leave_type_detail').val("ลากิจ");
                 $('#date_leave_start').val("");
                 $('#date_leave_to').val("");
                 $('#leave_day').val(1);
@@ -801,7 +814,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#action').val('ADD');
                 $('#save').val('Save');
                 $('#uploadSection').show();
-
+                setDatePicker();
             });
         });
     </script>
@@ -1064,53 +1077,51 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
-        $(document).ready(function () {
-            function setDatePicker() {
-                let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
-                let startDate = new Date(); // วันที่ปัจจุบัน
+        function setDatePicker() {
+            let leave_type_id = $('#leave_type_id').val(); // ดึงค่าที่เลือกจาก select
+            let startDate = new Date(); // วันที่ปัจจุบัน
 
-                // กำหนดการตั้งค่าเริ่มต้นของวันที่
-                if (leave_type_id === 'L6') {
-                    // ถ้าเลือก leave_type_id = 'L6' สามารถเลือกได้ทุกวันที่ผ่านมาและวันปัจจุบัน
-                    startDate = new Date('2000-01-01'); // ไม่จำกัดวันเริ่มต้น (ให้ย้อนกลับได้)
-                } else if (leave_type_id === 'L1' || leave_type_id === 'L3') {
-                    // ถ้าเลือก L1 หรือ L3 ให้เริ่มเลือกได้จาก 3 วันหลังจากวันนี้
-                    startDate.setDate(startDate.getDate() + 3);
-                } else if (leave_type_id === 'S') {
-                    // ถ้าเลือก S ให้เลือกวันนี้ได้เลย
-                    startDate.setDate(startDate.getDate());
-                }
-
-                // ทำลาย datepicker ก่อนสร้างใหม่
-                $('#date_leave_start').datepicker('destroy').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้น
-                });
-
-                $('#date_leave_to').datepicker('destroy').datepicker({
-                    format: "dd-mm-yyyy",
-                    todayHighlight: true,
-                    language: "th",
-                    autoclose: true,
-                    startDate: startDate // กำหนดวันที่เริ่มต้น
-                });
-
-                console.log("ประเภทการลา: " + leave_type_id + " | วันที่เริ่มต้น: " + startDate);
+            // กำหนดการตั้งค่าเริ่มต้นของวันที่
+            if (leave_type_id === 'L6') {
+                // ถ้าเลือก leave_type_id = 'L6' สามารถเลือกได้ทุกวันที่ผ่านมาและวันปัจจุบัน
+                startDate = new Date('2000-01-01'); // ไม่จำกัดวันเริ่มต้น (ให้ย้อนกลับได้)
+            } else if (leave_type_id === 'L1' || leave_type_id === 'L3') {
+                // ถ้าเลือก L1 หรือ L3 ให้เริ่มเลือกได้จาก 3 วันหลังจากวันนี้
+                startDate.setDate(startDate.getDate() + 3);
+            } else if (leave_type_id === 'S') {
+                // ถ้าเลือก S ให้เลือกวันนี้ได้เลย
+                startDate.setDate(startDate.getDate());
             }
 
-            // เมื่อเลือกประเภทการลาให้ตั้งค่า datepicker ใหม่
-            $('#leave_type_id').on('change', function () {
-                setDatePicker();
+            // ทำลาย datepicker ก่อนสร้างใหม่
+            $('#date_leave_start').datepicker('destroy').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true,
+                startDate: startDate // กำหนดวันที่เริ่มต้น
             });
 
-            // เมื่อปิด Modal ให้รีเซ็ตวันที่ลา
-            $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
-                setDatePicker();
-                $('#date_leave_start').val('');
+            $('#date_leave_to').datepicker('destroy').datepicker({
+                format: "dd-mm-yyyy",
+                todayHighlight: true,
+                language: "th",
+                autoclose: true,
+                startDate: startDate // กำหนดวันที่เริ่มต้น
             });
+
+            console.log("ประเภทการลา: " + leave_type_id + " | วันที่เริ่มต้น: " + startDate);
+        }
+
+        // เมื่อเลือกประเภทการลาให้ตั้งค่า datepicker ใหม่
+        $('#leave_type_id').on('change', function () {
+            setDatePicker();
+        });
+
+        // เมื่อปิด Modal ให้รีเซ็ตวันที่ลา
+        $('#SearchLeaveTypeModal').on('hidden.bs.modal', function () {
+            setDatePicker();
+            $('#date_leave_start').val('');
         });
     </script>
 
@@ -1135,7 +1146,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let input = event.target;
             let reader = new FileReader();
 
-            reader.onload = function() {
+            reader.onload = function () {
                 let preview = document.getElementById('preview');
                 let modalImage = document.getElementById('modalImage');
 
