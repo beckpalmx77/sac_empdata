@@ -1108,7 +1108,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
-        $(document).ready(function () {
 
             function setDatePicker() {
                 let leave_type_id = $('#leave_type_id').val();
@@ -1154,7 +1153,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#date_leave_start').val('');
             });
 
-        });
     </script>
 
 
