@@ -4,8 +4,8 @@ require '../config/connect_db.php'; // เชื่อมต่อฐานข�
 
 $action = $_POST['action'] ?? '';
 $id = $_POST['id'] ?? '';
-$line_api_token = $_POST['line_api_token'] ?? '';
-$doc_type = $_POST['doc_type'] ?? '';
+$line_api_token = isset($_POST['line_api_token']) ? trim($_POST['line_api_token']) : '';
+$doc_type = isset($_POST['doc_type']) ? trim($_POST['doc_type']) : '';
 $detail = $_POST['detail'] ?? '';
 
 if ($action == 'insert') {
