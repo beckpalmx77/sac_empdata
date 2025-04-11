@@ -54,14 +54,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                         <div class="col-md-12 col-md-offset-2">
                                             <!--label for="name_t"
                                                    class="control-label"><b><?php echo urldecode($_GET['s']) ?></b></label-->
-                                            <button type='button' name='btnAdd' id='btnAdd'
-                                                    class='btn btn-primary btn-xs'>สร้างเอกสาร
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <button type='button' name='backBtn' id='backBtn'
-                                                    class='btn btn-danger btn-xs'>กลับหน้าแรก
-                                                <i class="fa fa-reply"></i>
-                                            </button>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-2">
+                                                    <button type="button" name="btnAdd" id="btnAdd" class="btn btn-primary w-100">
+                                                        สร้างเอกสาร <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <button type="button" name="backBtn" id="backBtn" class="btn btn-danger w-100">
+                                                        กลับหน้าแรก <i class="fa fa-reply"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                         <div class="col-md-12 col-md-offset-2">
