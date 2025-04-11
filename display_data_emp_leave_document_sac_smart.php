@@ -142,21 +142,19 @@ if (strlen($_SESSION['alogin']) == "") {
 
                                                                     <br>
                                                                     <div class="row">
-                                                                        <div class="col-sm-12">
-                                                                            <input type="hidden" id="form_type"
-                                                                                   name="form_type" value="employee">
-                                                                            <button type="button" id="BtnData"
-                                                                                    name="BtnData"
-                                                                                    class="btn btn-primary mb-3">
+                                                                        <div class="col-sm-6 mb-2">
+                                                                            <input type="hidden" id="form_type" name="form_type" value="employee">
+                                                                            <button type="button" id="BtnData" name="BtnData" class="btn btn-primary w-100">
                                                                                 สรุปข้อมูล <i class="fa fa-info" aria-hidden="true"></i>
                                                                             </button>
-                                                                            <button type="button" id="backBtn"
-                                                                                    name="backBtn"
-                                                                                    class="btn btn-danger mb-3">
+                                                                        </div>
+                                                                        <div class="col-sm-6 mb-2">
+                                                                            <button type="button" id="backBtn" name="backBtn" class="btn btn-danger w-100">
                                                                                 กลับหน้าแรก <i class="fa fa-reply"></i>
                                                                             </button>
                                                                         </div>
                                                                     </div>
+
                                                                 </div>
                                                             </div>
 
