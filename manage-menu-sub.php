@@ -1,5 +1,6 @@
 <?php
 include('includes/Header.php');
+include('config/connect_db.php');
 if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
@@ -150,14 +151,21 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                placeholder="Link">
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <label for="icon"
-                                                                               class="control-label">Icon</label>
-                                                                        <input type="text" class="form-control"
-                                                                               id="icon"
-                                                                               name="icon"
-                                                                               required="required"
-                                                                               placeholder="Icon">
+                                                                        <label for="icon" class="control-label">Icon</label>
+                                                                        <input list="iconList" type="text" class="form-control"
+                                                                               id="icon" name="icon" required="required" placeholder="Icon">
+                                                                        <datalist id="iconList">
+                                                                            <?php
+                                                                            $stmt = $conn->prepare("SELECT DISTINCT icon FROM menu_sub WHERE icon IS NOT NULL AND icon != '' ORDER BY icon ASC");
+                                                                            $stmt->execute();
+                                                                            $icons = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                                                                            foreach ($icons as $icon) {
+                                                                                echo '<option value="' . htmlspecialchars($icon) . '">';
+                                                                            }
+                                                                            ?>
+                                                                        </datalist>
                                                                     </div>
+
                                                                 </div>
 
                                                                 <div class="form-group">
