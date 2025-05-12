@@ -36,7 +36,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                 การใช้วันหยุดประจำปี/นักขัตฤกษ์
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <p class="text-primary" id="Text1"></p>
+                                                <p class="text-primary" id="Text8"></p>
                                             </div>
                                         </div>
                                         <div class="col-auto">
