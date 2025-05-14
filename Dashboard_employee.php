@@ -23,7 +23,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         <h4 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน
                         <?php echo "ปี " . date("Y");?></h4>
                     </div>
-
+                    <br>
                     <div class="row mb-3">
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
                             <div class="card h-100">
