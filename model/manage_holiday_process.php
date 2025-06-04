@@ -103,7 +103,7 @@ if ($_POST["action"] === 'ADD') {
         $day_max_ext = GET_VALUE($conn, "select day_max_ext as data from mleave_type where leave_type_id ='H2' ");
 
         $cnt_day = "";
-        $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM vdholiday_event WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
+        $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM vdholiday_event WHERE status <> 'R' AND doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
         foreach ($conn->query($sql_cnt) as $row) {
             $cnt_day = $row['days'];
             $cnt_hour = $row['hours'];

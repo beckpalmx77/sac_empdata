@@ -143,7 +143,7 @@ if ($_POST["action"] === 'ADD') {
 
         $cnt_day = "";
         $sql_cnt = "SELECT SUM(leave_day) AS days , SUM(leave_hour) AS hours FROM " . $table
-            . " WHERE doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
+            . " WHERE status <> 'R' AND doc_year = '" . $doc_year . "' AND leave_type_id = '" . $leave_type_id . "' AND emp_id = '" . $emp_id . "'";
         foreach ($conn->query($sql_cnt) as $row) {
             $cnt_day = $row['days'];
             $cnt_hour = $row['hours'];
