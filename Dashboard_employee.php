@@ -179,13 +179,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     cond = where_year;
                     break;
                 case 2:
-                    cond = " Where leave_type_id = 'L1' " + where_emp_id + where_year;
+                    cond = " Where leave_type_id = 'L1' AND status = 'A' " + where_emp_id + where_year;
                     break;
                 case 3:
-                    cond = " Where leave_type_id = 'L3' " + where_emp_id + where_year;
+                    cond = " Where leave_type_id = 'L3' AND status = 'A' " + where_emp_id + where_year;
                     break;
                 case 4:
-                    cond = " Where leave_type_id = 'L2' " + where_emp_id + where_year;
+                    cond = " Where leave_type_id = 'L2' AND status = 'A' " + where_emp_id + where_year;
                     break;
                 case 5:
                     cond = " Where leave_type_id = 'O' " + where_emp_id + where_year;
@@ -197,7 +197,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     cond = " Where leave_type_id = 'S' " + where_emp_id + where_year;
                     break;
                 case 8:
-                    cond = " Where leave_type_id = 'H2' " + where_emp_id + where_year;
+                    cond = " Where leave_type_id = 'H2' AND status = 'A' " + where_emp_id + where_year;
                     break;
             }
             let formData = {action: action, table_name: table_name, field: field, cond: cond};
