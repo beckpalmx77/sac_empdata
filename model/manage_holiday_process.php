@@ -205,7 +205,7 @@ if ($_POST["action"] === 'ADD') {
                             $channelAccessToken = $line_api_token['line_api_token'];
                             foreach ($users as $user) {
                                 $userId = $user['user_id'];
-                                sendLineMessage($conn, $channelAccessToken, $userId, $sMessage);
+                                endLineMessage($conn, $channelAccessToken, $userId, $sMessage);
                             }
                         }
                     } else {
