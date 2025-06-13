@@ -117,12 +117,13 @@ if ($_POST["action"] === 'ADD') {
         } else {
             $day_hour_max = ($day_max * 8);
         }
-        /*
-                $txt = substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
-                $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $txt);
-                fclose($my_file);
-        */
+
+/*
+        $txt = $emp_id. " | " . substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
+        $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
+*/
 
         $filename = "";
         $picture = "";
@@ -143,7 +144,7 @@ if ($_POST["action"] === 'ADD') {
         }
 
         $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;
-        if ($cnt_total_day_hour >= $day_hour_max) {
+        if ($cnt_total_day_hour > $day_hour_max) {
             echo $Error_Over;
         } else {
             $sql_find = "SELECT * FROM dholiday_event WHERE date_leave_start = '" . $_POST["date_leave_start"] . "' AND emp_id = '" . $emp_id . "'";
