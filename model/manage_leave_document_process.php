@@ -192,7 +192,8 @@ if ($_POST["action"] === 'ADD') {
         }
 
         if ($leave_save === 'Y') {
-            $sql_find = "SELECT * FROM dleave_event dl WHERE dl.date_leave_start = :date_leave_start AND dl.emp_id = :emp_id";
+            //$sql_find = "SELECT * FROM dleave_event dl WHERE dl.date_leave_start = :date_leave_start AND dl.emp_id = :emp_id";
+            $sql_find = "SELECT * FROM dleave_event dl WHERE dl.date_leave_start = :date_leave_start AND dl.status not in ('R') AND dl.emp_id = :emp_id";
             $query_find = $conn->prepare($sql_find);
             $query_find->bindParam(':date_leave_start', $date_leave_start, PDO::PARAM_STR);
             $query_find->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);

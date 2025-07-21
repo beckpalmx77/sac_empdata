@@ -147,7 +147,8 @@ if ($_POST["action"] === 'ADD') {
         if ($cnt_total_day_hour > $day_hour_max) {
             echo $Error_Over;
         } else {
-            $sql_find = "SELECT * FROM dholiday_event WHERE date_leave_start = '" . $_POST["date_leave_start"] . "' AND emp_id = '" . $emp_id . "'";
+            //$sql_find = "SELECT * FROM dholiday_event WHERE date_leave_start = '" . $_POST["date_leave_start"] . "' AND emp_id = '" . $emp_id . "'";
+            $sql_find = "SELECT * FROM dholiday_event WHERE date_leave_start = '" . $_POST["date_leave_start"] . "' AND emp_id = '" . $emp_id . "' AND status not in ('R') ";
             $nRows = $conn->query($sql_find)->fetchColumn();
             if ($nRows > 0) {
                 echo $dup;
