@@ -256,7 +256,7 @@ if ($_POST["action"] === 'UPDATE') {
         if ($nRows > 0) {
 
             if ($_SESSION['approve_permission'] === "Y") {
-                $sql_update = "UPDATE dleave_event SET approve_1_id=:approve_1_id,status=:status,leave_type_id=:leave_type_id
+                $sql_update = "UPDATE dleave_event SET approve_2_id=:approve_2_id,status=:status,leave_type_id=:leave_type_id
                 ,date_leave_start=:date_leave_start,date_leave_to=:date_leave_to
                 ,time_leave_start=:time_leave_start,time_leave_to=:time_leave_to,remark=:remark,doc_year=:doc_year,total_time=:total_time     
                 ,emp_id=:emp_id,leave_day=:leave_day                    
@@ -267,7 +267,7 @@ if ($_POST["action"] === 'UPDATE') {
                 //fclose($myfile);
 
                 $query = $conn->prepare($sql_update);
-                $query->bindParam(':approve_1_id', $update_by, PDO::PARAM_STR);
+                $query->bindParam(':approve_2_id', $update_by, PDO::PARAM_STR);
                 $query->bindParam(':status', $status, PDO::PARAM_STR);
                 $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
                 $query->bindParam(':date_leave_start', $date_leave_start, PDO::PARAM_STR);

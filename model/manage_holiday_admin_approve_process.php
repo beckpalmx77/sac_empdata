@@ -187,10 +187,10 @@ if ($_POST["action"] === 'UPDATE') {
         if ($nRows > 0) {
 
             if ($_SESSION['approve_permission'] === "Y") {
-                $sql_update = "UPDATE dholiday_event SET approve_1_id=:approve_1_id , status=:status
+                $sql_update = "UPDATE dholiday_event SET approve_2_id=:approve_2_id , status=:status
                                WHERE id = :id";
                 $query = $conn->prepare($sql_update);
-                $query->bindParam(':approve_1_id', $update_by, PDO::PARAM_STR);
+                $query->bindParam(':approve_2_id', $update_by, PDO::PARAM_STR);
                 $query->bindParam(':status', $status, PDO::PARAM_STR);
                 $query->bindParam(':id', $id, PDO::PARAM_STR);
                 $query->execute();
