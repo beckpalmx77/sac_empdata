@@ -174,6 +174,9 @@ if ($_POST["action"] === 'UPDATE') {
         $time_leave_to = $_POST["time_leave_to"];
         $remark = $_POST["remark"];
         $status = $_POST["status"];
+
+        $update_by = $_SESSION['alogin'];
+
 /*
         $myfile = fopen("time2-param.txt", "w") or die("Unable to open file!");
         fwrite($myfile,  $doc_id . " | " . $emp_id . " | ". $leave_type_id . " | " . $status);
@@ -184,9 +187,10 @@ if ($_POST["action"] === 'UPDATE') {
         if ($nRows > 0) {
 
             if ($_SESSION['approve_permission'] === "Y") {
-                $sql_update = "UPDATE dholiday_event SET status=:status
+                $sql_update = "UPDATE dholiday_event SET approve_1_id=:approve_1_id , status=:status
                                WHERE id = :id";
                 $query = $conn->prepare($sql_update);
+                $query->bindParam(':approve_1_id', $update_by, PDO::PARAM_STR);
                 $query->bindParam(':status', $status, PDO::PARAM_STR);
                 $query->bindParam(':id', $id, PDO::PARAM_STR);
                 $query->execute();
