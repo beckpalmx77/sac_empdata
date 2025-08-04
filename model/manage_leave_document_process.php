@@ -298,6 +298,8 @@ if ($_POST["action"] === 'UPDATE') {
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 
+        $update_by = $_SESSION['alogin'];
+
         $datetime_leave_start_cal = substr($date_leave_start, 6) . "-" . substr($date_leave_start, 3, 2) . "-" . substr($date_leave_start, 0, 2) . " " . $time_leave_start;
         $datetime_leave_to_cal = substr($date_leave_to, 6) . "-" . substr($date_leave_to, 3, 2) . "-" . substr($date_leave_to, 0, 2) . " " . $time_leave_to;
 
@@ -322,7 +324,7 @@ if ($_POST["action"] === 'UPDATE') {
         if ($nRows > 0) {
 
             if ($_SESSION['approve_permission'] === "Y") {
-                $sql_update = "UPDATE dleave_event SET status=:status,leave_type_id=:leave_type_id
+                $sql_update = "UPDATE dleave_event SET approve_1_id=:approve_1_id,status=:status,leave_type_id=:leave_type_id
                 ,date_leave_start=:date_leave_start,date_leave_to=:date_leave_to
                 ,time_leave_start=:time_leave_start,time_leave_to=:time_leave_to,remark=:remark,doc_year=:doc_year,total_time=:total_time     
                 ,emp_id=:emp_id,leave_day=:leave_day,leave_hour=:leave_hour
@@ -333,6 +335,7 @@ if ($_POST["action"] === 'UPDATE') {
                 //fclose($myfile);
 
                 $query = $conn->prepare($sql_update);
+                $query->bindParam(':approve_1_id', $update_by, PDO::PARAM_STR);
                 $query->bindParam(':status', $status, PDO::PARAM_STR);
                 $query->bindParam(':leave_type_id', $leave_type_id, PDO::PARAM_STR);
                 $query->bindParam(':date_leave_start', $date_leave_start, PDO::PARAM_STR);

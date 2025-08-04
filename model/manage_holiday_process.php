@@ -248,14 +248,17 @@ if ($_POST["action"] === 'UPDATE') {
         $remark = $_POST["remark"];
         $status = $_POST["status"];
 
+        $update_by = $_SESSION['alogin'];
+
         $sql_find = "SELECT * FROM dholiday_event WHERE doc_id = '" . $doc_id . "'";
         $nRows = $conn->query($sql_find)->fetchColumn();
         if ($nRows > 0) {
 
             if ($_SESSION['document_dept_cond'] == "A") {
-                $sql_update = "UPDATE dholiday_event SET status=:status
+                $sql_update = "UPDATE dholiday_event SET approve_1_id=:approve_1_id , status=:status
                                WHERE id = :id";
                 $query = $conn->prepare($sql_update);
+                $query->bindParam(':approve_1_id', $update_by, PDO::PARAM_STR);
                 $query->bindParam(':status', $status, PDO::PARAM_STR);
                 $query->bindParam(':id', $id, PDO::PARAM_STR);
                 $query->execute();
