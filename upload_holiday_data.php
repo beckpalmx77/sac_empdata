@@ -293,7 +293,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 e.preventDefault();
                 let fd = new FormData();
                 $.ajax({
-                    url: "upload_ajax.php",
+                    url: "upload_holiday_ajax.php",
                     type: "POST",
                     data: new FormData(this),
                     contentType: false,
