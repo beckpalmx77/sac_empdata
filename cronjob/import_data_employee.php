@@ -8,7 +8,7 @@ include("../config/connect_db.php");
 include("../util/record_util.php");
 
 $temp_sql = "SELECT EMP_KEY,EMP_INTL,EMPFILE.EMP_NAME,EMPFILE.EMP_SURNME,EMPFILE.EMP_GENDER,EMPFILE.EMP_EMAIL
-,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
+,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_START_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
 ,PERSONALINFO.PRS_JBT,DEPTTAB.DEPT_THAIDESC,JOBTITLE.JBT_THAIDESC
 ,PAYROLLINFO.PRI_STATUS,EMPFILE.EMP_BIRTH,PERSONALINFO.PRS_NO,PAYROLLINFO.PRI_EMP
 FROM EMPFILE 
@@ -24,7 +24,7 @@ $previous_year = date("Y") - 2;
 $previous_year = "2025";
 
 $sql_sqlsvr = "SELECT EMP_KEY,EMP_INTL,EMPFILE.EMP_NAME,EMPFILE.EMP_SURNME,EMPFILE.EMP_GENDER,EMPFILE.EMP_EMAIL
-,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
+,PERSONALINFO.PRS_SC_D,PAYROLLINFO.PRI_START_D,PAYROLLINFO.PRI_SALARY ,PERSONALINFO.PRS_DEPT
 ,PERSONALINFO.PRS_JBT,DEPTTAB.DEPT_THAIDESC,JOBTITLE.JBT_THAIDESC
 ,PAYROLLINFO.PRI_STATUS,EMPFILE.EMP_BIRTH,PERSONALINFO.PRS_NO,PAYROLLINFO.PRI_EMP
 FROM EMPFILE
@@ -123,8 +123,12 @@ while ($result_sqlsvr = $stmt_sqlsvr->fetch(PDO::FETCH_ASSOC)) {
     $birth_str = $result_sqlsvr["EMP_BIRTH"] == "" ? "0000-00-00" : $result_sqlsvr["EMP_BIRTH"];
     $birth = substr($birth_str, 8, 2) . "-" . substr($birth_str, 5, 2) . "-" . substr($birth_str, 0, 4);
 
-    $start_work_date_str = $result_sqlsvr["PRS_SC_D"] == "" ? "0000-00-00" : $result_sqlsvr["PRS_SC_D"];
-    $start_work_date = substr($start_work_date_str, 8, 2) . "-" . substr($start_work_date_str, 5, 2) . "-" . substr($start_work_date_str, 0, 4);
+    /*
+        $start_work_date_str = $result_sqlsvr["PRS_SC_D"]==""?"0000-00-00":$result_sqlsvr["PRS_SC_D"];
+        $start_work_date = substr($start_work_date_str,8,2) . "-" . substr($start_work_date_str,5,2) . "-" . substr($start_work_date_str,0,4) ;
+    */
+    $start_work_date_str = $result_sqlsvr["PRI_START_D"]==""?"0000-00-00":$result_sqlsvr["PRI_START_D"];
+    $start_work_date = substr($start_work_date_str,8,2) . "-" . substr($start_work_date_str,5,2) . "-" . substr($start_work_date_str,0,4) ;
 
     $sql_find = "SELECT * FROM memployee WHERE emp_id = '" . $result_sqlsvr["PRS_NO"] . "'";
     $nRows = $conn->query($sql_find)->fetchColumn();
