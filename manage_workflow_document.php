@@ -53,46 +53,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             </button>
                                         </div-->
 
-                                        <div class="form-group row">
-                                            <div class="col-sm-4">
-                                                <label for="text"
-                                                       class="control-label">รหัสพนักงาน</label>
-                                                <input type="text" class="form-control"
-                                                       id="emp_id" name="emp_id"
-                                                       readonly="true"
-                                                       value=""
-                                                       placeholder="">
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label for="text"
-                                                       class="control-label">ชื่อ -
-                                                    นามสกุล</label>
-                                                <input type="hidden" id="f_name" name="f_name"
-                                                       value="">
-                                                <input type="hidden" id="l_name" name="l_name"
-                                                       value="">
-                                                <input type="text" class="form-control"
-                                                       id="full_name" name="full_name"
-                                                       readonly="true"
-                                                       value=""
-                                                       placeholder="">
-                                            </div>
-
-                                            <div class="col-sm-2">
-                                                <label for="emp_id"
-                                                       class="control-label">เลือก</label>
-                                                <a data-toggle="modal"
-                                                   href="#SearchSupervisorModal"
-                                                   class="btn btn-primary">
-                                                    Click <i class="fa fa-search"
-                                                             aria-hidden="true"></i>
-                                                </a>
-                                            </div>
-
-
-                                        </div>
-
-
                                         <div class="col-md-12 col-md-offset-2">
                                             <table id='TableRecordList' class='display dataTable'>
                                                 <thead>
