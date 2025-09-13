@@ -294,13 +294,13 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee  ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee where status =  'Y' ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee where status =  'Y' " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
