@@ -529,26 +529,58 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'update'},
                 ]
             });
+        });
+    </script>
 
-            <!-- *** FOR SUBMIT FORM *** -->
-            $("#recordModal").on('submit', '#recordForm', function (event) {
-                event.preventDefault();
-                $('#save').attr('disabled', 'disabled');
-                let formData = $(this).serialize();
-                $.ajax({
-                    url: 'model/manage_workflow_document_process.php',
-                    method: "POST",
-                    data: formData,
-                    success: function (data) {
+    <!--script>
+
+        $("#recordModal").on('submit', '#recordForm', function (event) {
+            event.preventDefault();
+            $('#save').attr('disabled', 'disabled');
+            let formData = $(this).serialize();
+            $.ajax({
+                url: 'model/manage_workflow_document_process.php',
+                method: "POST",
+                data: formData,
+                success: function (data) {
+                    alertify.success(data);
+                    $('#recordForm')[0].reset();
+                    $('#recordModal').modal('hide');
+                    $('#save').attr('disabled', false);
+                    dataRecords.ajax.reload();
+                }
+            })
+        });
+
+    </script-->
+
+    <script>
+        $("#recordModal").on('submit', '#recordForm', function (event) {
+            event.preventDefault();
+            $('#save').attr('disabled', 'disabled');
+            let formData = $(this).serialize();
+            $.ajax({
+                url: 'model/manage_workflow_document_process.php',
+                method: "POST",
+                data: formData,
+                success: function (data) {
+                    // ตรวจสอบข้อความที่ส่งกลับมาเพื่อแสดง alert ที่เหมาะสม
+                    if (data.includes("บันทึกข้อมูลเรียบร้อยแล้ว")) {
                         alertify.success(data);
                         $('#recordForm')[0].reset();
                         $('#recordModal').modal('hide');
-                        $('#save').attr('disabled', false);
                         dataRecords.ajax.reload();
+                    } else {
+                        alertify.error(data); // ถ้ามี error message ก็แสดงเป็นสีแดง
                     }
-                })
+                    $('#save').attr('disabled', false);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // ส่วนนี้จะทำงานเมื่อ Server มีปัญหา
+                    alertify.error("ไม่สามารถเชื่อมต่อกับ Server ได้: ".errorThrown);
+                    $('#save').attr('disabled', false);
+                }
             });
-            <!-- *** FOR SUBMIT FORM *** -->
         });
     </script>
 
