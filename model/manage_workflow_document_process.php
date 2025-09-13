@@ -321,8 +321,19 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
                     fclose($my_file);
     */
 
+/*
+
+SELECT em.*,mt.work_time_detail,dp.department_desc, us.first_name
+FROM memployee em
+left join mwork_time mt on mt.work_time_id = em.work_time_id
+left join mdepartment dp on dp.department_id = em.dept_id
+left join v_ims_user_supervisor us on em.dept_id_approve = us.dept_id_approve and us.role = "SUPERVISOR" and us.`status` = 'Active'
+WHERE 1 and em.status =  "Y"
+
+*/
 
 // Bind values
+
     foreach ($searchArray as $key => $search) {
         $stmt->bindValue(':' . $key, $search, PDO::PARAM_STR);
     }
