@@ -192,54 +192,72 @@ if ($_POST["action"] === 'ADD') {
 
 if ($_POST["action"] === 'UPDATE') {
 
-    if ($_POST["emp_id"] != '') {
+    if (!empty($_POST["emp_id"])) {
 
-        $id = $_POST["id"];
-        $emp_id = $_POST["emp_id"];
-        $f_name = $_POST["f_name"];
-        $l_name = $_POST["l_name"];
-        $dept_id = $_POST["dept_id"];
-        $work_time_id = $_POST["work_time_id"];
-        $remark = $_POST["remark"];
-        $sex = $_POST["sex"];
-        $prefix = $_POST["prefix"];
-        $nick_name = $_POST["nick_name"];
-        $position = $_POST["position"];
-        $week_holiday = $_POST["week_holiday"];
-        $dept_id_approve = $_POST["dept_id_approve"];
+        try {
+            // เริ่ม Transaction
+            $conn->beginTransaction();
 
-        $sql_find = "SELECT * FROM memployee WHERE emp_id = '" . $emp_id . "'";
-        $nRows = $conn->query($sql_find)->fetchColumn();
-        if ($nRows > 0) {
+            $id = $_POST["id"];
+            $emp_id = $_POST["emp_id"];
+            $f_name = $_POST["f_name"];
+            $l_name = $_POST["l_name"];
+            $dept_id = $_POST["dept_id"];
+            $work_time_id = $_POST["work_time_id"];
+            $remark = $_POST["remark"];
+            $sex = $_POST["sex"];
+            $prefix = $_POST["prefix"];
+            $nick_name = $_POST["nick_name"];
+            $position = $_POST["position"];
+            $week_holiday = $_POST["week_holiday"];
+            $dept_id_approve = $_POST["dept_id_approve"];
 
-            $sql_update = "UPDATE memployee SET week_holiday=:week_holiday,dept_id_approve=:dept_id_approve             
-            WHERE id = :id";
-            $query = $conn->prepare($sql_update);
-            $query->bindParam(':week_holiday', $week_holiday, PDO::PARAM_STR);
-            $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
-            $query->bindParam(':id', $id, PDO::PARAM_STR);
-            $query->execute();
+            // 1. ตรวจสอบข้อมูลพนักงาน (ใช้ Prepared Statement เพื่อความปลอดภัย)
+            $sql_find = "SELECT COUNT(*) FROM memployee WHERE emp_id = :emp_id";
+            $stmt_find = $conn->prepare($sql_find);
+            $stmt_find->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
+            $stmt_find->execute();
+            $nRows = $stmt_find->fetchColumn();
 
-            $sql_user = "UPDATE ims_user SET first_name=:f_name,last_name=:l_name,department_id=:dept_id,dept_id_approve=:dept_id_approve       
-            WHERE emp_id = :emp_id";
-            $query_user = $conn->prepare($sql_user);
-            $query_user->bindParam(':f_name', $f_name, PDO::PARAM_STR);
-            $query_user->bindParam(':l_name', $l_name, PDO::PARAM_STR);
-            $query_user->bindParam(':dept_id', $dept_id, PDO::PARAM_STR);
-            $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
-            $query_user->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
-            $query_user->execute();
+            if ($nRows > 0) {
+                // 2. อัปเดตตาราง memployee
+                $sql_update_memployee = "UPDATE memployee SET week_holiday=:week_holiday, dept_id_approve=:dept_id_approve WHERE id = :id";
+                $query_memployee = $conn->prepare($sql_update_memployee);
+                $query_memployee->bindParam(':week_holiday', $week_holiday, PDO::PARAM_STR);
+                $query_memployee->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
+                $query_memployee->bindParam(':id', $id, PDO::PARAM_INT); // ID ควรเป็น INT
+                $query_memployee->execute();
 
-            echo $save_success;
-            /*
-                        $txt = $id . " | " . $emp_id . " | " . $week_holiday . " | " . $save_success;
-                        $my_file = fopen("holiday_a.txt", "w") or die("Unable to open file!");
-                        fwrite($my_file, $txt);
-                        fclose($my_file);
-            */
+                // 3. อัปเดตตาราง ims_user
+                $sql_update_user = "UPDATE ims_user SET first_name=:f_name, last_name=:l_name, department_id=:dept_id, dept_id_approve=:dept_id_approve WHERE emp_id = :emp_id";
+                $query_user = $conn->prepare($sql_update_user);
+                $query_user->bindParam(':f_name', $f_name, PDO::PARAM_STR);
+                $query_user->bindParam(':l_name', $l_name, PDO::PARAM_STR);
+                $query_user->bindParam(':dept_id', $dept_id, PDO::PARAM_STR);
+                $query_user->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
+                $query_user->bindParam(':emp_id', $emp_id, PDO::PARAM_STR);
+                $query_user->execute();
 
+                // ถ้าทุกอย่างสำเร็จ ให้ Commit Transaction
+                $conn->commit();
+
+                // ส่งข้อความกลับไป
+                echo $save_success;
+
+            } else {
+                // ถ้าไม่พบ emp_id
+                echo "ไม่พบรหัสพนักงานนี้ในระบบ";
+            }
+
+        } catch (PDOException $e) {
+            // ถ้ามีข้อผิดพลาดเกิดขึ้น ให้ Rollback Transaction
+            $conn->rollBack();
+            // ส่งข้อความ error กลับไป (เพื่อการ debug)
+            // สำหรับใช้งานจริง อาจจะเปลี่ยนเป็นข้อความที่เป็นมิตรกับผู้ใช้
+            echo "เกิดข้อผิดพลาด: " . $e->getMessage();
         }
-
+    } else {
+        echo "ไม่พบรหัสพนักงาน (emp_id)";
     }
 }
 

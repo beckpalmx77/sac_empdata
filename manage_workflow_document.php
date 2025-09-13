@@ -218,7 +218,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     <input type="hidden" class="form-control"
                                                                            id="dept_id"
                                                                            name="dept_id">
-                                                                    <div class="col-sm-10">
+                                                                    <div class="col-sm-5">
                                                                         <label for="department_id"
                                                                                class="control-label">หน่วยงาน</label>
                                                                         <input type="text" class="form-control"
@@ -228,29 +228,59 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                readonly="true"
                                                                                placeholder="หน่วยงาน">
                                                                     </div>
-                                                                </div>
 
-                                                                <div class="form-group row">
-                                                                    <input type="hidden" class="form-control"
-                                                                           id="work_time_id"
-                                                                           name="work_time_id">
-                                                                    <div class="col-sm-10">
-                                                                        <label for="work_time_detail"
-                                                                               class="control-label">ตารางเวลาทำงาน</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="hidden" class="form-control"
+                                                                               id="id_dept_approve"
+                                                                               name="id_dept_approve">
+                                                                        <label for="dept_id_approve"
+                                                                               class="control-label">หน่วยงานที่อนุมัติ</label>
                                                                         <input type="text" class="form-control"
-                                                                               id="work_time_detail"
-                                                                               name="work_time_detail"
+                                                                               id="dept_id_approve"
+                                                                               name="dept_id_approve"
                                                                                required="required"
                                                                                readonly="true"
-                                                                               placeholder="ตารางเวลาทำงาน">
+                                                                               placeholder="หน่วยงาน">
                                                                     </div>
+
+                                                                    <div class="col-sm-2">
+                                                                        <label for="dept_id_approve"
+                                                                               class="control-label">เลือก</label>
+                                                                        <a data-toggle="modal"
+                                                                           href="#SearchApproveModal"
+                                                                           class="btn btn-primary">
+                                                                            Click <i class="fa fa-search"
+                                                                                     aria-hidden="true"></i>
+                                                                        </a>
+                                                                    </div>
+
                                                                 </div>
+
+
+                                                                <input type="hidden" class="form-control"
+                                                                       id="work_time_id"
+                                                                       name="work_time_id">
+                                                                <div class="col-sm-10">
+                                                                    <input type="hidden" class="form-control"
+                                                                           id="work_time_detail"
+                                                                           name="work_time_detail"
+                                                                           required="required"
+                                                                           placeholder="">
+                                                                </div>
+
                                                             </div>
                                                         </div>
 
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="id" id="id"/>
                                                             <input type="hidden" name="action" id="action" value=""/>
+
+                                                            <span class="icon-input-btn">
+                                                                <i class="fa fa-check"></i>
+                                                            <input type="submit" name="save" id="save"
+                                                                   class="btn btn-primary" value="Save"/>
+                                                            </span>
+
                                                             <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Close <i
                                                                         class="fa fa-window-close"></i>
@@ -258,6 +288,46 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                         </div>
                                                     </form>
 
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal fade" id="SearchApproveModal">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Modal title</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">×
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="container"></div>
+                                                    <div class="modal-body">
+
+                                                        <div class="modal-body">
+
+                                                            <table cellpadding="0" cellspacing="0" border="0"
+                                                                   class="display"
+                                                                   id="TableApproveList"
+                                                                   width="100%">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>รหัสหน่วยงานอนุมัติ</th>
+                                                                    <th>ผู้อนุมัติ</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tfoot>
+                                                                <tr>
+                                                                    <th>รหัสหน่วยงานอนุมัติ</th>
+                                                                    <th>ผู้อนุมัติ</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -342,50 +412,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             </div>
                                         </div>
 
-                                        <div class="modal fade" id="SearchSupervisorModal">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Modal title</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-hidden="true">×
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="container"></div>
-                                                    <div class="modal-body">
-
-                                                        <div class="modal-body">
-
-                                                            <table cellpadding="0" cellspacing="0" border="0"
-                                                                   class="display"
-                                                                   id="TableEmployeeList"
-                                                                   width="100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>รหัสพนักงาน</th>
-                                                                    <th>ชื่อพนักงาน</th>
-                                                                    <th>ชื่อเล่น</th>
-                                                                    <th>หน่วยงาน</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                <tr>
-                                                                    <th>รหัสพนักงาน</th>
-                                                                    <th>ชื่อพนักงาน</th>
-                                                                    <th>ชื่อเล่น</th>
-                                                                    <th>หน่วยงาน</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                                </tfoot>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                 </div>
                             </div>
                         </div>
@@ -417,7 +443,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src="js/modal/show_department_modal.js"></script>
     <script src="js/modal/show_worktime_modal.js"></script>
 
-    <script src="js/modal/show_supervisor_modal.js"></script>
+    <script src="js/modal/show_approve_dept_modal.js"></script>
 
     <!-- Page level plugins -->
 
