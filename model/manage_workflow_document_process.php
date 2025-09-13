@@ -77,7 +77,7 @@ if ($_POST["action"] === 'GET_SELECT_EMP_BY_DEPT') {
     }
 
     if ($_SESSION['role'] === 'ADMIN' || $_SESSION['role'] === 'HR') {
-        $con_query = $query . " AND (branch <> 'XXX' AND branch NOT LIKE 'CP%') " ;
+        $con_query = $query . " AND (branch <> 'XXX' AND branch NOT LIKE 'CP%') ";
         $stmt = $conn->prepare($con_query);
     }
     /*
@@ -294,43 +294,42 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee ");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee  ");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee WHERE 1 " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee " . $searchQuery);
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-    $sql_getdata = "SELECT em.*,mt.work_time_detail,dp.department_desc FROM memployee em            
-            left join mwork_time mt on mt.work_time_id = em.work_time_id 
-            left join mdepartment dp on dp.department_id = em.dept_id 	
-            WHERE 1 " . $searchQuery
-        . " ORDER BY status DESC, emp_id DESC , " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+
+    /*
+        $sql_getdata = "SELECT em.*,mt.work_time_detail,dp.department_desc FROM memployee em
+                left join mwork_time mt on mt.work_time_id = em.work_time_id
+                left join mdepartment dp on dp.department_id = em.dept_id
+                WHERE 1 " . $searchQuery;
+    */
+
+    $sql_getdata = "SELECT em.*,mt.work_time_detail,dp.department_desc,us.first_name,us.last_name
+    FROM memployee em
+    left join mwork_time mt on mt.work_time_id = em.work_time_id
+    left join mdepartment dp on dp.department_id = em.dept_id
+    left join v_ims_user_supervisor us on em.dept_id_approve = us.dept_id_approve and us.role = 'SUPERVISOR' and us.status = 'Active'
+    WHERE 1 and em.status =  'Y' " . $searchQuery
+        . " ORDER BY id DESC, " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($sql_getdata);
 
     /*
-                    $txt = $sql_getdata ;
-                    $my_file = fopen("emp.txt", "w") or die("Unable to open file!");
-                    fwrite($my_file, $txt);
-                    fclose($my_file);
+        $txt = $sql_getdata ;
+        $my_file = fopen("emp.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $txt);
+        fclose($my_file);
     */
-
-/*
-
-SELECT em.*,mt.work_time_detail,dp.department_desc, us.first_name
-FROM memployee em
-left join mwork_time mt on mt.work_time_id = em.work_time_id
-left join mdepartment dp on dp.department_id = em.dept_id
-left join v_ims_user_supervisor us on em.dept_id_approve = us.dept_id_approve and us.role = "SUPERVISOR" and us.`status` = 'Active'
-WHERE 1 and em.status =  "Y"
-
-*/
 
 // Bind values
 
@@ -348,11 +347,14 @@ WHERE 1 and em.status =  "Y"
 
         if ($_POST['sub_action'] === "GET_MASTER") {
 
+            $approve_name = $row['first_name'] . " " . $row['last_name'];
+
             $data[] = array(
                 "id" => $row['id'],
                 "emp_id" => $row['emp_id'],
                 "f_name" => $row['f_name'],
                 "l_name" => $row['l_name'],
+                "approve_name" => $approve_name,
                 "nick_name" => $row['nick_name'],
                 "prefix" => $row['prefix'],
                 "sex" => $row['sex'],
