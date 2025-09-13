@@ -62,7 +62,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>หน่วยงาน</th>
                                                     <th>ชื่อเล่น</th>
                                                     <th>วันเริ่มงาน</th>
-                                                    <th>dept_id_approve</th>
+                                                    <th>หน่วยงานที่อนุมัติ</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -74,7 +74,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>หน่วยงาน</th>
                                                     <th>ชื่อเล่น</th>
                                                     <th>วันเริ่มงาน</th>
-                                                    <th>dept_id_approve</th>
+                                                    <th>หน่วยงานที่อนุมัติ</th>
                                                     <th>สถานะ</th>
                                                     <th>Action</th>
                                                 </tr>
