@@ -320,7 +320,7 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     left join mdepartment dp on dp.department_id = em.dept_id
     left join v_ims_user_supervisor us on em.dept_id_approve = us.dept_id_approve and us.role = 'SUPERVISOR' and us.status = 'Active'
     WHERE 1 and em.status =  'Y' " . $searchQuery
-        . " ORDER BY id DESC, " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+        . " ORDER BY emp_id DESC, " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($sql_getdata);
 
