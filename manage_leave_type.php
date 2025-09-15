@@ -532,42 +532,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
 
     </script>
-
-    <!--script>
-        $(document).ready(function () {
-            $("#btnCopy").click(function () {
-                // Display a loading message
-                //alertify.success("กำลังดำเนินการคัดลอกข้อมูล...");
-
-                // Make an AJAX call to the PHP script
-                $.ajax({
-                    url: 'model/copy_leave_type.php', // Path to your PHP script
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success' || response.status === 'info') {
-                            alertify.success(response.message);
-
-                            // Reload the DataTable here
-                            dataRecords.ajax.reload(null, false); // Reload without resetting the current page
-                        } else {
-                            alertify.error("เกิดข้อผิดพลาด: " + response.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // This is for network or server-side errors
-                        try {
-                            let response = JSON.parse(xhr.responseText);
-                            alertify.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์: " + response.message);
-                        } catch (e) {
-                            alertify.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ หรือการตอบสนองไม่ถูกต้อง");
-                        }
-                    }
-                });
-            });
-        });
-    </script-->
-
+    
     </body>
     </html>
 
