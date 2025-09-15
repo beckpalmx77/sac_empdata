@@ -8,11 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Ensure your 'connect_db.php' file is included.
-// This file should contain the PDO connection and assign it to a variable named $conn.
 require_once '../config/connect_db.php';
-
-// The existing PDO connection is now available via $conn.
-// No need to create a new one.
 
 try {
     // Step 1: Find the latest effect_year
@@ -40,50 +36,31 @@ try {
         exit;
     }
 
-    // Step 3: Copy data from the latest year to the next year
+    // Step 3: Begin the transaction
     $conn->beginTransaction();
 
-    $stmt = $conn->prepare("SELECT `leave_type_id`, `leave_type_detail`, `day_max`, `day_max_ext`, `leave_before`
-    , `work_age_allow`, `day_flag`, `remark`, `status`, `leave_strict`, `color`, `leave_for`, `retro_flag`, `line_alert` 
-    FROM `mleave_type` WHERE `effect_year` = ?");
-    $stmt->execute([$latest_year]);
-    $records_to_copy = $stmt->fetchAll();
+    // Step 4: Update the effect_year of the latest year's records to the next year
+    $update_stmt = $conn->prepare("UPDATE `mleave_type` SET `effect_year` = ? WHERE `effect_year` = ?");
+    $update_stmt->execute([$next_year, $latest_year]);
 
-    if (empty($records_to_copy)) {
+    // Check how many rows were affected to ensure the update was successful
+    $rows_updated = $update_stmt->rowCount();
+
+    if ($rows_updated === 0) {
         $conn->rollBack();
-        echo json_encode(['status' => 'error', 'message' => 'No records found to copy for year ' . $latest_year . '.']);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No records found to update for year ' . $latest_year . '.'
+        ]);
         exit;
     }
 
-    // Prepare the insert statement
-    $insert_sql = "INSERT INTO `mleave_type` (`leave_type_id`, `leave_type_detail`, `day_max`, `day_max_ext`, `leave_before`, `work_age_allow`, `day_flag`, `remark`, `status`, `leave_strict`, `color`, `leave_for`, `retro_flag`, `line_alert`, `effect_year`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $insert_stmt = $conn->prepare($insert_sql);
-
-    foreach ($records_to_copy as $record) {
-        $insert_stmt->execute([
-            $record['leave_type_id'],
-            $record['leave_type_detail'],
-            $record['day_max'],
-            $record['day_max_ext'],
-            $record['leave_before'],
-            $record['work_age_allow'],
-            $record['day_flag'],
-            $record['remark'],
-            $record['status'],
-            $record['leave_strict'],
-            $record['color'],
-            $record['leave_for'],
-            $record['retro_flag'],
-            $record['line_alert'],
-            $next_year // Use the new year for the new records
-        ]);
-    }
-
+    // Step 5: Commit the transaction if everything succeeded
     $conn->commit();
 
     echo json_encode([
         'status' => 'success',
-        'message' => 'Successfully copied data from year ' . $latest_year . ' to ' . $next_year . '.',
+        'message' => 'Successfully updated data from year ' . $latest_year . ' to ' . $next_year . '.',
         'next_year' => $next_year
     ]);
 

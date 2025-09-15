@@ -532,7 +532,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
 
     </script>
-    
+
     </body>
     </html>
 
