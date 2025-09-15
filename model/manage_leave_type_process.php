@@ -265,7 +265,7 @@ if ($_POST["action"] === 'GET_LEAVE_TYPE') {
 
 ## Fetch records
     $stmt = $conn->prepare("SELECT * FROM mleave_type WHERE 1 " . $searchQuery
-        . " ORDER BY day_flag,leave_type_id " . " LIMIT :limit,:offset");
+        . " ORDER BY effect_year desc,day_flag,leave_type_id " . " LIMIT :limit,:offset");
 
 /*
         $txt = $_POST["action"] . " | "  . $_POST["sub_action"] . " | " . $_POST["action_for"] . " | " . $columnName . " | " . $columnSortOrder ;

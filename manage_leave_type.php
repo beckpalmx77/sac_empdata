@@ -47,6 +47,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     class='btn btn-primary btn-xs'>Add
                                                 <i class="fa fa-plus"></i>
                                             </button>
+                                            <button type='button' name='btnCopy' id='btnCopy'
+                                                    class='btn btn-success btn-xs'>คัดลอกประเภทเอกสารทั้งหมด
+                                                เริ่มต้นปีใหม่
+                                                <i class="fa fa-copy"></i>
+                                            </button>
                                         </div>
 
                                         <div class="col-md-12 col-md-offset-2">
@@ -138,11 +143,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                     <div class="d-flex gap-3 align-items-center">
                                                                         <div class="w-50">
                                                                             <label for="day_max" class="form-label">Office</label>
-                                                                            <input type="text" class="form-control" id="day_max" name="day_max" required placeholder="">
+                                                                            <input type="text" class="form-control"
+                                                                                   id="day_max" name="day_max" required
+                                                                                   placeholder="">
                                                                         </div>
                                                                         <div class="w-50">
                                                                             <label for="day_max_ext" class="form-label">สาขา</label>
-                                                                            <input type="text" class="form-control" id="day_max_ext" name="day_max_ext" required placeholder="">
+                                                                            <input type="text" class="form-control"
+                                                                                   id="day_max_ext" name="day_max_ext"
+                                                                                   required placeholder="">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -348,6 +357,39 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 ]
             });
 
+
+            $("#btnCopy").click(function () {
+                // Display a loading message
+                //alertify.success("กำลังดำเนินการคัดลอกข้อมูล...");
+
+                // Make an AJAX call to the PHP script
+                $.ajax({
+                    url: 'model/copy_leave_type.php', // Path to your PHP script
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success' || response.status === 'info') {
+                            alertify.success(response.message);
+
+                            // Reload the DataTable here
+                            dataRecords.ajax.reload(null, false); // Reload without resetting the current page
+                        } else {
+                            alertify.error("เกิดข้อผิดพลาด: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // This is for network or server-side errors
+                        try {
+                            let response = JSON.parse(xhr.responseText);
+                            alertify.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์: " + response.message);
+                        } catch (e) {
+                            alertify.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ หรือการตอบสนองไม่ถูกต้อง");
+                        }
+                    }
+                });
+            });
+
+
             <!-- *** FOR SUBMIT FORM *** -->
             $("#recordModal").on('submit', '#recordForm', function (event) {
                 event.preventDefault();
@@ -490,6 +532,41 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
 
     </script>
+
+    <!--script>
+        $(document).ready(function () {
+            $("#btnCopy").click(function () {
+                // Display a loading message
+                //alertify.success("กำลังดำเนินการคัดลอกข้อมูล...");
+
+                // Make an AJAX call to the PHP script
+                $.ajax({
+                    url: 'model/copy_leave_type.php', // Path to your PHP script
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success' || response.status === 'info') {
+                            alertify.success(response.message);
+
+                            // Reload the DataTable here
+                            dataRecords.ajax.reload(null, false); // Reload without resetting the current page
+                        } else {
+                            alertify.error("เกิดข้อผิดพลาด: " + response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // This is for network or server-side errors
+                        try {
+                            let response = JSON.parse(xhr.responseText);
+                            alertify.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์: " + response.message);
+                        } catch (e) {
+                            alertify.error("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ หรือการตอบสนองไม่ถูกต้อง");
+                        }
+                    }
+                });
+            });
+        });
+    </script-->
 
     </body>
     </html>
