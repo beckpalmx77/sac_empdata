@@ -119,6 +119,7 @@ if ($_POST["action"] === 'ADD') {
         }
 
 // ย้ายแผนก CP TO BTC 2025
+// Modify 19-09-2025
         if ($emp_id ==='80047' && $doc_year === '2025') {
             $day_hour_max = ($day_max_ext * 8);
         }
