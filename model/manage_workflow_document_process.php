@@ -310,16 +310,16 @@ if ($_POST["action"] === 'GET_APPROVE_EMP') {
         $searchQuery = " AND (em.emp_id LIKE '%" . $searchValue . "%' OR em.f_name LIKE '%" . $searchValue . "%') ";
     }
 
-/*
-    if ($searchValue != '') {
-        $searchQuery = " AND (em.emp_id LIKE :emp_id or
-        em.f_name LIKE :f_name ) ";
-        $searchArray = array(
-            'emp_id' => "%$searchValue%",
-            'f_name' => "%$searchValue%",
-        );
-    }
-*/
+    /*
+        if ($searchValue != '') {
+            $searchQuery = " AND (em.emp_id LIKE :emp_id or
+            em.f_name LIKE :f_name ) ";
+            $searchArray = array(
+                'emp_id' => "%$searchValue%",
+                'f_name' => "%$searchValue%",
+            );
+        }
+    */
 
     /*
     $myfile = fopen("a-param.txt", "w") or die("Unable to open file!");
@@ -340,11 +340,11 @@ if ($_POST["action"] === 'GET_APPROVE_EMP') {
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-/*
-    $myfile = fopen("b-param.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $searchQuery);
-    fclose($myfile);
-*/
+    /*
+        $myfile = fopen("b-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $searchQuery);
+        fclose($myfile);
+    */
     $sql_getdata = "SELECT em.*,mt.work_time_detail,dp.department_desc,us.first_name,us.last_name
     FROM memployee em
     left join mwork_time mt on mt.work_time_id = em.work_time_id
@@ -355,11 +355,11 @@ if ($_POST["action"] === 'GET_APPROVE_EMP') {
 
     $stmt = $conn->prepare($sql_getdata);
 
-/*
-    $myfile = fopen("b-param.txt", "w") or die("Unable to open file!");
-    fwrite($myfile, $sql_getdata . " | " . $searchQuery);
-    fclose($myfile);
-*/
+    /*
+        $myfile = fopen("b-param.txt", "w") or die("Unable to open file!");
+        fwrite($myfile, $sql_getdata . " | " . $searchQuery);
+        fclose($myfile);
+    */
 
 // Bind values
 
