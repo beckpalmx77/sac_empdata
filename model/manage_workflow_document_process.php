@@ -279,7 +279,7 @@ if ($_POST["action"] === 'DELETE') {
     }
 }
 
-if ($_POST["action"] === 'GET_EMPLOYEE') {
+if ($_POST["action"] === 'GET_APPROVE_EMP') {
 
     ## Read value
     $draw = $_POST['draw'];
@@ -299,17 +299,33 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     //$searchQuery = " AND emp_id = '" . $_SESSION['emp_id'] . "'";
     //}
 
+
+// กำหนดค่าเริ่มต้น
+    $searchQuery = "";
+    $searchArray = array();
+
+// ตรวจสอบว่ามีค่าที่ใช้ค้นหาหรือไม่
+    if (!empty($searchValue)) {
+        // สร้างส่วนของ SQL query โดยใช้ named placeholders
+        $searchQuery = " AND (em.emp_id LIKE '%" . $searchValue . "%' OR em.f_name LIKE '%" . $searchValue . "%') ";
+    }
+
+/*
     if ($searchValue != '') {
-        $searchQuery = " AND (emp_id LIKE :emp_id or l_name LIKE :l_name or
-        f_name LIKE :f_name or nick_name LIKE :nick_name or dept_id_approve LIKE :dept_id_approve) ";
+        $searchQuery = " AND (em.emp_id LIKE :emp_id or
+        em.f_name LIKE :f_name ) ";
         $searchArray = array(
             'emp_id' => "%$searchValue%",
-            'l_name' => "%$searchValue%",
             'f_name' => "%$searchValue%",
-            'nick_name' => "%$searchValue%",
-            'dept_id_approve' => "%$searchValue%"
         );
     }
+*/
+
+    /*
+    $myfile = fopen("a-param.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $searchQuery . " | " . $searchValue);
+    fclose($myfile);
+    */
 
 ## Total number of records without filtering
     $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee where status =  'Y' ");
@@ -318,36 +334,32 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     $totalRecords = $records['allcount'];
 
 ## Total number of records with filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee where status =  'Y' " . $searchQuery);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM memployee where status =  'Y' ");
     $stmt->execute($searchArray);
     $records = $stmt->fetch();
     $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-
-    /*
-        $sql_getdata = "SELECT em.*,mt.work_time_detail,dp.department_desc FROM memployee em
-                left join mwork_time mt on mt.work_time_id = em.work_time_id
-                left join mdepartment dp on dp.department_id = em.dept_id
-                WHERE 1 " . $searchQuery;
-    */
-
+/*
+    $myfile = fopen("b-param.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $searchQuery);
+    fclose($myfile);
+*/
     $sql_getdata = "SELECT em.*,mt.work_time_detail,dp.department_desc,us.first_name,us.last_name
     FROM memployee em
     left join mwork_time mt on mt.work_time_id = em.work_time_id
     left join mdepartment dp on dp.department_id = em.dept_id
     left join v_ims_user_supervisor us on em.dept_id_approve = us.dept_id_approve and us.role = 'SUPERVISOR' and us.status = 'Active'
     WHERE 1 and em.status =  'Y' " . $searchQuery
-        . " ORDER BY emp_id DESC, " . $columnName . " " . $columnSortOrder . " LIMIT :limit,:offset";
+        . " ORDER BY em.emp_id DESC " . " LIMIT :limit,:offset";
 
     $stmt = $conn->prepare($sql_getdata);
 
-    /*
-        $txt = $sql_getdata ;
-        $my_file = fopen("emp.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-    */
+/*
+    $myfile = fopen("b-param.txt", "w") or die("Unable to open file!");
+    fwrite($myfile, $sql_getdata . " | " . $searchQuery);
+    fclose($myfile);
+*/
 
 // Bind values
 
