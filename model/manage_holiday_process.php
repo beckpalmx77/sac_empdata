@@ -120,16 +120,16 @@ if ($_POST["action"] === 'ADD') {
 
 // ย้ายแผนก CP TO BTC 2025
 // Modify 19-09-2025
-        if ($emp_id ==='80047' && $doc_year === '2025') {
+        if ($emp_id === '80047' && $doc_year === '2025') {
             $day_hour_max = ($day_max_ext * 8);
         }
 
-/*
-        $txt = $emp_id. " | " . substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
-        $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
-        fwrite($my_file, $txt);
-        fclose($my_file);
-*/
+        /*
+                $txt = $emp_id. " | " . substr($_SESSION['dept_id_approve'], 0, 2) . " | " .  $day_hour_max ;
+                $my_file = fopen("a-leave_1.txt", "w") or die("Unable to open file!");
+                fwrite($my_file, $txt);
+                fclose($my_file);
+        */
 
         $filename = "";
         $picture = "";
