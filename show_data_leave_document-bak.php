@@ -88,7 +88,7 @@ $sql_leave_addition = "";
 
 <div class="card-body">
     <a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์ </a>
-    <a id="myLink" href="#" onclick="window.close();"><i class="fa fa-window-close"></i> ปิด (Close) </a>
+    <a id="myLink" href="#" onclick="window.close();"><i class="fa fa-times"></i> ปิด (Close) </a>
 </div>
 
 <input type="hidden" class="form-control" id="f_name" name="f_name" value="">

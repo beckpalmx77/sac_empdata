@@ -249,7 +249,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                             <input type="hidden" name="action" id="action" value=""/>
                                                             <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Close <i
-                                                                        class="fa fa-window-close"></i>
+                                                                        class="fa fa-times"></i>
                                                             </button>
                                                         </div>
                                                     </form>
