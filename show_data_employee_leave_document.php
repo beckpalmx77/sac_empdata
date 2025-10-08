@@ -73,7 +73,7 @@ foreach ($MonthTo as $row_to) {
 
 <div class="card-body">
     <!--a id="myLink" href="#" onclick="PrintPage();"><i class="fa fa-print"></i> พิมพ์ </a-->
-    <!--a id="myLink" href="#" onclick="window.close();"><i class="fa fa-window-close"></i> ปิด (Close) </a-->
+    <!--a id="myLink" href="#" onclick="window.close();"><i class="fa fa-times"></i> ปิด (Close) </a-->
     <div class="container-fluid" id="container-wrapper">
         <button class="btn btn-danger" onclick="window.close()">ปิด (Close)</button>
     </div>
