@@ -24,9 +24,12 @@ if (strlen($_SESSION['alogin']) == "") {
                 include('includes/Top-Bar.php');
                 ?>
                 <div class="container-fluid" id="container-wrapper">
+                    <input type="hidden" id="main_menu" name="main_menu" value="<?php echo urldecode($_GET['m']) ?>">
+                    <input type="hidden" id="sub_menu" name="sub_menu" value="<?php echo urldecode($_GET['s']) ?>">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><?php echo "เอกสารการลา/ใช้วันหยุดประจำปี รายวัน" ?></h1>
+                        <h1 class="h3 mb-0 text-gray-800"><?php echo "เอกสารการลา/ใช้วันหยุด รายวัน" ?></h1>
                     </div>
+
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card mb-12">
