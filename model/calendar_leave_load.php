@@ -29,7 +29,7 @@ foreach ($result as $row) {
 
     $data[] = array(
         'id'    => $date,
-        'title' => $row["total_cnt_record"] . " รายการ",
+        'title' => "จำนวนเอกสาร " . $row["total_cnt_record"] . " รายการ",
         'start' => $date,
         'end'   => $date,
         'count' => $row["total_cnt_record"]

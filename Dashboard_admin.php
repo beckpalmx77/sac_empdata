@@ -1,6 +1,11 @@
 <?php
+session_start();
+error_reporting(0);
 include('includes/Header.php');
-if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "") {
+include('config/connect_db.php');
+$curr_date = date("d-m-Y");
+
+if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
     ?>
@@ -18,130 +23,121 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 <?php
                 include('includes/Top-Bar.php');
                 ?>
-                <!--div class="col-xl-12 col-md-12 mb-12"><h2>เอกสารการลาประจำวัน</h2></div>
-                <div class="col-xl-12 col-md-12 mb-12">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <table id='TableRecordList' class='display dataTable'>
-                                    <thead>
-                                    <tr>
-                                        <th>ปี</th>
-                                        <th>วันที่เอกสาร</th>
-                                        <th>ชื่อ-นามสกุล</th>
-                                        <th>หน่วยงาน</th>
-                                        <th>ประเภทการลา</th>
-                                        <th>วันที่ลาเริ่มต้น</th>
-                                        <th>วันที่ลาสิ้นสุด</th>
-                                        <th>จำนวนวัน</th>
-                                        <th>สถานะ</th>
-                                        <th>รูปภาพ</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>ปี</th>
-                                        <th>วันที่เอกสาร</th>
-                                        <th>ชื่อ-นามสกุล</th>
-                                        <th>หน่วยงาน</th>
-                                        <th>ประเภทการลา</th>
-                                        <th>วันที่ลาเริ่มต้น</th>
-                                        <th>วันที่ลาสิ้นสุด</th>
-                                        <th>จำนวนวัน</th>
-                                        <th>สถานะ</th>
-                                        <th>รูปภาพ</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-
+                <div class="container-fluid" id="container-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-12">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                </div>
+                                <div class="card-body">
+                                    <section class="container-sm">
+                                        <div class="col-sm-12">
+                                            <div id='calendar'></div>
+                                        </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div-->
+                </div>
             </div>
+            <?php
+            include('includes/Modal-Logout.php');
+            include('includes/Footer.php');
+            ?>
         </div>
     </div>
 
-    <?php
-    include('includes/Modal-Logout.php');
-    include('includes/Footer.php');
-    ?>
-    <!-- Scroll to top -->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="js/myadmin.min.js"></script>
-    <script src="vendor/chart.js/Chart.min.js"></script>
-    <script src="js/chart/chart-area-demo.js"></script>
 
-    <link href='vendor/calendar/main.css' rel='stylesheet'/>
-    <script src='vendor/calendar/main.js'></script>
-    <script src='vendor/calendar/locales/th.js'></script>
-
-    <script src='js/clock_time.js'></script>
+    <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
+    <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
+    <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
     <script src="vendor/datatables/v11/bootbox.min.js"></script>
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.19/index.global.js'></script>
+    <script src="js/popup.js"></script>
+
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_LEAVE_DOCUMENT", sub_action: "GET_MASTER", page_manage: "USER",};
-            let dataRecords = $('#TableRecordList').DataTable({
-                'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
-                'language': {
-                    search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
-                    info: 'หน้าที่ _PAGE_ จาก _PAGES_',
-                    infoEmpty: 'ไม่มีข้อมูล',
-                    zeroRecords: "ไม่มีข้อมูลตามเงื่อนไข",
-                    infoFiltered: '(กรองข้อมูลจากทั้งหมด _MAX_ รายการ)',
-                    paginate: {
-                        previous: 'ก่อนหน้า',
-                        last: 'สุดท้าย',
-                        next: 'ต่อไป'
-                    }
-                },
-                'processing': true,
-                'serverSide': true,
-                'serverMethod': 'post',
-                'autoWidth': true,
-                'searching': true,
-                <?php  if ($_SESSION['deviceType'] !== 'computer') {
-                    echo "'scrollX': true,";
-                }?>
-                'ajax': {
-                    'url': 'model/manage_leave_document_process.php',
-                    'data': formData
-                },
-                'columns': [
-                    {data: 'doc_year'},
-                    {data: 'doc_date'},
-                    {data: 'full_name'},
-                    {data: 'department_id'},
-                    {data: 'leave_type_detail'},
-                    {data: 'dt_leave_start'},
-                    {data: 'dt_leave_to'},
-                    {data: 'leave_day'},
-                    {data: 'status'},
-                    {data: 'image'},
-                    {data: 'update'},
-                ]
+            $(".icon-input-btn").each(function () {
+                let btnFont = $(this).find(".btn").css("font-size");
+                let btnColor = $(this).find(".btn").css("color");
+                $(this).find(".fa").css({'font-size': btnFont, 'color': btnColor});
             });
-
         });
-
     </script>
 
-    </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendarEl = document.getElementById('calendar');
+            // *** Set locale to 'th' for Thai language ***
+            let initialLocaleCode = 'th';
 
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                timeZone: 'local',
+                headerToolbar: {
+                    right: 'prev,next today',
+                    center: 'title',
+                    left: 'dayGridMonth'
+                },
+                buttonText: {
+                    today: 'วันนี้', // เปลี่ยน "today" เป็น "วันนี้"
+                    month: 'เดือน',  // เปลี่ยน "month" เป็น "เดือน" (หรือ "เดือน")
+                    week: 'สัปดาห์', // เผื่อต้องการใช้ปุ่ม week ในอนาคต
+                    day: 'วัน',      // เผื่อต้องการใช้ปุ่ม day ในอนาคต
+                },
+                // *** Apply Thai locale ***
+                locale: initialLocaleCode,
+                initialView: 'dayGridMonth',
+                height: 550,
+                events: {
+                    url: 'model/calendar_leave_load.php',
+                    method: 'GET',
+                    failure: function () {
+                        console.error("❌ โหลดข้อมูล event ไม่ได้จาก calendar_leave_load.php");
+                    },
+                    success: function (data) {
+                        console.log("✅ Event Loaded: ", data);
+                    }
+                },
+                editable: true,
+                selectable: true,
+
+                eventClick: function (info) {
+
+                    info.jsEvent.preventDefault();
+
+                    // change the border color
+                    //info.el.style.borderColor = 'red';
+
+                    let main_menu = document.getElementById("main_menu").value;
+                    let sub_menu = document.getElementById("sub_menu").value;
+                    let url = "manage_leave_calendar_data.php?title=รายการข้อมูลการลางาน"
+                        + '&main_menu=' + main_menu + '&sub_menu=' + sub_menu
+                        + '&doc_date=' + info.event.id;
+                    window.open(url, "", "");
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+
+
+    </body>
     </html>
 
 <?php } ?>
-
