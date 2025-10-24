@@ -81,6 +81,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                         <thead>
                                                         <tr>
                                                             <th>ปี</th>
+                                                            <th>เลขที่เอกสาร</th>
                                                             <th>วันที่เอกสาร</th>
                                                             <th>ชื่อ-นามสกุล</th>
                                                             <th>หน่วยงาน</th>
@@ -88,13 +89,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <th>วันที่ลาเริ่มต้น</th>
                                                             <th>วันที่ลาสิ้นสุด</th>
                                                             <th>สถานะ</th>
-                                                            <th>รูปภาพ</th>
-                                                            <th>Action</th>
                                                         </tr>
                                                         </thead>
                                                         <tfoot>
                                                         <tr>
                                                             <th>ปี</th>
+                                                            <th>เลขที่เอกสาร</th>
                                                             <th>วันที่เอกสาร</th>
                                                             <th>ชื่อ-นามสกุล</th>
                                                             <th>หน่วยงาน</th>
@@ -102,8 +102,6 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <th>วันที่ลาเริ่มต้น</th>
                                                             <th>วันที่ลาสิ้นสุด</th>
                                                             <th>สถานะ</th>
-                                                            <th>รูปภาพ</th>
-                                                            <th>Action</th>
                                                         </tr>
                                                         </tfoot>
                                                     </table>
@@ -300,6 +298,18 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script type="text/javascript">
+
+        // ฟังก์ชันสำหรับแปลงรูปแบบวันที่จาก YYYY-MM-DD เป็น DD-MM-YYYY
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const parts = dateString.split('-'); // แยกส่วน YYYY, MM, DD
+            if (parts.length === 3) {
+                // parts[2] คือ DD, parts[1] คือ MM, parts[0] คือ YYYY
+                return parts[2] + '-' + parts[1] + '-' + parts[0];
+            }
+            return dateString; // คืนค่าเดิมหากรูปแบบไม่ถูกต้อง
+        }
+
         let queryString = new Array();
         $(function () {
             if (queryString.length == 0) {
@@ -313,7 +323,12 @@ if (strlen($_SESSION['alogin']) == "") {
                 }
             }
 
-            let title = queryString["title"] + " :  " + queryString["doc_date"];
+            // 1. แปลงรูปแบบวันที่ที่ดึงมาจาก queryString ก่อน
+            let formatted_doc_date = formatDate(queryString["doc_date"]);
+
+            // 2. นำวันที่ที่แปลงแล้วไปใช้งานในการสร้าง title
+            let title = queryString["title"] + " : วันที่ " + formatted_doc_date;
+
             let data = "<b>" + title + "</b>";
             $("#title").html(data);
             $("#main_menu").html(queryString["main_menu"]);
@@ -323,6 +338,42 @@ if (strlen($_SESSION['alogin']) == "") {
             Load_Data_Detail(queryString["doc_date"], "v_leave_holiday_calendar");
         });
     </script>
+
+    <!--script>
+        // ในไฟล์ manage_leave_calendar_data.php
+        function Load_Data_Detail(doc_date, table_name) {
+            console.log("Load_Data_Detail:", doc_date, table_name);
+
+            $('#TableRecordList').DataTable({
+                processing: true,
+                serverSide: true,
+                serverMethod: 'post',
+                ajax: {
+                    url: 'model/manage_leave_calendar_process.php',
+                    data: {
+                        action: "GET_LEAVE_DETAIL",
+                        sub_action: "GET_MASTER",
+                        doc_date: doc_date,
+                        table_name: table_name
+                    },
+                },
+                // *** ส่วนที่ต้องแก้ไข/ปรับปรุง: ปรับให้ตรงกับ <th> 9 คอลัมน์ ***
+                columns: [
+                    { "data": "doc_year" }, // ปี
+                    { "data": "doc_id" }, // เลขที่เอกสาร
+                    { "data": "doc_date" }, // วันที่เอกสาร
+                    { "data": "full_name" }, // ชื่อ-นามสกุล (PHP สร้าง Full Name พร้อมสีแล้ว)
+                    { "data": "department_desc" }, // หน่วยงาน
+                    { "data": "leave_type_detail" }, // ประเภทการลา (PHP สร้าง Leave Type พร้อมสีแล้ว)
+                    { "data": "dt_leave_start" }, // วันที่ลาเริ่มต้น (รวมวันที่และเวลา)
+                    { "data": "dt_leave_to" }, // วันที่ลาสิ้นสุด (รวมวันที่และเวลา)
+                    { "data": "status" }, // สถานะ (PHP สร้าง Status พร้อมสีแล้ว)
+                    { "data": "image" }, // รูปภาพ (ปุ่ม Image สำหรับ Modal ดูสลิป)
+                    { "data": "update" } // Action (ใช้ปุ่ม Update เป็นคอลัมน์สุดท้าย)
+                ]
+            });
+        }
+    </script-->
 
     <script>
         // ในไฟล์ manage_leave_calendar_data.php
@@ -344,16 +395,15 @@ if (strlen($_SESSION['alogin']) == "") {
                 },
                 // *** ส่วนที่ต้องแก้ไข/ปรับปรุง: ปรับให้ตรงกับ <th> 9 คอลัมน์ ***
                 columns: [
-                    { "data": "doc_year" }, // ปี
-                    { "data": "doc_date" }, // วันที่เอกสาร
-                    { "data": "full_name" }, // ชื่อ-นามสกุล (PHP สร้าง Full Name พร้อมสีแล้ว)
-                    { "data": "department_desc" }, // หน่วยงาน
-                    { "data": "leave_type_detail" }, // ประเภทการลา (PHP สร้าง Leave Type พร้อมสีแล้ว)
-                    { "data": "dt_leave_start" }, // วันที่ลาเริ่มต้น (รวมวันที่และเวลา)
-                    { "data": "dt_leave_to" }, // วันที่ลาสิ้นสุด (รวมวันที่และเวลา)
-                    { "data": "status" }, // สถานะ (PHP สร้าง Status พร้อมสีแล้ว)
-                    { "data": "image" }, // รูปภาพ (ปุ่ม Image สำหรับ Modal ดูสลิป)
-                    { "data": "update" } // Action (ใช้ปุ่ม Update เป็นคอลัมน์สุดท้าย)
+                    {"data": "doc_year"}, // ปี
+                    {"data": "doc_id"}, // เลขที่เอกสาร
+                    {"data": "doc_date"}, // วันที่เอกสาร
+                    {"data": "full_name"}, // ชื่อ-นามสกุล (PHP สร้าง Full Name พร้อมสีแล้ว)
+                    {"data": "department_desc"}, // หน่วยงาน
+                    {"data": "leave_type_detail"}, // ประเภทการลา (PHP สร้าง Leave Type พร้อมสีแล้ว)
+                    {"data": "dt_leave_start"}, // วันที่ลาเริ่มต้น (รวมวันที่และเวลา)
+                    {"data": "dt_leave_to"}, // วันที่ลาสิ้นสุด (รวมวันที่และเวลา)
+                    {"data": "status"}
                 ]
             });
         }
