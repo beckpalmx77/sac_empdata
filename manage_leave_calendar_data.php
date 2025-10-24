@@ -212,37 +212,27 @@ if (strlen($_SESSION['alogin']) == "") {
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <!--script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <!-- Select2 -->
-    <script src="vendor/select2/dist/js/select2.min.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script-->
 
-
-    <!-- Bootstrap Touchspin -->
-    <script src="vendor/bootstrap-touchspin/js/jquery.bootstrap-touchspin.js"></script>
-    <!-- ClockPicker -->
-
-    <!-- RuangAdmin Javascript -->
     <script src="js/myadmin.min.js"></script>
-    <script src="js/util.js"></script>
-    <script src="js/Calculate.js"></script>
-    <!-- Javascript for this page -->
 
-    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css"/-->
+    <script src="js/util/calculate_datetime.js"></script>
+
+    <script src="vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
+    <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
+    <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
+
+    <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
     <script src="vendor/datatables/v11/bootbox.min.js"></script>
     <script src="vendor/datatables/v11/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="vendor/datatables/v11/jquery.dataTables.min.css"/>
     <link rel="stylesheet" href="vendor/datatables/v11/buttons.dataTables.min.css"/>
 
-    <script src="vendor/date-picker-1.9/js/bootstrap-datepicker.js"></script>
-    <script src="vendor/date-picker-1.9/locales/bootstrap-datepicker.th.min.js"></script>
-    <!--link href="vendor/date-picker-1.9/css/date_picker_style.css" rel="stylesheet"/-->
-    <link href="vendor/date-picker-1.9/css/bootstrap-datepicker.css" rel="stylesheet"/>
+    <script src="js/popup.js"></script>
 
     <style>
 
