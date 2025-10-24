@@ -51,6 +51,7 @@ if (strlen($_SESSION['alogin']) == "") {
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <?php
