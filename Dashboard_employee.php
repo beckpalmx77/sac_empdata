@@ -267,6 +267,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         console.log("✅ Event Loaded:", data);
                     }
                 },
+                editable: true,
+                selectable: true,
 
                 eventClick: function (info) {
                     info.jsEvent.preventDefault();  // ✅ ปิด default
