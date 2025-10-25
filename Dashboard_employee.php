@@ -122,6 +122,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         </div>
                     </div>
 
+                    <?php include('includes/Footer.php'); ?>
+
                 </div>
             </div>
         </div>
@@ -130,7 +132,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <?php
     include('includes/Modal-Logout.php');
-    include('includes/Footer.php');
     ?>
     <!-- Scroll to top -->
     <a class="scroll-to-top rounded" href="#page-top">
