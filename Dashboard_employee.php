@@ -53,7 +53,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                เอกสารใบลากิจ ลาสูงสุดได้ 3 วัน/ปี
+                                                สารลากิจ ลาสูงสุดได้ 3 วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-success" id="Text2"></p>
@@ -73,7 +73,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                เอกสารการลาพักผ่อน ลาสูงสุดได้ 6 วัน/ปี (อายุงานครบ 1 ปี)
+                                                การลาพักผ่อน ลาสูงสุดได้ 6 วัน/ปี (อายุงานครบ 1 ปี)
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-info" id="Text3"></p>
@@ -93,7 +93,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                เอกสารการลาป่วย ลาสูงสุดได้ 30 วัน/ปี
+                                                การลาป่วย ลาสูงสุดได้ 30 วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-warning" id="Text4"></p>
