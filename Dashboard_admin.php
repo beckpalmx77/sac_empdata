@@ -78,7 +78,7 @@ if (strlen($_SESSION['alogin']) == "") {
     <style>
         /* ทำให้ Calendar ขยายเต็มพื้นที่ Card อย่างสวยงาม */
         .card-body {
-            padding: 0 !important;  /* ลบ padding จาก card-body เพื่อให้ calendar ชิดขอบพอดี */
+            padding: 5px !important;  /* ลบ padding จาก card-body เพื่อให้ calendar ชิดขอบพอดี */
             overflow: hidden;        /* กันไม่ให้มี scrollbar/hide overflow */
         }
 
