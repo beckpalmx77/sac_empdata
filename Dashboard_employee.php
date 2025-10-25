@@ -110,14 +110,13 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card mb-12">
+                            <div class="card mb-3">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 </div>
                                 <div class="card-body">
-                                    <section class="container-sm">
-                                        <div class="col-sm-12">
-                                            <div id='calendar'></div>
-                                        </div>
+                                    <div class="container-fluid">
+                                        <div id="calendar"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -153,6 +152,16 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src='js/clock_time.js'></script>
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.19/index.global.js'></script>
+
+    <style>
+        #calendar {
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .card-body {
+            overflow-x: auto; /* ให้スクロールถ้าล้น */
+        }
+    </style>
 
     <script>
 
