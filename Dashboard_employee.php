@@ -153,12 +153,17 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.19/index.global.js'></script>
 
     <style>
-        #calendar {
-            max-width: 100%;
-            overflow: hidden;
-        }
+        /* ทำให้ Calendar ขยายเต็มพื้นที่ Card อย่างสวยงาม */
         .card-body {
-            overflow-x: auto; /* ให้スクロールถ้าล้น */
+            padding: 5px !important;  /* ลบ padding จาก card-body เพื่อให้ calendar ชิดขอบพอดี */
+            overflow: hidden;        /* กันไม่ให้มี scrollbar/hide overflow */
+        }
+
+        #calendar {
+            width: 100% !important;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 15px;           /* เว้นระยะภายใน ให้ดูไม่ชิดจนเกินไป */
         }
     </style>
 
