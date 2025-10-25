@@ -33,12 +33,11 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card mb-3">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">ปฏิทินงาน</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="container-fluid">
-                                        <div id="calendar"></div>
-                                    </div>
+                                    <div id="calendar"></div>
                                 </div>
                             </div>
                         </div>
@@ -77,12 +76,15 @@ if (strlen($_SESSION['alogin']) == "") {
     <script src="js/popup.js"></script>
 
     <style>
-        #calendar {
-            max-width: 100%;
-            overflow: hidden;
-        }
         .card-body {
-            overflow-x: auto; /* ให้スクロールถ้าล้น */
+            overflow: hidden;          /* กันล้นออกนอก card */
+            padding: 15px;             /* กันขอบชน */
+        }
+
+        #calendar {
+            width: 100%;               /* ให้กินเต็มพื้นที่ card */
+            max-width: 100%;           /* ไม่ให้กว้างเกิน card */
+            box-sizing: border-box;    /* รวม padding เข้าไปในความกว้าง */
         }
     </style>
 
