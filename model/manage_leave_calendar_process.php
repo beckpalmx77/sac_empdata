@@ -27,12 +27,12 @@ if ($_POST["action"] === 'GET_LEAVE_DETAIL') {
     list($year, $month, $day) = explode('-', $doc_date_format);
     $doc_date = $day . "-" . $month . "-" . $year;  // 24-10-2025
 
-/*
-    $txt = $doc_date ;
-    $my_file = fopen("a_doc_leave_select.txt", "w") or die("Unable to open file!");
-    fwrite($my_file, $searchValue . " | " .  $txt);
-    fclose($my_file);
-*/
+    /*
+        $txt = $doc_date ;
+        $my_file = fopen("a_doc_leave_select.txt", "w") or die("Unable to open file!");
+        fwrite($my_file, $searchValue . " | " .  $txt);
+        fclose($my_file);
+    */
 
 ## Search
     /*
@@ -67,7 +67,7 @@ if ($_POST["action"] === 'GET_LEAVE_DETAIL') {
     }
 
 ## Total number of records without filtering
-    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_leave_holiday_calendar WHERE doc_date = '" . $doc_date .  "'");
+    $stmt = $conn->prepare("SELECT COUNT(*) AS allcount FROM v_leave_holiday_calendar WHERE doc_date = '" . $doc_date . "'");
     $stmt->execute();
     $records = $stmt->fetch();
     $totalRecords = $records['allcount'];
@@ -83,14 +83,14 @@ if ($_POST["action"] === 'GET_LEAVE_DETAIL') {
             FROM v_leave_holiday_calendar 
             LEFT JOIN mstatus ms on ms.status_doctype = 'LEAVE' AND ms.status_doc_id = v_leave_holiday_calendar.status               
             WHERE v_leave_holiday_calendar.doc_date = '" . $doc_date . "' "
-            . $searchQuery . " ORDER BY sort_order " . " LIMIT :limit,:offset";
+        . $searchQuery . " ORDER BY sort_order " . " LIMIT :limit,:offset";
 
-/*
-                $txt = $sql_get_leave ;
-                $my_file = fopen("a_leave_select.txt", "w") or die("Unable to open file!");
-                fwrite($my_file, $searchValue. " | " .  $txt);
-                fclose($my_file);
-*/
+    /*
+                    $txt = $sql_get_leave ;
+                    $my_file = fopen("a_leave_select.txt", "w") or die("Unable to open file!");
+                    fwrite($my_file, $searchValue. " | " .  $txt);
+                    fclose($my_file);
+    */
 
     $stmt = $conn->prepare($sql_get_leave);
 
