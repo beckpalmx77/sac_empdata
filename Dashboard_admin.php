@@ -33,9 +33,9 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card mb-3">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">ปฏิทินงาน</h6>
-                                </div>
+                                <!--div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                </div-->
                                 <div class="card-body">
                                     <div id="calendar"></div>
                                 </div>
