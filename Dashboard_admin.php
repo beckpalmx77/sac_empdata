@@ -76,15 +76,17 @@ if (strlen($_SESSION['alogin']) == "") {
     <script src="js/popup.js"></script>
 
     <style>
+        /* ทำให้ Calendar ขยายเต็มพื้นที่ Card อย่างสวยงาม */
         .card-body {
-            overflow: hidden;          /* กันล้นออกนอก card */
-            padding: 15px;             /* กันขอบชน */
+            padding: 0 !important;  /* ลบ padding จาก card-body เพื่อให้ calendar ชิดขอบพอดี */
+            overflow: hidden;        /* กันไม่ให้มี scrollbar/hide overflow */
         }
 
         #calendar {
-            width: 100%;               /* ให้กินเต็มพื้นที่ card */
-            max-width: 100%;           /* ไม่ให้กว้างเกิน card */
-            box-sizing: border-box;    /* รวม padding เข้าไปในความกว้าง */
+            width: 100% !important;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 15px;           /* เว้นระยะภายใน ให้ดูไม่ชิดจนเกินไป */
         }
     </style>
 
