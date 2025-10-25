@@ -20,7 +20,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 ?>
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-12">
-                        <h4 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน
+                        <h4 class="h6 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน
                         <?php echo "ปี " . date("Y");?></h4>
                     </div>
                     <br>
@@ -35,7 +35,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
                                                 การใช้วันหยุดประจำปี/นักขัตฤกษ์
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
                                             </div>
                                         </div>
@@ -55,7 +55,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
                                                 เอกสารใบลากิจ ลาสูงสุดได้ 3 วัน/ปี
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-success" id="Text2"></p>
                                             </div>
                                         </div>
@@ -75,7 +75,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
                                                 เอกสารการลาพักผ่อน ลาสูงสุดได้ 6 วัน/ปี (อายุงานครบ 1 ปี)
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-info" id="Text3"></p>
                                             </div>
                                         </div>
@@ -95,7 +95,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
                                                 เอกสารการลาป่วย ลาสูงสุดได้ 30 วัน/ปี
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-warning" id="Text4"></p>
                                             </div>
                                         </div>
@@ -107,6 +107,22 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-12">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                </div>
+                                <div class="card-body">
+                                    <section class="container-sm">
+                                        <div class="col-sm-12">
+                                            <div id='calendar'></div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
@@ -135,6 +151,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     <script src='vendor/calendar/locales/th.js'></script>
 
     <script src='js/clock_time.js'></script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.19/index.global.js'></script>
 
     <script>
 
@@ -214,6 +232,61 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 }
             });
         }
+    </script>
+
+    <!-- ✅ FullCalendar Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendarEl = document.getElementById('calendar');
+
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'th',
+                timeZone: 'local',
+                initialView: 'dayGridMonth',
+                height: 550,
+
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth'
+                },
+                buttonText: {
+                today: 'วันนี้', // เปลี่ยน "today" เป็น "วันนี้"
+                    month: 'เดือน',  // เปลี่ยน "month" เป็น "เดือน" (หรือ "เดือน")
+                    week: 'สัปดาห์', // เผื่อต้องการใช้ปุ่ม week ในอนาคต
+                    day: 'วัน',      // เผื่อต้องการใช้ปุ่ม day ในอนาคต
+            },
+
+                events: {
+                    url: 'model/calendar_leave_load.php',
+                    method: 'GET',
+                    failure: function () {
+                        console.error("❌ ไม่สามารถโหลดข้อมูลจาก calendar_leave_load.php");
+                    },
+                    success: function (data) {
+                        console.log("✅ Event Loaded:", data);
+                    }
+                },
+
+                eventClick: function (info) {
+                    info.jsEvent.preventDefault();  // ✅ ปิด default
+
+                    let main_menu = document.getElementById("main_menu")?.value || "";
+                    let sub_menu = document.getElementById("sub_menu")?.value || "";
+                    let doc_date = info.event.id || info.event.startStr;
+
+                    let url = "manage_leave_calendar_data.php?title=รายการข้อมูลการลางาน"
+                        + "&main_menu=" + encodeURIComponent(main_menu)
+                        + "&sub_menu=" + encodeURIComponent(sub_menu)
+                        + "&doc_date=" + encodeURIComponent(doc_date);
+
+                    console.log("🔗 ไปที่ URL:", url);
+                    window.open(url, "_blank");  // ✅ ป้องกัน popup block
+                }
+            });
+
+            calendar.render();
+        });
     </script>
 
     </body>
