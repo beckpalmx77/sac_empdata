@@ -122,7 +122,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         </div>
                     </div>
 
-
                 </div>
             </div>
         </div>
