@@ -48,7 +48,7 @@ foreach ($result as $row) {
     $date = date("Y-m-d", strtotime($row["doc_date"]));
     $data[] = array(
         'id' => $date,
-        'title' => "จำนวนเอกสาร " . $row["total_cnt_record"] . " รายการ Click " . $clickIcon ,
+        'title' => "จำนวนเอกสาร " . $row["total_cnt_record"] . " รายการ " . $clickIcon . " Click",
         'start' => $date,
         'end' => $date,
         'count' => $row["total_cnt_record"]
