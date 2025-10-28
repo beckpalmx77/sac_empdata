@@ -3,7 +3,7 @@ session_start();
 error_reporting(0);
 
 include('../config/connect_db.php');
-
+$clickIcon = "👆";
 $data = array();
 
 // ✅ เงื่อนไขค้นหาตามสิทธิ์
@@ -48,7 +48,7 @@ foreach ($result as $row) {
     $date = date("Y-m-d", strtotime($row["doc_date"]));
     $data[] = array(
         'id' => $date,
-        'title' => "จำนวนเอกสาร " . $row["total_cnt_record"] . " รายการ",
+        'title' => "จำนวนเอกสาร " . $row["total_cnt_record"] . " รายการ Click " . $clickIcon ,
         'start' => $date,
         'end' => $date,
         'count' => $row["total_cnt_record"]
