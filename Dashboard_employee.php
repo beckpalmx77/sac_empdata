@@ -33,7 +33,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ 5 วัน
+                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ 5 วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
