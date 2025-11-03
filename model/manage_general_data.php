@@ -84,4 +84,3 @@ if ($_POST["action"] === 'GET_SUM_RESULT_COND') {
 */
     echo $sum_result;
 }
-?>

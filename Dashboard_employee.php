@@ -1,8 +1,28 @@
 <?php
 include('includes/Header.php');
+include('config/connect_db.php');
 if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) == "") {
     header("Location: index.php");
 } else {
+
+    if ($_SESSION['dept_id_approve'] === 'CP') {
+        $sql_get = "SELECT day_max_ext as day_max FROM mleave_type WHERE leave_type_id = 'H2' ";
+    } else {
+        $sql_get = "SELECT day_max as day_max FROM mleave_type WHERE leave_type_id = 'H2' ";
+    }
+
+    {
+        $statement = $conn->query($sql_get);
+        $result = $statement->fetch(PDO::FETCH_ASSOC); // Use fetch() for a single row
+
+        // Check if a result was found
+        if ($result) {
+            $day_max_value = $result['day_max']; // Correctly access the 'day_max' alias
+        } else {
+            $day_max_value = 0; // Default or error value if no record found
+        }
+    }
+
     ?>
 
     <!DOCTYPE html>
@@ -33,7 +53,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ 
+                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ <?php echo $day_max_value; ?> วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
@@ -53,7 +73,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                ลากิจ ลาสูงสุดได้ 3 วัน/ปี
+                                                ลากิจ ลาสูงสุดได้ 3 วัน/ปี <?php $day_max2 ?>
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-success" id="Text2"></p>
