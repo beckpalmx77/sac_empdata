@@ -5,7 +5,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
     header("Location: index.php");
 } else {
     $day_max_value = 0;
-    $dept_chk = substr($_SESSION['dept_id_approve'],0,2);
+    $dept_chk = substr($_SESSION['dept_id_approve'], 0, 2);
     if ($dept_chk === 'CP') {
         $sql_get = "SELECT day_max_ext as day_max FROM mleave_type WHERE leave_type_id = 'H2' ";
     } else {
@@ -64,8 +64,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                 ?>
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-12">
-                        <h5 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน 
-                        <?php echo "ปี " . date("Y");?></h5>
+                        <h5 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน
+                            <?php echo "ปี " . date("Y"); ?></h5>
                     </div>
                     <br>
                     <div class="row mb-3">
@@ -77,7 +77,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ <?php echo $day_max_value ?? 0; ?> วัน/ปี
+                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์
+                                                ใช้ได้ <?php echo $day_max_value ?? 0; ?> วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
@@ -117,7 +118,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                ลาพักผ่อน ลาสูงสุดได้ <?php echo $leave_limits['L3'] ?? 0; ?> วัน/ปี (อายุงานครบ 1 ปี)
+                                                ลาพักผ่อน ลาสูงสุดได้ <?php echo $leave_limits['L3'] ?? 0; ?> วัน/ปี
+                                                (อายุงานครบ 1 ปี)
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-info" id="Text3"></p>
@@ -200,15 +202,15 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
     <style>
         /* ทำให้ Calendar ขยายเต็มพื้นที่ Card อย่างสวยงาม */
         .card-body {
-            padding: 5px !important;  /* ลบ padding จาก card-body เพื่อให้ calendar ชิดขอบพอดี */
-            overflow: hidden;        /* กันไม่ให้มี scrollbar/hide overflow */
+            padding: 5px !important; /* ลบ padding จาก card-body เพื่อให้ calendar ชิดขอบพอดี */
+            overflow: hidden; /* กันไม่ให้มี scrollbar/hide overflow */
         }
 
         #calendar {
             width: 100% !important;
             max-width: 100%;
             box-sizing: border-box;
-            padding: 15px;           /* เว้นระยะภายใน ให้ดูไม่ชิดจนเกินไป */
+            padding: 15px; /* เว้นระยะภายใน ให้ดูไม่ชิดจนเกินไป */
         }
     </style>
 
@@ -309,11 +311,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                     right: 'dayGridMonth'
                 },
                 buttonText: {
-                today: 'วันนี้', // เปลี่ยน "today" เป็น "วันนี้"
+                    today: 'วันนี้', // เปลี่ยน "today" เป็น "วันนี้"
                     month: 'เดือน',  // เปลี่ยน "month" เป็น "เดือน" (หรือ "เดือน")
                     week: 'สัปดาห์', // เผื่อต้องการใช้ปุ่ม week ในอนาคต
                     day: 'วัน',      // เผื่อต้องการใช้ปุ่ม day ในอนาคต
-            },
+                },
 
                 events: {
                     url: 'model/calendar_leave_load.php',
