@@ -4,7 +4,7 @@ include('config/connect_db.php');
 if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) == "") {
     header("Location: index.php");
 } else {
-
+    $day_max_value = 0;
     if ($_SESSION['dept_id_approve'] === 'CP') {
         $sql_get = "SELECT day_max_ext as day_max FROM mleave_type WHERE leave_type_id = 'H2' ";
     } else {
@@ -53,7 +53,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ <?php echo $day_max_value; ?> วัน/ปี
+                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ <?php echo $day_max_value; ?> วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
@@ -73,7 +73,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                ลากิจ ลาสูงสุดได้ 3 วัน/ปี <?php $day_max2 ?>
+                                                ลากิจ ลาสูงสุดได้ 3 วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-success" id="Text2"></p>
