@@ -49,7 +49,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                             <div class="card h-100">
                                 <div class="card-body">
                                     <input type="hidden" id="emp_id" name="emp_id"
-                                           value="<?php echo $_SESSION['emp_id'] . " " . $_SESSION['dept_id_approve'] ; ?>">
+                                           value="<?php echo $_SESSION['emp_id']; ?>">
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
