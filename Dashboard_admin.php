@@ -110,9 +110,9 @@ if (strlen($_SESSION['alogin']) == "") {
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 timeZone: 'local',
                 headerToolbar: {
-                    right: 'prev,next today',
+                    left: 'prev,next today',
                     center: 'title',
-                    left: 'dayGridMonth'
+                    right: 'dayGridMonth'
                 },
                 buttonText: {
                     today: 'วันนี้', // เปลี่ยน "today" เป็น "วันนี้"
