@@ -74,6 +74,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>จำนวนวัน</th>
+                                                    <th>จำนวน ช.ม.</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
@@ -642,6 +643,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
                     {data: 'leave_day'},
+                    {data: 'leave_hour'},
                     {data: 'status'},
                     {data: 'image'},
                     {data: 'update'},

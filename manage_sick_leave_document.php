@@ -70,6 +70,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>จำนวนวัน</th>
+                                                    <th>จำนวน ช.ม.</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
@@ -85,6 +86,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>วันที่ลาเริ่มต้น</th>
                                                     <th>วันที่ลาสิ้นสุด</th>
                                                     <th>จำนวนวัน</th>
+                                                    <th>จำนวน ช.ม.</th>
                                                     <th>สถานะ</th>
                                                     <th>รูปภาพ</th>
                                                     <th>Action</th>
@@ -644,6 +646,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'dt_leave_start'},
                     {data: 'dt_leave_to'},
                     {data: 'leave_day'},
+                    {data: 'leave_hour'},
                     {data: 'status'},
                     {data: 'image'},
                     {data: 'update'},
@@ -669,64 +672,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
 
     </script>
-
-    <!--script>
-        $(document).ready(function () {
-
-            $("#recordModal").on('submit', '#recordForm', function (event) {
-                event.preventDefault();
-                //$('#save').attr('disabled', 'disabled');
-
-                if (chkTime($('#time_leave_start').val()) && chkTime($('#time_leave_to').val())) {
-
-                    if ($('#date_leave_start').val() !== '' && $('#date_leave_to').val() !== '' && ($('#leave_day').val() !== '' || $('#leave_day').val() !== '0')) {
-
-                        let date_leave_1 = $('#doc_date').val().substr(3, 2) + "/" + $('#doc_date').val().substr(0, 2) + "/" + $('#doc_date').val().substr(6, 10);
-                        let date_leave_2 = $('#date_leave_start').val().substr(3, 2) + "/" + $('#date_leave_start').val().substr(0, 2) + "/" + $('#date_leave_start').val().substr(6, 10);
-
-                        let check_day = CalDay(date_leave_1, date_leave_2); // Check Date
-                        let l_before = $('#leave_before').val();
-
-
-                        $('#filename').val($('#ImgFile').val());
-
-                        let formData = $(this).serialize();
-
-                        // alert(formData);
-
-                        $.ajax({
-                            url: 'model/manage_sick_leave_document_process.php',
-                            method: "POST",
-                            data: formData,
-                            success: function (data) {
-
-                                if (data.includes("Over")) {
-                                    alertify.error(data);
-                                } else {
-                                    alertify.success(data);
-                                }
-
-                                $('#recordForm')[0].reset();
-                                $('#recordModal').modal('hide');
-                                $('#save').attr('disabled', false);
-                                ReloadDataTable();
-                                //dataRecords.ajax.reload();
-
-                            }
-                        })
-
-                    } else {
-                        alertify.error("กรุณาป้อนวันที่ต้องการลา !!!");
-                    }
-                } else {
-                    alertify.error("กรุณาป้อนวันที่ - เวลา ให้ถูกต้อง !!!");
-                }
-
-            });
-
-        });
-
-    </script-->
 
     <script>
         $(document).ready(function () {
@@ -799,6 +744,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#date_leave_start').val("");
                 $('#date_leave_to').val("");
                 $('#leave_day').val("1");
+                $('#leave_hour').val("0");
                 $('#remark').val("");
                 $('#status').val("N");
                 $('.modal-title').html("<i class='fa fa-plus'></i> ADD Record");
@@ -836,6 +782,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let time_leave_to = response[i].time_leave_to;
                         let leave_before = response[i].leave_before;
                         let leave_day = response[i].leave_day;
+                        let leave_hour = response[i].leave_hour;
                         let remark = response[i].remark;
                         let status = response[i].status;
 
@@ -855,6 +802,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#time_leave_to').val(time_leave_to);
                         $('#leave_before').val(leave_before);
                         $('#leave_day').val(leave_day);
+                        $('#leave_hour').val(leave_hour);
                         $('#remark').val(remark);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
@@ -897,6 +845,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let time_leave_to = response[i].time_leave_to;
                         let leave_before = response[i].leave_before;
                         let leave_day = response[i].leave_day;
+                        let leave_hour = response[i].leave_hour;
                         let picture = response[i].picture;
                         let remark = response[i].remark;
                         let status = response[i].status;
@@ -917,6 +866,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             + '&time_leave_to=' + time_leave_to
                             + '&leave_before=' + leave_before
                             + '&leave_day=' + leave_day
+                            + '&leave_hour=' + leave_hour
                             + '&picture=' + picture
                             + '&remark=' + remark
                             + '&status=' + status

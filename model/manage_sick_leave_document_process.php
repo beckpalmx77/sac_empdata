@@ -509,6 +509,7 @@ if ($_POST["action"] === 'GET_LEAVE_DOCUMENT') {
                 "department_id" => $row['department_id'],
                 "remark" => $row['remark'],
                 "leave_day" => $row['leave_day'],
+                "leave_hour" => $row['leave_hour'],
                 "full_name" => '<span style="color: ' . $color_full_name . ';">' . $row['f_name'] . ' ' . $row['l_name'] . '</span>',
                 //"full_name" => $row['f_name'] . " " . $row['l_name'],
                 "image" => "<button type='button' name='image' id='" . $row['id'] . "' Class='btn btn-secondary btn-xs image' data-picture='" . $row['picture'] . "' data-toggle='tooltip' title='image'>Image</button>",
