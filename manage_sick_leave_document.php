@@ -283,10 +283,17 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <div class="form-group row d-flex align-items-center">
                                                                     <div class="col-sm-3">
                                                                         <label for="leave_day" class="control-label">จำนวนวันที่ลา</label>
-                                                                        <input type="text" class="form-control" id="leave_day" name="leave_day" value="" required="required" placeholder=""
+                                                                        <input type="text" class="form-control" id="leave_day" name="leave_day" value="0" required="required" placeholder=""
                                                                                oninput="validateInput(this)">
                                                                     </div>
-
+                                                                    <div class="col-sm-3">
+                                                                        <label for="leave_hour" class="control-label">จำนวนชั่วโมงที่ลา</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="leave_hour" name="leave_hour"
+                                                                               value="0"
+                                                                               required="required" placeholder=""
+                                                                               oninput="validateInput(this)">
+                                                                    </div>
                                                                     <div class="col-sm-9">
                                                                         <label for="remark" class="control-label">หมายเหตุ</label>
                                                                         <textarea class="form-control" id="remark" name="remark" rows="1"></textarea>
