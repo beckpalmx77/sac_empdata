@@ -1,6 +1,6 @@
 <?php
 include('includes/Header.php');
-if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "") {
+if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) == "") {
     header("Location: index.php");
 } else {
     ?>
@@ -29,11 +29,11 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                             <div class="card h-100">
                                 <div class="card-body">
                                     <input type="hidden" id="emp_id" name="emp_id"
-                                           value="<?php echo $_SESSION['emp_id']; ?>">
+                                           value="<?php echo $_SESSION['emp_id'] . " " . $_SESSION['dept_id_approve'] ; ?>">
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ 5 วัน/ปี
+                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ 
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
