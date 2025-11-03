@@ -23,6 +23,29 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
         }
     }
 
+    $max_days_map = ['L1', 'L3', 'L2']; // The leave types to query
+    $leave_limits = []; // Initialize an array to store results
+
+    foreach ($max_days_map as $leave_type) {
+        // Note: If 'CP' department needed extended limits, you'd add that logic here again.
+        // Assuming 'mleave_type.day_max' is the standard max:
+        $sql_get = "SELECT day_max as day_max_leave FROM mleave_type WHERE leave_type_id = :leave_type";
+
+        // Using prepared statement for better security
+        $statement = $conn->prepare($sql_get);
+        $statement->bindParam(':leave_type', $leave_type);
+        $statement->execute();
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            // Store the result using the leave type ID as the key
+            $leave_limits[$leave_type] = $result['day_max_leave'];
+        } else {
+            $leave_limits[$leave_type] = 0;
+        }
+    }
+
     ?>
 
     <!DOCTYPE html>
@@ -53,7 +76,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ <?php echo $day_max_value; ?> วัน/ปี
+                                                การใช้วันหยุดประจำปี/นักขัตฤกษ์ ใช้ได้ <?php echo $day_max_value ?? 0; ?> วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-primary" id="Text8"></p>
@@ -73,7 +96,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                ลากิจ ลาสูงสุดได้ 3 วัน/ปี
+                                                ลากิจ ลาสูงสุดได้ <?php echo $leave_limits['L1'] ?? 0; ?> วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-success" id="Text2"></p>
@@ -93,7 +116,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                ลาพักผ่อน ลาสูงสุดได้ 6 วัน/ปี (อายุงานครบ 1 ปี)
+                                                ลาพักผ่อน ลาสูงสุดได้ <?php echo $leave_limits['L3'] ?? 0; ?> วัน/ปี (อายุงานครบ 1 ปี)
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-info" id="Text3"></p>
@@ -113,7 +136,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; margin-bottom: 1rem;">
-                                                ลาป่วย ลาสูงสุดได้ 30 วัน/ปี
+                                                ลาป่วย ลาสูงสุดได้ <?php echo $leave_limits['L2'] ?? 0; ?> วัน/ปี
                                             </div>
                                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                                 <p class="text-warning" id="Text4"></p>
