@@ -5,7 +5,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
     header("Location: index.php");
 } else {
     $day_max_value = 0;
-    if ($_SESSION['dept_id_approve'] === 'CP') {
+    $dept_chk = substr($_SESSION['dept_id_approve'],0,2);
+    if ($dept_chk === 'CP') {
         $sql_get = "SELECT day_max_ext as day_max FROM mleave_type WHERE leave_type_id = 'H2' ";
     } else {
         $sql_get = "SELECT day_max as day_max FROM mleave_type WHERE leave_type_id = 'H2' ";
@@ -63,7 +64,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['dept_id_approve']) ==
                 ?>
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-12">
-                        <h5 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน
+                        <h5 class="h5 mb-0 text-gray-800">แสดงข้อมูลการใช้วันหยุด / การลา พนักงาน 
                         <?php echo "ปี " . date("Y");?></h5>
                     </div>
                     <br>
