@@ -84,3 +84,47 @@ if ($_POST["action"] === 'GET_SUM_RESULT_COND') {
     */
     echo $sum_result;
 }
+
+// 🎯 NEW ACTION: คำนวณวันลาและชั่วโมงลารวม (8 ชั่วโมง = 1 วัน)
+if ($_POST["action"] === 'GET_SUM_LEAVE_COND') {
+    $cond = trim($_POST["cond"]);
+    $return_arr = array();
+
+    // Check if condition starts with 'WHERE'
+    if ($cond !== '') {
+        if (stripos($cond, 'where') !== 0) {
+            $cond = ' WHERE ' . $cond;
+        }
+    }
+
+    // SQL query: ดึงผลรวม leave_day และ leave_hour
+    $sql_get = "SELECT COALESCE(SUM(leave_day), 0) as sum_days, COALESCE(SUM(leave_hour), 0) as sum_hours FROM " . $table_name . " " . $cond;
+
+    $statement = $conn->query($sql_get);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $sum_days = 0;
+    $sum_hours = 0;
+
+    foreach ($results as $result) {
+        $sum_days = (float)$result['sum_days'];
+        $sum_hours = (int)$result['sum_hours'];
+    }
+
+    // Logic: 8 ชั่วโมง = 1 วัน
+    $extra_days_from_hours = floor($sum_hours / 8);
+    $remaining_hours = $sum_hours % 8;
+
+    $final_days = $sum_days + $extra_days_from_hours;
+    $final_hours = $remaining_hours;
+
+    // สร้าง array สำหรับส่งกลับเป็น JSON
+    $result_array = [
+        'days' => $final_days,
+        'hours' => $final_hours
+    ];
+
+    echo json_encode($result_array);
+}
+
+?>
