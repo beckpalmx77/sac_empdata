@@ -532,28 +532,6 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         });
     </script>
 
-    <!--script>
-
-        $("#recordModal").on('submit', '#recordForm', function (event) {
-            event.preventDefault();
-            $('#save').attr('disabled', 'disabled');
-            let formData = $(this).serialize();
-            $.ajax({
-                url: 'model/manage_workflow_document_process.php',
-                method: "POST",
-                data: formData,
-                success: function (data) {
-                    alertify.success(data);
-                    $('#recordForm')[0].reset();
-                    $('#recordModal').modal('hide');
-                    $('#save').attr('disabled', false);
-                    dataRecords.ajax.reload();
-                }
-            })
-        });
-
-    </script-->
-
     <script>
         $("#recordModal").on('submit', '#recordForm', function (event) {
             event.preventDefault();
