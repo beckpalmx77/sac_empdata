@@ -142,7 +142,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     info.jsEvent.preventDefault();
 
                     // change the border color
-                    //info.el.style.borderColor = 'red';
+                    info.el.style.borderColor = 'blue';
 
                     let main_menu = document.getElementById("main_menu").value;
                     let sub_menu = document.getElementById("sub_menu").value;
