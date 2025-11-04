@@ -312,7 +312,7 @@ include('includes/Modal-Logout.php');
                 url: 'model/calendar_leave_load.php',
                 method: 'GET',
                 failure: function () {
-                    console.error("❌ ไม่สามารถโหลดข้อมูลจาก calendar_leave_load.php");
+                    console.error("❌ ไม่สามารถโหลดข้อมูลจาก calendar_leave_load");
                 },
                 success: function (data) {
                     console.log("✅ Event Loaded:", data);
