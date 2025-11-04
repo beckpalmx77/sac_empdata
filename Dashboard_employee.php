@@ -324,6 +324,9 @@ include('includes/Modal-Logout.php');
             eventClick: function (info) {
                 info.jsEvent.preventDefault();  // ✅ ปิด default
 
+                // change the border color
+                info.el.style.borderColor = 'blue';
+
                 let main_menu = document.getElementById("main_menu")?.value || "";
                 let sub_menu = document.getElementById("sub_menu")?.value || "";
                 let doc_date = info.event.id || info.event.startStr;
