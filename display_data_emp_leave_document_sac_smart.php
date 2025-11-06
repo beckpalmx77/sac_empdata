@@ -165,6 +165,9 @@ if (strlen($_SESSION['alogin']) == "") {
                                         </div>
                                     </section>
                                 </div>
+                                <?php
+                                include('includes/Footer.php');
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -172,7 +175,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
                 <?php
                 include('includes/Modal-Logout.php');
-                include('includes/Footer.php');
                 ?>
 
             </div>
