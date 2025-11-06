@@ -23,7 +23,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h4 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page']?>">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
+                            </li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
@@ -79,7 +80,8 @@ if (strlen($_SESSION['alogin']) == "") {
                                                             <div class="modal-body">
 
                                                                 <div class="form-group">
-                                                                    <label for="user_id" class="control-label">line user id</label>
+                                                                    <label for="user_id" class="control-label">line user
+                                                                        id</label>
                                                                     <input type="user_id" class="form-control"
                                                                            id="user_id" name="user_id"
                                                                            readonly="true"
@@ -172,7 +174,9 @@ if (strlen($_SESSION['alogin']) == "") {
                             </div>
                         </div>
                     </div>
-
+                    <?php
+                    include('includes/Footer.php');
+                    ?>
                 </div>
             </div>
         </div>
@@ -180,7 +184,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <?php
     include('includes/Modal-Logout.php');
-    include('includes/Footer.php');
     ?>
 
 

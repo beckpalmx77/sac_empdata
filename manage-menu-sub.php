@@ -24,7 +24,8 @@ if (strlen($_SESSION['alogin']) == "") {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h4 mb-0 text-gray-800"><?php echo urldecode($_GET['s']) ?></h1>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page']?>">Home</a></li>
+                            <li class="breadcrumb-item"><a href="<?php echo $_SESSION['dashboard_page'] ?>">Home</a>
+                            </li>
                             <li class="breadcrumb-item"><?php echo urldecode($_GET['m']) ?></li>
                             <li class="breadcrumb-item active"
                                 aria-current="page"><?php echo urldecode($_GET['s']) ?></li>
@@ -151,9 +152,12 @@ if (strlen($_SESSION['alogin']) == "") {
                                                                                placeholder="Link">
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <label for="icon" class="control-label">Icon</label>
-                                                                        <input list="iconList" type="text" class="form-control"
-                                                                               id="icon" name="icon" required="required" placeholder="Icon">
+                                                                        <label for="icon"
+                                                                               class="control-label">Icon</label>
+                                                                        <input list="iconList" type="text"
+                                                                               class="form-control"
+                                                                               id="icon" name="icon" required="required"
+                                                                               placeholder="Icon">
                                                                         <datalist id="iconList">
                                                                             <?php
                                                                             $stmt = $conn->prepare("SELECT DISTINCT icon FROM menu_sub WHERE icon IS NOT NULL AND icon != '' ORDER BY icon ASC");
@@ -254,7 +258,9 @@ if (strlen($_SESSION['alogin']) == "") {
                             </div>
                         </div>
                     </div>
-
+                    <?php
+                    include('includes/Footer.php');
+                    ?>
                 </div>
             </div>
         </div>
@@ -262,7 +268,6 @@ if (strlen($_SESSION['alogin']) == "") {
 
     <?php
     include('includes/Modal-Logout.php');
-    include('includes/Footer.php');
     ?>
 
 
