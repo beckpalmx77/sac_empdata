@@ -96,7 +96,8 @@ include('includes/CheckDevice.php');
                                                                             class="btn btn-danger btn-block"
                                                                             onclick="closeWindow();">Close
                                                                     </button-->
-                                                                    <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+                                                                    <a class="nav-link" href="javascript:void(0);"
+                                                                       data-toggle="modal" data-target="#logoutModal">
                                                                         <i class="fas fa-sign-out-alt"></i>
                                                                         <span>Exit</span></a>
                                                                 </div>
