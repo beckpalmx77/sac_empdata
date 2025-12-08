@@ -92,10 +92,13 @@ include('includes/CheckDevice.php');
                                                         <?php if ($_SESSION['deviceType'] == 'computer') { ?>
                                                             <div class="form-group has-success">
                                                                 <div class="">
-                                                                    <button type="button"
+                                                                    <!--button type="button"
                                                                             class="btn btn-danger btn-block"
                                                                             onclick="closeWindow();">Close
-                                                                    </button>
+                                                                    </button-->
+                                                                    <a class="nav-link" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+                                                                        <i class="fas fa-sign-out-alt"></i>
+                                                                        <span>Exit</span></a>
                                                                 </div>
                                                             </div>
                                                         <?php } else { ?>
