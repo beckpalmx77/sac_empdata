@@ -43,7 +43,7 @@ include('includes/CheckDevice.php');
                                                                 User Name</label>
 
                                                             <div class="">
-                                                                <input type="username" name="username"
+                                                                <input type="text" name="username"
                                                                        class="form-control"
                                                                        required="required" id="username">
                                                             </div>
