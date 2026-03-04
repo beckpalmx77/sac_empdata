@@ -56,6 +56,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>นามสกุล</th>
                                                     <th>Type</th>
                                                     <th>Role</th>
+                                                    <th>Dept Approve</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -69,6 +70,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                     <th>นามสกุล</th>
                                                     <th>Type</th>
                                                     <th>Role</th>
+                                                    <th>Dept Approve</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                     <th>Action</th>
@@ -227,6 +229,17 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                id="document_dept_cond"
                                                                                name="document_dept_cond"
                                                                                placeholder="แผนกที่อนุมัติเอกสารได้">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row">
+                                                                    <div class="col-sm-12">
+                                                                        <label for="dept_id_approve"
+                                                                               class="control-label">แผนกที่อนุมัติเอกสาร</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="dept_id_approve"
+                                                                               name="dept_id_approve"
+                                                                               placeholder="แผนกที่อนุมัติเอกสาร">
                                                                     </div>
                                                                 </div>
 
@@ -441,6 +454,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                     {data: 'last_name'},
                     {data: 'picture'},
                     {data: 'role'},
+                    {data: 'dept_id_approve'},
                     {data: 'status'},
                     {data: 'update'},
                     {data: 'delete'}
@@ -496,6 +510,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let approve_permission = response[i].approve_permission;
                         let document_dept_cond = response[i].document_dept_cond;
                         let role = response[i].role;
+                        let dept_id_approve = response[i].dept_id_approve;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
@@ -512,6 +527,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#approve_permission').val(approve_permission);
                         $('#document_dept_cond').val(document_dept_cond);
                         $('#role').val(role);
+                        $('#dept_id_approve').val(dept_id_approve);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-plus'></i> Edit Record");
                         $('#action').val('UPDATE');
@@ -553,6 +569,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let approve_permission = response[i].approve_permission;
                         let document_dept_cond = response[i].document_dept_cond;
                         let role = response[i].role;
+                        let dept_id_approve = response[i].dept_id_approve;
                         let status = response[i].status;
 
                         $('#recordModal').modal('show');
@@ -569,6 +586,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#approve_permission').val(approve_permission);
                         $('#document_dept_cond').val(document_dept_cond);
                         $('#role').val(role);
+                        $('#dept_id_approve').val(dept_id_approve);
                         $('#status').val(status);
                         $('.modal-title').html("<i class='fa fa-minus'></i> Delete Record");
                         $('#action').val('DELETE');

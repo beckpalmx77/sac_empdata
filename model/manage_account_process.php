@@ -38,6 +38,7 @@ if ($_POST["action"] === 'GET_DATA') {
             "approve_permission" => $result['approve_permission'],
             "document_dept_cond" => $result['document_dept_cond'],
             "role" => $result['role'],
+            "dept_id_approve" => $result['dept_id_approve'],
             "status" => $result['status']);
     }
 
@@ -62,6 +63,7 @@ if ($_POST["action"] === 'ADD') {
         $approve_permission = $_POST["approve_permission"];
 
         $role = $_POST["role"];
+        $dept_id_approve = $_POST["dept_id_approve"];
 
         if ($role === 'HR' || $role === 'SUPERVISOR' || $role === 'ADMIN') {
             $document_dept_cond = "A";
@@ -77,8 +79,8 @@ if ($_POST["action"] === 'ADD') {
         if ($nRows > 0) {
             echo 2;
         } else {
-            $sql = "INSERT INTO ims_user(user_id,email,password,first_name,last_name,account_type,picture,department_id,approve_permission,document_dept_cond,status,role)
-            VALUES (:user_id,:email,:password,:first_name,:last_name,:account_type,:picture,:department_id,:approve_permission,:document_dept_cond,:status,:role)";
+            $sql = "INSERT INTO ims_user(user_id,email,password,first_name,last_name,account_type,picture,department_id,approve_permission,document_dept_cond,status,role,dept_id_approve)
+            VALUES (:user_id,:email,:password,:first_name,:last_name,:account_type,:picture,:department_id,:approve_permission,:document_dept_cond,:status,:role,:dept_id_approve)";
             /*
                         $myfile = fopen("myqeury_1.txt", "w") or die("Unable to open file!");
                         fwrite($myfile, $sql);
@@ -96,8 +98,9 @@ if ($_POST["action"] === 'ADD') {
             $query->bindParam(':department_id', $department_id, PDO::PARAM_STR);
             $query->bindParam(':approve_permission', $approve_permission, PDO::PARAM_STR);
             $query->bindParam(':document_dept_cond', $document_dept_cond, PDO::PARAM_STR);
-            $query->bindParam(':role', $role, PDO::PARAM_STR);
             $query->bindParam(':status', $status, PDO::PARAM_STR);
+            $query->bindParam(':role', $role, PDO::PARAM_STR);
+            $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
             $query->execute();
 
             $lastInsertId = $conn->lastInsertId();
@@ -127,6 +130,7 @@ if ($_POST["action"] === 'UPDATE') {
         $picture = $account_type === 'admin' ? "img/icon/admin-001.png" : "img/icon/user-001.png";
         $approve_permission = $_POST["approve_permission"];
         $role = $_POST["role"];
+        $dept_id_approve = $_POST["dept_id_approve"];
 
         if ($role === 'HR' || $role === 'SUPERVISOR' || $role === 'ADMIN') {
             $document_dept_cond = "A";
@@ -140,6 +144,7 @@ if ($_POST["action"] === 'UPDATE') {
         if ($nRows > 0) {
             $sql_update = "UPDATE ims_user SET first_name=:first_name,last_name=:last_name,status=:status,account_type=:account_type
             ,picture=:picture,department_id=:department_id,email=:email,approve_permission=:approve_permission,document_dept_cond=:document_dept_cond,role=:role
+            ,dept_id_approve=:dept_id_approve         
             WHERE id = :id";
 
             $query = $conn->prepare($sql_update);
@@ -153,6 +158,7 @@ if ($_POST["action"] === 'UPDATE') {
             $query->bindParam(':approve_permission', $approve_permission, PDO::PARAM_STR);
             $query->bindParam(':document_dept_cond', $document_dept_cond, PDO::PARAM_STR);
             $query->bindParam(':role', $role, PDO::PARAM_STR);
+            $query->bindParam(':dept_id_approve', $dept_id_approve, PDO::PARAM_STR);
             $query->bindParam(':id', $id, PDO::PARAM_STR);
             $query->execute();
             echo $save_success;
@@ -313,6 +319,7 @@ if ($_POST["action"] === 'GET_ACCOUNT') {
             "first_name" => $row['first_name'],
             "last_name" => $row['last_name'],
             "role" => $row['role'],
+            "dept_id_approve" => $row['dept_id_approve'],
             "update" => "<button type='button' name='update' id='" . $row['id'] . "' class='btn btn-info btn-xs update' data-toggle='tooltip' title='Update'>Update</button>",
             "delete" => "<button type='button' name='delete' id='" . $row['id'] . "' class='btn btn-danger btn-xs delete' data-toggle='tooltip' title='Delete'>Delete</button>",
             "picture" => "<img src = '" . $row['picture'] . "'  width='32' height='32' title='" . $row['account_type'] . "'>",
