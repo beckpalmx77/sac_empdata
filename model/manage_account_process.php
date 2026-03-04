@@ -280,6 +280,7 @@ if ($_POST["action"] === 'GET_ACCOUNT') {
             'first_name' => "%$searchValue%",
             'last_name' => "%$searchValue%",
             'role' => "%$searchValue%",
+            'dept_id_approve' => "%$searchValue%",
             'status' => "%$searchValue%"
         );
     }
