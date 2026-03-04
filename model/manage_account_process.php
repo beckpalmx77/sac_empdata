@@ -273,6 +273,7 @@ if ($_POST["action"] === 'GET_ACCOUNT') {
         first_name LIKE :first_name OR
         last_name LIKE :last_name OR
         role LIKE :role OR
+        dept_id_approve LIKE :dept_id_approve OR
         status LIKE :status ) ";
         $searchArray = array(
             'user_id' => "%$searchValue%",
