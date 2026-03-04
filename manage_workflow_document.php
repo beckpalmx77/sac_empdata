@@ -496,9 +496,12 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
+
+        let dataRecords;
+
         $(document).ready(function () {
             let formData = {action: "GET_APPROVE_EMP", sub_action: "GET_MASTER", page_manage: "ADMIN",};
-            let dataRecords = $('#TableRecordList').DataTable({
+                dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
@@ -532,9 +535,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 ]
             });
         });
-    </script>
 
-    <script>
         $("#recordModal").on('submit', '#recordForm', function (event) {
             event.preventDefault();
             $('#save').attr('disabled', 'disabled');
