@@ -184,9 +184,13 @@ foreach ($max_days_map as $leave_type) {
 <?php
 include('includes/Modal-Logout.php');
 ?>
-<!-- Scroll to top -->
+
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
+</a>
+
+<a class="scroll-to-bottom" id="scroll-to-bottom" href="javascript:void(0);">
+    <i class="fas fa-angle-down"></i>
 </a>
 
 <script src="vendor/jquery/jquery.min.js"></script>
@@ -217,7 +221,51 @@ include('includes/Modal-Logout.php');
         box-sizing: border-box;
         padding: 15px; /* เว้นระยะภายใน ให้ดูไม่ชิดจนเกินไป */
     }
+
+     .scroll-to-bottom {
+         position: fixed;
+         right: 1rem;
+         bottom: 5rem; /* อยู่เหนือปุ่ม Scroll to Top */
+         display: block; /* ✅ เปลี่ยนจาก none เป็น block เพื่อให้โชว์ทันที */
+         width: 2.75rem;
+         height: 2.75rem;
+         text-align: center;
+         color: #fff;
+         background: rgba(90, 92, 105, 0.5);
+         line-height: 2.05rem;
+         border-radius: 0.35rem;
+         transition: background 0.3s;
+         z-index: 999;
+     }
+
+    .scroll-to-bottom:focus, .scroll-to-bottom:hover {
+        color: white;
+        background: #5a5c69;
+        text-decoration: none;
+    }
+
 </style>
+
+<script>
+    $(document).ready(function() {
+        // ฟังก์ชันเมื่อคลิกปุ่มเลื่อนลงล่างสุด
+        $('#scroll-to-bottom').click(function() {
+            $('html, body').animate({
+                scrollTop: $(document).height()
+            }, 1000, 'easeInOutExpo');
+            return false;
+        });
+
+        // (Option) ซ่อนปุ่มเฉพาะตอนที่เลื่อนถึงล่างสุดแล้วจริงๆ
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
+                $('#scroll-to-bottom').fadeOut();
+            } else {
+                $('#scroll-to-bottom').fadeIn();
+            }
+        });
+    });
+</script>
 
 <script>
 
