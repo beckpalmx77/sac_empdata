@@ -152,7 +152,7 @@ foreach ($max_days_map as $leave_type) {
                             </div>
                             <div class="card-body">
                                 <div class="container-fluid">
-                                    <div id="calendar"></div>
+                                    <?php include 'show_data_leave_document_sac_supervisor.php'; ?>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +166,7 @@ foreach ($max_days_map as $leave_type) {
                             </div>
                             <div class="card-body">
                                 <div class="container-fluid">
-                                    <?php include 'show_data_leave_document_sac_supervisor.php'; ?>
+                                    <div id="calendar"></div>
                                 </div>
                             </div>
                         </div>
@@ -222,34 +222,34 @@ include('includes/Modal-Logout.php');
         padding: 15px; /* เว้นระยะภายใน ให้ดูไม่ชิดจนเกินไป */
     }
 
-     .scroll-to-bottom {
-         position: fixed;
-         right: 1rem;
-         bottom: 5rem; /* อยู่เหนือปุ่ม Scroll to Top */
-         display: block; /* ✅ เปลี่ยนจาก none เป็น block เพื่อให้โชว์ทันที */
-         width: 2.75rem;
-         height: 2.75rem;
-         text-align: center;
-         color: #fff;
-         background: rgba(90, 92, 105, 0.5);
-         line-height: 2.05rem;
-         border-radius: 0.35rem;
-         transition: background 0.3s;
-         z-index: 999;
-     }
+    .scroll-to-bottom {
+        position: fixed;
+        right: 1rem;
+        bottom: 5rem; /* อยู่เหนือปุ่ม Scroll to Top */
+        display: block; /* ✅ เปลี่ยนจาก none เป็น block เพื่อให้โชว์ทันที */
+        width: 2.75rem;
+        height: 2.75rem;
+        text-align: center;
+        color: #fff;
+        background: rgba(90, 92, 105, 0.5);
+        line-height: 2.05rem;
+        border-radius: 0.35rem;
+        transition: background 0.3s;
+        z-index: 999;
+    }
 
     .scroll-to-bottom:focus, .scroll-to-bottom:hover {
         color: white;
         background: #5a5c69;
         text-decoration: none;
     }
-
 </style>
 
+
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // ฟังก์ชันเมื่อคลิกปุ่มเลื่อนลงล่างสุด
-        $('#scroll-to-bottom').click(function() {
+        $('#scroll-to-bottom').click(function () {
             $('html, body').animate({
                 scrollTop: $(document).height()
             }, 1000, 'easeInOutExpo');
@@ -257,8 +257,8 @@ include('includes/Modal-Logout.php');
         });
 
         // (Option) ซ่อนปุ่มเฉพาะตอนที่เลื่อนถึงล่างสุดแล้วจริงๆ
-        $(window).scroll(function() {
-            if($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
+        $(window).scroll(function () {
+            if ($(window).scrollTop() + $(window).height() > $(document).height() - 50) {
                 $('#scroll-to-bottom').fadeOut();
             } else {
                 $('#scroll-to-bottom').fadeIn();
