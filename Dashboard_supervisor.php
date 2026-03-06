@@ -152,7 +152,20 @@ foreach ($max_days_map as $leave_type) {
                             </div>
                             <div class="card-body">
                                 <div class="container-fluid">
-                                    <!--div id="calendar"></div-->
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card mb-3">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            </div>
+                            <div class="card-body">
+                                <div class="container-fluid">
                                     <?php include 'show_data_leave_document_sac_supervisor.php'; ?>
                                 </div>
                             </div>
