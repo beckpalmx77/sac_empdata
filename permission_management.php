@@ -79,6 +79,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                                 <option value="Dashboard_admin">
                                                                                     Dashboard_admin
                                                                                 </option>
+                                                                                <option value="Dashboard_supervisor">
+                                                                                    Dashboard_supervisor
+                                                                                </option>
                                                                                 <option value="Dashboard_employee">
                                                                                     Dashboard_employee
                                                                                 </option>

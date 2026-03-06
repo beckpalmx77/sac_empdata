@@ -152,7 +152,8 @@ foreach ($max_days_map as $leave_type) {
                             </div>
                             <div class="card-body">
                                 <div class="container-fluid">
-                                    <div id="calendar"></div>
+                                    <!--div id="calendar"></div-->
+                                    <?php include 'show_data_leave_document_sac_supervisor.php'; ?>
                                 </div>
                             </div>
                         </div>
