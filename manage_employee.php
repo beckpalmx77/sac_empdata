@@ -423,7 +423,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
 
     <script>
         $(document).ready(function () {
-            let formData = {action: "GET_EMPLOYEE", sub_action: "GET_MASTER" ,page_manage: "ADMIN",};
+            let formData = {action: "GET_EMPLOYEE", sub_action: "GET_MASTER", page_manage: "ADMIN",};
             let dataRecords = $('#TableRecordList').DataTable({
                 'lengthMenu': [[5, 10, 20, 50, 100], [5, 10, 20, 50, 100]],
                 'language': {
@@ -536,8 +536,8 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let week_holiday = response[i].week_holiday;
                         let dept_id_approve = response[i].dept_id_approve;
 
-                        let work_age = 0 ;
-                        let start_w_date = start_work_date.substr(3,2) + "/" + start_work_date.substr(0,2) + "/" + start_work_date.substr(6,10);
+                        let work_age = 0;
+                        let start_w_date = start_work_date.substr(3, 2) + "/" + start_work_date.substr(0, 2) + "/" + start_work_date.substr(6, 10);
                         work_age = getAge(start_w_date);
 
                         $('#recordModal').modal('show');
@@ -612,12 +612,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 months += 12; // เพิ่มเดือนจากปีที่แล้ว
             }
 
-            return { years, months, days };
+            return {years, months, days};
 
     </script>
-
-
-
 
     </body>
     </html>
