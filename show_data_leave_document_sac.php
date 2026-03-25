@@ -261,10 +261,20 @@ if (strlen($_SESSION['alogin']) == "") {
                         <td><?php echo $status_desc; ?></td>
                         <td>
                             <?php if (!empty($row_leave['picture'])): ?>
-                                <img src="<?php echo htmlentities("img_doc/" . $row_leave['picture']); ?>"
+                                <?php
+                                $pictures = explode(',', $row_leave['picture']);
+                                foreach ($pictures as $pic):
+                                    $pic = trim($pic);
+                                    if (!empty($pic)):
+                                ?>
+                                <img src="<?php echo htmlentities("img_doc/" . $pic); ?>"
                                      alt="Attached Document"
-                                     style="width: 50px; height: 50px; cursor: pointer;"
-                                     onclick="openImage('<?php echo htmlentities("img_doc/" . $row_leave['picture']); ?>')">
+                                     style="width: 50px; height: 50px; cursor: pointer; margin: 2px;"
+                                     onclick="openImage('<?php echo htmlentities("img_doc/" . $pic); ?>')">
+                                <?php
+                                    endif;
+                                endforeach;
+                                ?>
                             <?php endif; ?>
                         </td>
                         <td><?php echo htmlentities($row_leave['remark']); ?></td>

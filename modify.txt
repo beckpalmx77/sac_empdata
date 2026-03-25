@@ -1,0 +1,318 @@
+# รายละเอียดการแก้ไขระบบ Multi-File Upload และ Preview
+
+## ภาพรวม
+แก้ไขระบบให้รองรับการอัปโหลดไฟล์/รูปภาพหลายไฟล์ โดยชื่อไฟล์จะถูกบันทึกในฐานข้อมูลคั่นด้วยเครื่องหมาย comma (,) และแสดงผลหลายรูปในหน้าจอต่างๆ
+
+---
+
+## 1. ไฟล์ Form สำหรับบันทึกข้อมูล (Frontend) - 6 ไฟล์
+
+### 1.1 manage_leave_document_smart.php
+- **Input Upload:** เปลี่ยน `name="image_upload"` เป็น `name="image_upload[]"` เพิ่ม attribute `multiple` และ `accept="image/*,.pdf,.doc,.docx"`
+- **Preview Section:** เปลี่ยนจาก `<img id="preview">` เป็น `<div id="preview-container">`
+- **JavaScript:** เพิ่มตัวแปร `selectedFiles` array และฟังก์ชัน `previewImages()`, `renderPreview()`, `updateFileInput()`
+- **Ajax Submit:** ใช้ `selectedFiles` ในการส่งไฟล์แทน `$('#image_upload')[0].files`
+- **หลัง Save:** Reset `selectedFiles`, preview container และ file input
+- **เมื่อกด Add:** Clear `selectedFiles` และ preview container
+
+### 1.2 manage_sick_leave_document_smart.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_smart.php
+
+### 1.3 manage_holiday_document_emp_smart.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_smart.php
+
+### 1.4 manage_leave_document.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_smart.php
+
+### 1.5 manage_sick_leave_document.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_smart.php
+
+### 1.6 manage_holiday_document_emp.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_smart.php
+
+---
+
+## 2. ไฟล์ Upload ข้อมูล (Upload Pages) - 4 ไฟล์
+
+### 2.1 upload_leave_data.php
+- **Input Upload:** เปลี่ยน `name="image"` เป็น `name="image[]"` เพิ่ม `accept="image/*,.pdf,.doc,.docx"` และ `multiple`
+- **Preview Section:** เพิ่ม `<div id="preview-container">` สำหรับแสดงรูป preview
+- **JavaScript:** เพิ่ม `selectedFiles` array และฟังก์ชัน `previewImages()`, `renderPreview()`, `updateFileInput()`
+- **Form Submit:** สร้าง FormData ใหม่แทนใช้ `this` เพื่อหลีกเลี่ยงปัญหาไฟล์ซ้ำ
+- **Load Document:** แก้ไขให้แสดงรูปทั้งหมดจากฐานข้อมูล (แยกด้วย comma)
+- **After Upload:** แก้ไขให้แสดงรูปทั้งหมดที่ upload หลัง save
+
+### 2.2 upload_holiday_data.php
+- แก้ไขเช่นเดียวกับ upload_leave_data.php
+
+### 2.3 upload_ajax.php
+- แก้ไขให้รองรับหลายไฟล์ บันทึกชื่อคั่นด้วย comma
+- เพิ่ม valid extensions: pdf, doc, docx
+- Code:
+```php
+if (!empty($_FILES['image']['name'][0])) {
+    foreach ($_FILES['image']['name'] as $key => $img) {
+        if (!empty($img)) {
+            $tmp = $_FILES['image']['tmp_name'][$key];
+            $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
+            if(in_array($ext, $valid_extensions)) {
+                $final_image = time() . "_" . $key . "_" . basename($img);
+                if(move_uploaded_file($tmp, $uploadPath)) {
+                    $filenames[] = strtolower($final_image);
+                }
+            }
+        }
+    }
+    $picture = implode(",", $filenames);
+}
+```
+
+### 2.4 upload_holiday_ajax.php
+- แก้ไขเช่นเดียวกับ upload_ajax.php
+
+---
+
+## 3. ไฟล์ Process (Backend) - 3 ไฟล์
+
+### 3.1 model/manage_leave_document_process.php
+```php
+if (!empty($_FILES['image_upload']['name'][0])) {
+    $uploadDir = "../img_doc/";
+    $filenames = [];
+    
+    foreach ($_FILES['image_upload']['name'] as $key => $name) {
+        if (!empty($name)) {
+            $filename = time() . "_" . $key . "_" . basename($name);
+            $uploadFile = $uploadDir . $filename;
+            
+            if (move_uploaded_file($_FILES['image_upload']['tmp_name'][$key], $uploadFile)) {
+                $filenames[] = $filename;
+            }
+        }
+    }
+    
+    $picture = implode(",", $filenames);
+}
+```
+
+### 3.2 model/manage_sick_leave_document_process.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_process.php
+
+### 3.3 model/manage_holiday_process.php
+- แก้ไขเช่นเดียวกับ manage_leave_document_process.php
+
+---
+
+## 4. ไฟล์แสดงผล (Display/Report) - 3 ไฟล์
+
+### 4.1 show_data_leave_document_sac.php
+```php
+<?php if (!empty($row_leave['picture'])): ?>
+    <?php
+    $pictures = explode(',', $row_leave['picture']);
+    foreach ($pictures as $pic):
+        $pic = trim($pic);
+        if (!empty($pic)):
+    ?>
+    <img src="<?php echo htmlentities("img_doc/" . $pic); ?>"
+         style="width: 50px; height: 50px; cursor: pointer; margin: 2px;"
+         onclick="openImage('<?php echo htmlentities("img_doc/" . $pic); ?>')">
+    <?php endif; endforeach; ?>
+<?php endif; ?>
+```
+
+### 4.2 show_data_leave_document_sac_admin.php
+- แก้ไขเช่นเดียวกับ show_data_leave_document_sac.php
+
+### 4.3 show_data_leave_document_sac_supervisor.php
+- แก้ไขเช่นเดียวกับ show_data_leave_document_sac.php
+
+---
+
+## 5. รายละเอียด JavaScript
+
+### 5.1 ตัวแปร Global
+```javascript
+let selectedFiles = [];
+```
+
+### 5.2 ฟังก์ชัน previewImages (เพิ่มไฟล์ใหม่เข้า array)
+```javascript
+function previewImages(event) {
+    const container = document.getElementById('preview-container');
+    
+    const newFiles = Array.from(event.target.files);
+    if (newFiles.length === 0) return;
+    
+    newFiles.forEach((file) => {
+        selectedFiles.push(file);
+    });
+    
+    renderPreview();
+}
+```
+
+### 5.3 ฟังก์ชัน renderPreview (แสดงรูป + ชื่อไฟล์ + ปุ่มลบ)
+```javascript
+function renderPreview() {
+    const container = document.getElementById('preview-container');
+    container.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        let reader = new FileReader();
+        
+        reader.onload = function (e) {
+            let div = document.createElement('div');
+            div.style.position = 'relative';
+            div.style.display = 'inline-block';
+            div.style.textAlign = 'center';
+            div.style.margin = '5px';
+            
+            let img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.maxWidth = '100px';
+            img.style.maxHeight = '100px';
+            img.style.cursor = 'pointer';
+            img.setAttribute('data-toggle', 'modal');
+            img.setAttribute('data-target', '#imageModal');
+            img.onclick = function() {
+                document.getElementById('modalImage').src = this.src;
+            };
+            
+            let filename = document.createElement('div');
+            filename.textContent = file.name;
+            filename.style.fontSize = '10px';
+            filename.style.maxWidth = '100px';
+            filename.style.overflow = 'hidden';
+            filename.style.textOverflow = 'ellipsis';
+            filename.style.whiteSpace = 'nowrap';
+            
+            let removeBtn = document.createElement('span');
+            removeBtn.innerHTML = '&times;';
+            removeBtn.style.position = 'absolute';
+            removeBtn.style.top = '-5px';
+            removeBtn.style.right = '-5px';
+            removeBtn.style.background = 'red';
+            removeBtn.style.color = 'white';
+            removeBtn.style.borderRadius = '50%';
+            removeBtn.style.width = '20px';
+            removeBtn.style.height = '20px';
+            removeBtn.style.display = 'flex';
+            removeBtn.style.alignItems = 'center';
+            removeBtn.style.justifyContent = 'center';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.fontSize = '14px';
+            removeBtn.onclick = function() {
+                selectedFiles.splice(index, 1);
+                renderPreview();
+            };
+            
+            div.appendChild(img);
+            div.appendChild(filename);
+            div.appendChild(removeBtn);
+            container.appendChild(div);
+        };
+        
+        reader.readAsDataURL(file);
+    });
+    
+    updateFileInput();
+}
+```
+
+### 5.4 ฟังก์ชัน updateFileInput (อัปเดต input file ให้ตรงกับ array)
+```javascript
+function updateFileInput() {
+    const dataTransfer = new DataTransfer();
+    selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+    });
+    document.getElementById('image_upload').files = dataTransfer.files;
+}
+```
+
+### 5.5 Ajax Submit (สำหรับ Form บันทึกข้อมูล)
+```javascript
+let formData = new FormData(this);
+selectedFiles.forEach(file => {
+    formData.append("image_upload[]", file);
+});
+```
+
+### 5.6 Ajax Submit (สำหรับ upload_leave_data.php)
+```javascript
+let formData = new FormData();
+formData.append('id', $('#id').val());
+formData.append('doc_id', $('#doc_id').val());
+// ... other fields
+selectedFiles.forEach(file => {
+    formData.append('image[]', file);
+});
+```
+
+### 5.7 Reset หลัง Save (สำหรับ Form บันทึกข้อมูล)
+```javascript
+$('#recordForm')[0].reset();
+$('#recordModal').modal('hide');
+$('#save').attr('disabled', false);
+selectedFiles = [];
+document.getElementById('preview-container').innerHTML = '';
+document.getElementById('image_upload').value = '';
+ReloadDataTable();
+```
+
+### 5.8 Reset หลัง Add (สำหรับปุ่ม Add ใหม่)
+```javascript
+$("#btnAdd").click(function () {
+    selectedFiles = [];
+    document.getElementById('preview-container').innerHTML = '';
+    // ... reset other fields
+});
+```
+
+---
+
+## 6. สรุปไฟล์ที่แก้ไข (ทั้งหมด 16 ไฟล์)
+
+### Frontend Forms (6 ไฟล์)
+1. manage_leave_document_smart.php
+2. manage_sick_leave_document_smart.php
+3. manage_holiday_document_emp_smart.php
+4. manage_leave_document.php
+5. manage_sick_leave_document.php
+6. manage_holiday_document_emp.php
+
+### Upload Pages (4 ไฟล์)
+7. upload_leave_data.php
+8. upload_holiday_data.php
+9. upload_ajax.php
+10. upload_holiday_ajax.php
+
+### Backend Processes (3 ไฟล์)
+11. model/manage_leave_document_process.php
+12. model/manage_sick_leave_document_process.php
+13. model/manage_holiday_process.php
+
+### Display/Reports (3 ไฟล์)
+14. show_data_leave_document_sac.php
+15. show_data_leave_document_sac_admin.php
+16. show_data_leave_document_sac_supervisor.php
+
+---
+
+## 7. ฟีเจอร์หลัก
+
+1. **เลือกไฟล์หลายไฟล์** - รองรับการเลือกไฟล์หลายครั้ง (ไม่ล้างไฟล์เดิม)
+2. **Preview รูปภาพ** - แสดงรูปทั้งหมดพร้อมชื่อไฟล์
+3. **ลบไฟล์** - มีปุ่ม X สำหรับลบไฟล์ที่ไม่ต้องการ
+4. **Reset หลัง Save** - ล้างข้อมูลทั้งหมดหลังบันทึกสำเร็จ
+5. **Reset หลัง Add** - ล้างไฟล์ที่เลือกเมื่อกดปุ่ม Add ใหม่
+6. **แสดงรูปจาก DB** - แสดงรูปทั้งหมดเมื่อโหลดเอกสาร
+7. **แสดงรูปหลัง Upload** - แสดงรูปทั้งหมดหลัง upload สำเร็จ
+
+---
+
+## 8. หมายเหตุ
+- ไฟล์ที่รองรับ: image/*, .pdf, .doc, .docx
+- การบันทึกชื่อไฟล์ในฐานข้อมูล: คั่นด้วยเครื่องหมาย comma (,)
+- การแสดงผล: แยกชื่อไฟล์ด้วย explode() และ loop แสดงรูปทั้งหมด

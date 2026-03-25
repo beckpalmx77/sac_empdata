@@ -125,10 +125,17 @@ if (strlen($_SESSION['alogin']) == "") {
                                     <div class="col-sm-10">
                                         <label for="uploadImage"
                                                class="control-label">เลือกไฟล์รูปภาพที่ต้องการ Upload</label>
-                                        <input class="form-control" type="file" id="uploadImage" accept="image/*"
-                                               name="image"
-                                               onchange="readURL(this)" multiple/>
-                                        <div>Upload File (ไฟล์ .jpg , .png เท่านั้น) ชี้ที่รูปเพื่อขยาย หรือ Click เพื่อเปิดดูภาพ</div>
+                                        <input class="form-control" type="file" id="uploadImage" accept="image/*,.pdf,.doc,.docx"
+                                               name="image[]"
+                                               onchange="previewImages(event)" multiple/>
+                                        <div>Upload File (ไฟล์ .jpg , .png , .pdf , .doc , .docx) ชี้ที่รูปเพื่อขยาย หรือ Click เพื่อเปิดดูภาพ</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="control-label">เอกสารที่แนบ (Click ที่รูปเพื่อขยาย)</label>
+                                        <div id="preview-container" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
                                     </div>
                                 </div>
 
@@ -225,16 +232,90 @@ if (strlen($_SESSION['alogin']) == "") {
     </style>
 
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
+        let selectedFiles = [];
+        
+        function previewImages(event) {
+            const container = document.getElementById('preview-container');
+            
+            const newFiles = Array.from(event.target.files);
+            if (newFiles.length === 0) return;
+            
+            newFiles.forEach((file) => {
+                selectedFiles.push(file);
+            });
+            
+            renderPreview();
+        }
+        
+        function renderPreview() {
+            const container = document.getElementById('preview-container');
+            container.innerHTML = '';
+            
+            selectedFiles.forEach((file, index) => {
                 let reader = new FileReader();
+                
                 reader.onload = function (e) {
-                    $('#img')
-                        .attr('src', e.target.result);
+                    let div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.style.textAlign = 'center';
+                    div.style.margin = '5px';
+                    
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100px';
+                    img.style.maxHeight = '100px';
+                    img.style.cursor = 'pointer';
+                    img.onclick = function() {
+                        window.open(this.src, '_blank');
+                    };
+                    
+                    let filename = document.createElement('div');
+                    filename.textContent = file.name;
+                    filename.style.fontSize = '10px';
+                    filename.style.maxWidth = '100px';
+                    filename.style.overflow = 'hidden';
+                    filename.style.textOverflow = 'ellipsis';
+                    filename.style.whiteSpace = 'nowrap';
+                    
+                    let removeBtn = document.createElement('span');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.style.position = 'absolute';
+                    removeBtn.style.top = '-5px';
+                    removeBtn.style.right = '-5px';
+                    removeBtn.style.background = 'red';
+                    removeBtn.style.color = 'white';
+                    removeBtn.style.borderRadius = '50%';
+                    removeBtn.style.width = '20px';
+                    removeBtn.style.height = '20px';
+                    removeBtn.style.display = 'flex';
+                    removeBtn.style.alignItems = 'center';
+                    removeBtn.style.justifyContent = 'center';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.fontSize = '14px';
+                    removeBtn.onclick = function() {
+                        selectedFiles.splice(index, 1);
+                        renderPreview();
+                    };
+                    
+                    div.appendChild(img);
+                    div.appendChild(filename);
+                    div.appendChild(removeBtn);
+                    container.appendChild(div);
                 };
-
-                reader.readAsDataURL(input.files[0]);
-            }
+                
+                reader.readAsDataURL(file);
+            });
+            
+            updateFileInput();
+        }
+        
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            document.getElementById('uploadImage').files = dataTransfer.files;
         }
     </script>
 
@@ -270,15 +351,23 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#date_leave_to').val(queryString["date_leave_to"]);
                 $('#leave_type_detail').val(queryString["leave_type_detail"]);
 
-                let image_load = "";
+                let picture = queryString["picture"];
 
-                if (queryString["picture"] === null || queryString["picture"] === 'null' || queryString["picture"] === '') {
-                    image_load = "img_doc/image_doc.png";
+                if (picture === null || picture === 'null' || picture === '') {
+                    $('.preview').html('<img class="enlarge" src="img_doc/image_doc.png" width="200" height="200" onclick="openImageInNewTab()">');
                 } else {
-                    image_load = "img_doc/" + queryString["picture"];
+                    let filenames = picture.split(',');
+                    let previewHtml = '';
+                    
+                    filenames.forEach(function(filename) {
+                        let fname = filename.trim();
+                        if (fname) {
+                            previewHtml += '<img class="enlarge" src="img_doc/' + fname + '" width="100" height="100" style="margin: 5px;" onclick="window.open(this.src,\'_blank\')">';
+                        }
+                    });
+                    
+                    $('.preview').html(previewHtml);
                 }
-
-                $("#img").attr("src", image_load);
 
                 $('#picture').val(queryString["picture"]);
 
@@ -291,36 +380,60 @@ if (strlen($_SESSION['alogin']) == "") {
         $(document).ready(function (e) {
             $("#my_form").on('submit', (function (e) {
                 e.preventDefault();
-                let fd = new FormData();
+                
+                let formData = new FormData();
+                
+                // Add other form fields
+                formData.append('id', $('#id').val());
+                formData.append('doc_id', $('#doc_id').val());
+                formData.append('doc_date', $('#doc_date').val());
+                formData.append('emp_id', $('#emp_id').val());
+                formData.append('full_name', $('#full_name').val());
+                formData.append('leave_type_detail', $('#leave_type_detail').val());
+                formData.append('picture', $('#picture').val());
+                formData.append('action', $('#action').val());
+                
+                // Add selected files
+                selectedFiles.forEach(file => {
+                    formData.append('image[]', file);
+                });
+                
                 $.ajax({
                     url: "upload_holiday_ajax.php",
                     type: "POST",
-                    data: new FormData(this),
+                    data: formData,
                     contentType: false,
                     cache: false,
                     processData: false,
                     beforeSend: function () {
-//$("#preview").fadeOut();
                         $("#err").fadeOut();
                     },
                     success: function (data) {
                         if (data === 'invalid') {
-// invalid file format.
                             $("#err").html("กรุณาเลือกไฟล์ที่ถูกต้องเพื่อ Upload !").fadeIn();
                             alertify.alert('กรุณาเลือกไฟล์ที่ถูกต้องเพื่อ Upload !');
                         } else {
-// view uploaded file.
-                            //$("#preview").html(data).fadeIn();
-                            //$("#form")[0].reset();
-
-                            $("#img").attr("src", data);
-                            $('.preview img').show();
-
+                            // Show all uploaded images
+                            let filenames = data.split(',');
+                            let previewHtml = '';
+                            
+                            filenames.forEach(function(filename) {
+                                let fname = filename.trim();
+                                if (fname) {
+                                    previewHtml += '<img class="enlarge" src="img_doc/' + fname + '" width="100" height="100" style="margin: 5px;" onclick="window.open(this.src,\'_blank\')">';
+                                }
+                            });
+                            
+                            $('.preview').html(previewHtml);
+                            
                             alertify
                                 .alert("Upload รูปภาพเรียบร้อยแล้ว", function () {
                                     alertify.message('OK');
                                 });
-
+                            $('#picture').val(data);
+                            selectedFiles = [];
+                            document.getElementById('preview-container').innerHTML = '';
+                            document.getElementById('uploadImage').value = '';
                         }
                     },
                     error: function (e) {

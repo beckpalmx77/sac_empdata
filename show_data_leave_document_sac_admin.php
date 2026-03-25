@@ -206,9 +206,20 @@ ORDER BY v.f_name ASC , v.create_date DESC
                             <td><?= $status_html ?></td>
                             <td>
                                 <?php if (!empty($row['picture'])) { ?>
-                                    <img src="img_doc/<?= $row['picture'] ?>"
+                                    <?php
+                                    $pictures = explode(',', $row['picture']);
+                                    foreach ($pictures as $pic):
+                                        $pic = trim($pic);
+                                        if (!empty($pic)):
+                                    ?>
+                                    <img src="img_doc/<?= htmlentities($pic) ?>"
                                          class="img-thumbnail-custom"
+                                         style="width: 50px; height: 50px; margin: 2px; cursor: pointer;"
                                          onclick="openImage(this.src)">
+                                    <?php
+                                        endif;
+                                    endforeach;
+                                    ?>
                                 <?php } ?>
                             </td>
                             <td><small><?= htmlentities($row['remark']) ?></small></td>

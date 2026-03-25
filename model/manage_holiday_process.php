@@ -134,19 +134,23 @@ if ($_POST["action"] === 'ADD') {
         $filename = "";
         $picture = "";
 
-        if (!empty($_FILES['image_upload']['name'])) {
+        if (!empty($_FILES['image_upload']['name'][0])) {
             $uploadDir = "../img_doc/";
-            $filename = time() . "_" . basename($_FILES['image_upload']['name']);
-            $uploadFile = $uploadDir . $filename;
-
-            if (move_uploaded_file($_FILES['image_upload']['tmp_name'], $uploadFile)) {
-                $picture = $filename;
-                echo "บันทึกสำเร็จ: " . $filename;
-            } else {
-                echo "อัปโหลดไฟล์ล้มเหลว";
+            $filenames = [];
+            
+            foreach ($_FILES['image_upload']['name'] as $key => $name) {
+                if (!empty($name)) {
+                    $filename = time() . "_" . $key . "_" . basename($name);
+                    $uploadFile = $uploadDir . $filename;
+                    
+                    if (move_uploaded_file($_FILES['image_upload']['tmp_name'][$key], $uploadFile)) {
+                        $filenames[] = $filename;
+                    }
+                }
             }
-        } else {
-            echo "ไม่มีไฟล์ที่ถูกอัปโหลด";
+            
+            $picture = implode(",", $filenames);
+            echo "บันทึกสำเร็จ: " . $picture;
         }
 
         $cnt_total_day_hour = ($cnt_day * 8) + $cnt_hour;

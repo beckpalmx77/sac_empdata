@@ -271,20 +271,19 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                                                                 <div class="form-group row" id="uploadSection">
                                                                     <div class="col-sm-6">
                                                                         <label for="upload_image" class="control-label">เอกสารแนบ
-                                                                            (Upload รูปภาพ)</label>
+                                                                            (Upload รูปภาพ/ไฟล์)</label>
                                                                         <input type="file" class="form-control-file"
-                                                                               id="image_upload" name="image_upload"
-                                                                               accept="image/*"
-                                                                               onchange="previewImage(event)">
+                                                                               id="image_upload" name="image_upload[]"
+                                                                               accept="image/*,.pdf,.doc,.docx"
+                                                                               multiple
+                                                                               onchange="previewImages(event)">
                                                                     </div>
                                                                     <div class="col-sm-6">
                                                                         <label class="control-label">เอกสารที่แนบ (Click
                                                                             ที่รูปเพื่อขยาย)</label>
                                                                         <br>
-                                                                        <img id="preview" src="" alt="Preview"
-                                                                             style="max-width: 100px; cursor: pointer; display: none;"
-                                                                             data-toggle="modal"
-                                                                             data-target="#imageModal">
+                                                                        <div id="preview-container" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
@@ -601,8 +600,10 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 event.preventDefault();  // ป้องกันการ submit แบบปกติ
                 $('#save').attr('disabled', 'disabled'); // ปิดการใช้งานปุ่ม Save เพื่อไม่ให้กดหลายครั้ง
 
-                let formData = new FormData(this);  // ใช้ FormData เพื่อส่งข้อมูลที่มีไฟล์
-                formData.append("filename", $('#image_upload')[0].files[0]); // เพิ่มไฟล์ลงใน FormData
+                let formData = new FormData(this);
+                selectedFiles.forEach(file => {
+                    formData.append("image_upload[]", file);
+                });
 
                 $.ajax({
                     url: 'model/manage_holiday_process.php',  // URL ที่จะส่งข้อมูลไป
@@ -615,6 +616,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         $('#recordForm')[0].reset();  // รีเซ็ตฟอร์มหลังจากส่งข้อมูลเสร็จ
                         $('#recordModal').modal('hide');  // ปิด Modal
                         $('#save').attr('disabled', false);  // เปิดปุ่ม Save ให้ใช้ได้อีกครั้ง
+                        selectedFiles = [];
+                        document.getElementById('preview-container').innerHTML = '';
+                        document.getElementById('image_upload').value = '';
                         ReloadDataTable();  // รีเฟรช DataTable ถ้ามี
                     },
                     error: function (xhr, status, error) {
@@ -633,6 +637,9 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
         $(document).ready(function () {
 
             $("#btnAdd").click(function () {
+                selectedFiles = [];
+                document.getElementById('preview-container').innerHTML = '';
+                
                 //alert(<?php echo $_SESSION['work_time_start']?>);
                 $('#recordModal').modal('show');
                 $('#id').val("");
@@ -808,23 +815,93 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
     </script>
 
     <script>
-        function previewImage(event) {
-            let input = event.target;
-            let reader = new FileReader();
-
-            reader.onload = function () {
-                let preview = document.getElementById('preview');
-                let modalImage = document.getElementById('modalImage');
-
-                preview.src = reader.result;
-                modalImage.src = reader.result;
-
-                preview.style.display = "block";
-            };
-
-            reader.readAsDataURL(input.files[0]);
+        let selectedFiles = [];
+        
+        function previewImages(event) {
+            const container = document.getElementById('preview-container');
+            
+            const newFiles = Array.from(event.target.files);
+            if (newFiles.length === 0) return;
+            
+            newFiles.forEach((file) => {
+                selectedFiles.push(file);
+            });
+            
+            renderPreview();
         }
-
+        
+        function renderPreview() {
+            const container = document.getElementById('preview-container');
+            container.innerHTML = '';
+            
+            selectedFiles.forEach((file, index) => {
+                let reader = new FileReader();
+                
+                reader.onload = function (e) {
+                    let div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.style.textAlign = 'center';
+                    div.style.margin = '5px';
+                    
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100px';
+                    img.style.maxHeight = '100px';
+                    img.style.cursor = 'pointer';
+                    img.setAttribute('data-toggle', 'modal');
+                    img.setAttribute('data-target', '#imageModal');
+                    img.onclick = function() {
+                        document.getElementById('modalImage').src = this.src;
+                    };
+                    
+                    let filename = document.createElement('div');
+                    filename.textContent = file.name;
+                    filename.style.fontSize = '10px';
+                    filename.style.maxWidth = '100px';
+                    filename.style.overflow = 'hidden';
+                    filename.style.textOverflow = 'ellipsis';
+                    filename.style.whiteSpace = 'nowrap';
+                    
+                    let removeBtn = document.createElement('span');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.style.position = 'absolute';
+                    removeBtn.style.top = '-5px';
+                    removeBtn.style.right = '-5px';
+                    removeBtn.style.background = 'red';
+                    removeBtn.style.color = 'white';
+                    removeBtn.style.borderRadius = '50%';
+                    removeBtn.style.width = '20px';
+                    removeBtn.style.height = '20px';
+                    removeBtn.style.display = 'flex';
+                    removeBtn.style.alignItems = 'center';
+                    removeBtn.style.justifyContent = 'center';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.fontSize = '14px';
+                    removeBtn.onclick = function() {
+                        selectedFiles.splice(index, 1);
+                        renderPreview();
+                    };
+                    
+                    div.appendChild(img);
+                    div.appendChild(filename);
+                    div.appendChild(removeBtn);
+                    container.appendChild(div);
+                };
+                
+                reader.readAsDataURL(file);
+            });
+            
+            updateFileInput();
+        }
+        
+        function updateFileInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            document.getElementById('image_upload').files = dataTransfer.files;
+        }
     </script>
 
     <script>
