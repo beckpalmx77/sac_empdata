@@ -62,11 +62,11 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
     $whereSql = implode(" AND ", $whereClauses);
 
     ## Total number of records without filtering (ดึงจาก View โดยตรง)
-    $stmtTotal = $conn->query("SELECT COUNT(*) FROM v_ims_time_attendance");
+    $stmtTotal = $conn->query("SELECT COUNT(id) FROM v_ims_time_attendance");
     $totalRecords = $stmtTotal->fetchColumn();
 
     ## Total number of records with filtering
-    $stmtFiltered = $conn->prepare("SELECT COUNT(*) FROM v_ims_time_attendance WHERE $whereSql");
+    $stmtFiltered = $conn->prepare("SELECT COUNT(id) FROM v_ims_time_attendance WHERE $whereSql");
     $stmtFiltered->execute($searchArray);
     $totalRecordwithFilter = $stmtFiltered->fetchColumn();
 
@@ -77,6 +77,13 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
                    WHERE $whereSql 
                    ORDER BY work_date DESC, start_time DESC 
                    LIMIT :limit, :offset";
+
+/*
+    $txt = $sql_record ;
+    $my_file = fopen("sql_record.txt", "w") or die("Unable to open file!");
+    fwrite($my_file, $txt. " - " . $row . " , " . $rowperpage );
+    fclose($my_file);
+*/
 
     $stmt = $conn->prepare($sql_record);
 
