@@ -12,8 +12,9 @@ if ($_POST["action"] === 'GET_DATA') {
 
     $return_arr = array();
 
-    $sql_get = "SELECT * FROM v_ims_time_attendance WHERE id = " . $id;
-    $statement = $conn->query($sql_get);
+    $sql_get = "SELECT * FROM v_ims_time_attendance WHERE id = :id";
+    $statement = $conn->prepare($sql_get);
+    $statement->execute(['id' => $id]);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $result) {
@@ -46,44 +47,84 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
 
     ## 1. Role-based Security Filtering
     if ($_SESSION['role'] === "SUPERVISOR") {
-        $whereClauses[] = "dept_id_approve = :dept_id_approve";
+        $whereClauses[] = "e.dept_id_approve = :dept_id_approve";
         $searchArray['dept_id_approve'] = $_SESSION['dept_id_approve'];
     } else if ($_SESSION['role'] !== "HR" && $_SESSION['role'] !== "ADMIN") {
-        $whereClauses[] = "emp_id = :session_emp_id";
+        $whereClauses[] = "a.emp_id = :session_emp_id";
         $searchArray['session_emp_id'] = $_SESSION['emp_id'];
     }
 
     ## 2. Search Filter
     if (!empty($searchValue)) {
-        $whereClauses[] = "(emp_id LIKE :search OR f_name LIKE :search OR l_name LIKE :search OR department_id LIKE :search OR work_date LIKE :search)";
+        $whereClauses[] = "(a.emp_id LIKE :search OR e.f_name LIKE :search OR e.l_name LIKE :search OR e.department_id LIKE :search OR a.date LIKE :search)";
         $searchArray['search'] = "%$searchValue%";
     }
 
     $whereSql = implode(" AND ", $whereClauses);
 
-    ## Total number of records without filtering (ดึงจาก View โดยตรง)
-    $stmtTotal = $conn->query("SELECT COUNT(id) FROM v_ims_time_attendance");
-    $totalRecords = $stmtTotal->fetchColumn();
+    ## 3. Total number of records without filtering (ดึงจาก Base Table โดยตรงเพื่อความเร็ว)
+    $countSecurityClauses = array("1=1");
+    $countSecurityArray = array();
+    
+    if ($_SESSION['role'] === "SUPERVISOR") {
+        $countSecurityClauses[] = "e.dept_id_approve = :dept_id_approve";
+        $countSecurityArray['dept_id_approve'] = $_SESSION['dept_id_approve'];
+        
+        $sql_total = "SELECT COUNT(DISTINCT a.emp_id, a.date) 
+                      FROM ims_time_attendance a 
+                      JOIN memployee e ON a.emp_id = e.emp_id 
+                      WHERE " . implode(" AND ", $countSecurityClauses);
+        
+        $stmtTotal = $conn->prepare($sql_total);
+        $stmtTotal->execute($countSecurityArray);
+        $totalRecords = $stmtTotal->fetchColumn();
+    } else if ($_SESSION['role'] !== "HR" && $_SESSION['role'] !== "ADMIN") {
+        $countSecurityClauses[] = "a.emp_id = :session_emp_id";
+        $countSecurityArray['session_emp_id'] = $_SESSION['emp_id'];
+        
+        $sql_total = "SELECT COUNT(DISTINCT a.date) 
+                      FROM ims_time_attendance a 
+                      WHERE " . implode(" AND ", $countSecurityClauses);
+                      
+        $stmtTotal = $conn->prepare($sql_total);
+        $stmtTotal->execute($countSecurityArray);
+        $totalRecords = $stmtTotal->fetchColumn();
+    } else {
+        $stmtTotal = $conn->query("SELECT COUNT(DISTINCT emp_id, date) FROM ims_time_attendance");
+        $totalRecords = $stmtTotal->fetchColumn();
+    }
 
-    ## Total number of records with filtering
-    $stmtFiltered = $conn->prepare("SELECT COUNT(id) FROM v_ims_time_attendance WHERE $whereSql");
-    $stmtFiltered->execute($searchArray);
-    $totalRecordwithFilter = $stmtFiltered->fetchColumn();
+    ## 4. Total number of records with filtering
+    if (empty($searchValue)) {
+        $totalRecordwithFilter = $totalRecords;
+    } else {
+        $sql_filtered = "SELECT COUNT(DISTINCT a.emp_id, a.date) 
+                         FROM ims_time_attendance a 
+                         LEFT JOIN memployee e ON e.emp_id = a.emp_id 
+                         WHERE $whereSql";
+        $stmtFiltered = $conn->prepare($sql_filtered);
+        $stmtFiltered->execute($searchArray);
+        $totalRecordwithFilter = $stmtFiltered->fetchColumn();
+    }
 
-    ## 3. Fetch records
-    // เลือกเฉพาะ Column ที่จำเป็น ลดภาระ Memory
-    $sql_record = "SELECT id, emp_id, f_name, l_name, department_id, dept_id_approve, work_date, start_time, end_time, device 
-                   FROM v_ims_time_attendance 
-                   WHERE $whereSql 
-                   ORDER BY work_date DESC, start_time DESC 
-                   LIMIT :limit, :offset";
-
-/*
-    $txt = $sql_record ;
-    $my_file = fopen("sql_record.txt", "w") or die("Unable to open file!");
-    fwrite($my_file, $txt. " - " . $row . " , " . $rowperpage );
-    fclose($my_file);
-*/
+    ## 5. Fetch records (ดึงตรงจาก Base Table + Query Optimization)
+    $sql_record = "SELECT 
+        SHA2(CONCAT(a.emp_id, a.date, COALESCE(MIN(CASE WHEN a.time < '12:00:00' THEN a.time END), '')), 256) AS id,
+        a.emp_id,
+        e.f_name,
+        e.l_name,
+        e.department_id,
+        e.dept_id_approve,
+        a.date AS work_date,
+        MIN(CASE WHEN a.time < '12:00:00' THEN a.time END) AS start_time,
+        MAX(CASE WHEN a.time >= '12:00:00' THEN a.time END) AS end_time,
+        MAX(a.device) AS device
+    FROM ims_time_attendance a
+    LEFT JOIN memployee e ON e.emp_id = a.emp_id
+    WHERE $whereSql 
+    GROUP BY a.date, a.emp_id
+    ORDER BY a.date DESC, a.emp_id DESC 
+    LIMIT :limit, :offset";
 
     $stmt = $conn->prepare($sql_record);
 
