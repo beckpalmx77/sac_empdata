@@ -173,12 +173,22 @@ function fetchLeaveData_BAK($conn, $table, $start_date, $end_date, $where_emp)
                     <td><?php echo htmlentities($row_leave->leave_hour); ?></td>
                     <td><?php echo $status_desc; ?></td>
                     <td>
-                        <?php if (!empty($row_leave->picture)): ?>
-                            <img src="<?php echo htmlentities("img_doc/" . $row_leave->picture); ?>"
-                                 alt="Attached Document"
-                                 style="width: 50px; height: 50px; cursor: pointer;"
-                                 onclick="openImage('<?php echo htmlentities("img_doc/" . $row_leave->picture); ?>')">
-                        <?php endif; ?>
+                        <?php
+                        if (!empty($row_leave->picture)):
+                            $pictures = explode(',', $row_leave->picture);
+                            foreach ($pictures as $pic):
+                                $pic = trim($pic);
+                                if (!empty($pic)):
+                        ?>
+                                    <img src="<?php echo htmlentities("img_doc/" . $pic); ?>"
+                                         alt="Attached Document"
+                                         style="width: 50px; height: 50px; cursor: pointer; margin-right: 5px;"
+                                         onclick="openImage('<?php echo htmlentities("img_doc/" . $pic); ?>')">
+                        <?php
+                                endif;
+                            endforeach;
+                        endif;
+                        ?>
                     </td>
                     <td><?php echo htmlentities($row_leave->remark); ?></td>
                 </tr>
