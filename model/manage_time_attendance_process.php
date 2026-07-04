@@ -75,11 +75,55 @@ if ($_POST["action"] === 'GET_TIME_ATTENDANCE') {
         $whereClauses[] = "a.emp_id = :session_emp_id";
         $searchArray['session_emp_id'] = $_SESSION['emp_id'];
     }
+    session_write_close(); // ปลดล็อค session เพื่อไม่ให้เกิด blocking ของ requests ถัดไปเมื่อพิมพ์ค้นหารัวๆ
 
     ## 2. Search Filter
     if (!empty($searchValue)) {
-        $whereClauses[] = "(a.emp_id LIKE :search OR e.f_name LIKE :search OR e.l_name LIKE :search OR e.department_id LIKE :search OR a.date LIKE :search)";
-        $searchArray['search'] = "%$searchValue%";
+        // ค้นหาข้อมูลพนักงานในตาราง memployee ก่อน เพื่อลดปริมาณการทำ Full Scan ในตารางใหญ่ ims_time_attendance
+        $stmtEmp = $conn->prepare("SELECT emp_id FROM memployee WHERE f_name LIKE :search_emp OR l_name LIKE :search_emp OR department_id LIKE :search_emp OR emp_id LIKE :search_emp");
+        $stmtEmp->execute(['search_emp' => "%$searchValue%"]);
+        $matchingEmpIds = $stmtEmp->fetchAll(PDO::FETCH_COLUMN);
+
+        $subClauses = array();
+        if (!empty($matchingEmpIds)) {
+            $inPlaceholders = array();
+            foreach ($matchingEmpIds as $i => $empId) {
+                $key = "emp_id_" . $i;
+                $inPlaceholders[] = ":" . $key;
+                $searchArray[$key] = $empId;
+            }
+            $subClauses[] = "a.emp_id IN (" . implode(",", $inPlaceholders) . ")";
+        } else {
+            // กรณีไม่เจอใน memployee ค้นด้วย LIKE a.emp_id เผื่อไว้
+            $subClauses[] = "a.emp_id LIKE :search";
+            $searchArray['search'] = "%$searchValue%";
+        }
+
+        // ค้นหาด้วยฟิลด์วันที่ เฉพาะเมื่อมีการป้อนตัวเลข/ขีด/สแลช (หลีกเลี่ยงการทำ Cast วันที่เป็นข้อความในตารางใหญ่โดยไม่จำเป็น)
+        if (preg_match('/[0-9-\/]/', $searchValue)) {
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $searchValue)) {
+                $subClauses[] = "a.date = :search_date";
+                $searchArray['search_date'] = $searchValue;
+            } else if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $searchValue)) {
+                $parts = explode('-', $searchValue);
+                $dbDate = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                $subClauses[] = "a.date = :search_date";
+                $searchArray['search_date'] = $dbDate;
+            } else if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $searchValue)) {
+                $parts = explode('/', $searchValue);
+                $dbDate = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                $subClauses[] = "a.date = :search_date";
+                $searchArray['search_date'] = $dbDate;
+            } else if (preg_match('/^\d{4}$/', $searchValue)) {
+                $subClauses[] = "YEAR(a.date) = :search_year";
+                $searchArray['search_year'] = $searchValue;
+            } else {
+                $subClauses[] = "a.date LIKE :search_date";
+                $searchArray['search_date'] = "%" . str_replace('/', '-', $searchValue) . "%";
+            }
+        }
+
+        $whereClauses[] = "(" . implode(" OR ", $subClauses) . ")";
     }
 
     $whereSql = implode(" AND ", $whereClauses);

@@ -257,6 +257,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
             let formData = {action: "GET_TIME_ATTENDANCE", sub_action: "GET_MASTER"};
 
             let dataRecords = $('#TableRecordList').DataTable({
+                'searchDelay': 500,
                 'lengthMenu': [[9, 20, 50, 100], [9, 20, 50, 100]],
                 'language': {
                     search: 'ค้นหา', lengthMenu: 'แสดง _MENU_ รายการ',
