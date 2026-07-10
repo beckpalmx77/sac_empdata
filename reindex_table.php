@@ -870,6 +870,13 @@ if (strlen($_SESSION['alogin']) == "") {
             });
         });
     </script>
+
+    <?php include('includes/Modal-Logout.php'); ?>
+
+    <!-- Core Javascript (Do NOT load vendor/jquery/jquery.min.js here because it is already loaded in Header.php. Loading it again will overwrite the jQuery object and break Select2/DataTables plugins) -->
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/myadmin.min.js"></script>
     </body>
     </html>
 <?php } ?>
