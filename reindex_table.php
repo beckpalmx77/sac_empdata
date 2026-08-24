@@ -10,7 +10,7 @@ if (isset($_GET['action'])) {
     if (!empty($table)) {
         try {
             $stmt = $conn->prepare("
-                SELECT TABLE_NAME, TABLE_TYPE 
+                SELECT TABLE_NAME, TABLE_TYPE, ENGINE 
                 FROM information_schema.TABLES 
                 WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table
             ");
@@ -28,8 +28,18 @@ if (isset($_GET['action'])) {
         }
     }
 
+    // 1. Action: แปลง Engine เป็น InnoDB และ Optimize Table
     if ($action == 'optimize' && !empty($table)) {
-        $response = ['success' => false, 'skipped' => false, 'before' => 0, 'after' => 0, 'message' => ''];
+        $response = [
+            'success' => false,
+            'skipped' => false,
+            'converted' => false,
+            'orig_engine' => '',
+            'new_engine' => 'INNODB',
+            'before' => 0,
+            'after' => 0,
+            'message' => ''
+        ];
         try {
             // ข้าม VIEW
             if ($tableInfo['TABLE_TYPE'] === 'VIEW') {
@@ -41,7 +51,7 @@ if (isset($_GET['action'])) {
                 exit;
             }
 
-            // ดึง ENGINE ตาราง
+            // ดึง ENGINE ตารางล่าสุด
             $infoStmt = $conn->prepare("
                 SELECT ENGINE 
                 FROM information_schema.TABLES 
@@ -49,17 +59,8 @@ if (isset($_GET['action'])) {
             ");
             $infoStmt->execute(['table' => $table]);
             $engineInfo = $infoStmt->fetch(PDO::FETCH_ASSOC);
-            $engine = strtoupper($engineInfo['ENGINE'] ?? 'INNODB');
-
-            // ข้าม Engine ที่ไม่รองรับ
-            if (!in_array($engine, ['INNODB', 'MYISAM', 'ARIA'])) {
-                $response['skipped']  = true;
-                $response['success']  = true;
-                $response['message']  = "⏭️ ข้าม: `$table` [$engine ไม่รองรับ OPTIMIZE]";
-                header('Content-Type: application/json');
-                echo json_encode($response);
-                exit;
-            }
+            $origEngine = strtoupper($engineInfo['ENGINE'] ?? 'INNODB');
+            $response['orig_engine'] = $origEngine;
 
             // วัดขนาดก่อน
             $sizeQuery = "SELECT ROUND(((data_length + index_length) / 1024 / 1024), 2) 
@@ -69,11 +70,19 @@ if (isset($_GET['action'])) {
             $stmtSize->execute(['table' => $table]);
             $response['before'] = (float)$stmtSize->fetchColumn();
 
+            $converted = false;
+            // หากตารางไม่ใช่ InnoDB ให้แปลง Engine เป็น InnoDB
+            if ($origEngine !== 'INNODB') {
+                $conn->exec("ALTER TABLE `$table` ENGINE = InnoDB");
+                $converted = true;
+                $response['converted'] = true;
+            }
+
             // ANALYZE TABLE (อัปเดต index statistics)
             $analyzeResult = $conn->query("ANALYZE TABLE `$table`")->fetchAll(PDO::FETCH_ASSOC);
             $analyzeMsg    = $analyzeResult[0]['Msg_text'] ?? 'OK';
 
-            // OPTIMIZE TABLE
+            // OPTIMIZE TABLE (rebuild/defragment)
             $optResult = $conn->query("OPTIMIZE TABLE `$table`")->fetchAll(PDO::FETCH_ASSOC);
             $optMsg    = $optResult[0]['Msg_text'] ?? 'OK';
 
@@ -83,7 +92,12 @@ if (isset($_GET['action'])) {
 
             $response['success'] = true;
             $saved = max(0, $response['before'] - $response['after']);
-            $response['message'] = "✅ [$engine] `$table` [{$response['before']} MB → {$response['after']} MB] ลดไป: " . round($saved, 2) . " MB | ANALYZE: $analyzeMsg | OPTIMIZE: $optMsg";
+            
+            if ($converted) {
+                $response['message'] = "🔄 [$origEngine ➔ InnoDB] `$table` แปลง Engine สำเร็จ! [{$response['before']} MB → {$response['after']} MB] คืนพื้นที่: " . round($saved, 2) . " MB | ANALYZE: $analyzeMsg | OPTIMIZE: $optMsg";
+            } else {
+                $response['message'] = "✅ [InnoDB] `$table` [{$response['before']} MB → {$response['after']} MB] คืนพื้นที่: " . round($saved, 2) . " MB | ANALYZE: $analyzeMsg | OPTIMIZE: $optMsg";
+            }
 
         } catch (PDOException $e) {
             $response['message'] = "❌ ผิดพลาด: `$table` - " . $e->getMessage();
@@ -94,6 +108,78 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+    // 2. Action: แปลง Engine เป็น InnoDB เฉพาะตาราง (Convert Engine Only)
+    if ($action == 'convert_engine' && !empty($table)) {
+        $response = [
+            'success' => false,
+            'skipped' => false,
+            'converted' => false,
+            'orig_engine' => '',
+            'new_engine' => 'INNODB',
+            'message' => ''
+        ];
+        try {
+            if ($tableInfo['TABLE_TYPE'] === 'VIEW') {
+                $response['skipped'] = true;
+                $response['success'] = true;
+                $response['message'] = "⏭️ ข้าม: `$table` เป็น VIEW ไม่สามารถแปลง ENGINE ได้";
+                header('Content-Type: application/json');
+                echo json_encode($response);
+                exit;
+            }
+
+            $infoStmt = $conn->prepare("
+                SELECT ENGINE 
+                FROM information_schema.TABLES 
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table
+            ");
+            $infoStmt->execute(['table' => $table]);
+            $engineInfo = $infoStmt->fetch(PDO::FETCH_ASSOC);
+            $origEngine = strtoupper($engineInfo['ENGINE'] ?? '');
+            $response['orig_engine'] = $origEngine;
+
+            if ($origEngine === 'INNODB') {
+                $response['success'] = true;
+                $response['converted'] = false;
+                $response['message'] = "ℹ️ ตาราง `$table` เป็น InnoDB อยู่แล้ว";
+            } else {
+                $conn->exec("ALTER TABLE `$table` ENGINE = InnoDB");
+                $conn->query("ANALYZE TABLE `$table`");
+                $response['success'] = true;
+                $response['converted'] = true;
+                $response['message'] = "✅ แปลง ENGINE ของตาราง `$table` จาก $origEngine เป็น InnoDB เรียบร้อยแล้ว";
+            }
+        } catch (PDOException $e) {
+            $response['message'] = "❌ ผิดพลาดในการแปลง ENGINE `$table`: " . $e->getMessage();
+        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
+    }
+
+    // 3. Action: ดึงข้อมูลรายละเอียดของตาราง (Table Info)
+    if ($action == 'get_table_info' && !empty($table)) {
+        try {
+            $stmt = $conn->prepare("
+                SELECT TABLE_NAME, ENGINE, TABLE_ROWS, TABLE_COLLATION, TABLE_TYPE,
+                       ROUND(((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024), 2) AS TOTAL_SIZE_MB,
+                       ROUND((DATA_LENGTH / 1024 / 1024), 2) AS DATA_SIZE_MB,
+                       ROUND((INDEX_LENGTH / 1024 / 1024), 2) AS INDEX_SIZE_MB
+                FROM information_schema.TABLES 
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table
+            ");
+            $stmt->execute(['table' => $table]);
+            $info = $stmt->fetch(PDO::FETCH_ASSOC);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'data' => $info]);
+        } catch (PDOException $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => '❌ ไม่สามารถดึงข้อมูลตาราง: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+
+    // 4. Action: ดึงดัชนี (Indexes) ของตาราง
     if ($action == 'get_indexes' && !empty($table)) {
         try {
             $stmt = $conn->prepare("SHOW INDEX FROM `$table`");
@@ -127,6 +213,7 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+    // 5. Action: ดึงคอลัมน์ของตาราง
     if ($action == 'get_columns' && !empty($table)) {
         try {
             $stmt = $conn->prepare("SHOW COLUMNS FROM `$table`");
@@ -152,6 +239,7 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+    // 6. Action: สร้าง Index
     if ($action == 'create_index' && !empty($table)) {
         $index_name = isset($_GET['index_name']) ? trim($_GET['index_name']) : '';
         $index_type = isset($_GET['index_type']) ? trim($_GET['index_type']) : 'INDEX';
@@ -209,6 +297,7 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+    // 7. Action: ลบ Index
     if ($action == 'drop_index' && !empty($table)) {
         $index_name = isset($_GET['index_name']) ? trim($_GET['index_name']) : '';
 
@@ -240,6 +329,7 @@ if (isset($_GET['action'])) {
         exit;
     }
 
+    // 8. Action: Analyze Table
     if ($action == 'analyze_table' && !empty($table)) {
         try {
             $stmt = $conn->query("ANALYZE TABLE `$table`");
@@ -262,9 +352,10 @@ if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
     exit;
 } else {
-    // ดึงเฉพาะ BASE TABLE (ไม่รวม VIEW) ตั้งแต่แรก
+    // ดึงตารางทั้งหมดในฐานข้อมูล
     $stmt = $conn->query(
-        "SELECT TABLE_NAME, TABLE_TYPE 
+        "SELECT TABLE_NAME, TABLE_TYPE, ENGINE, TABLE_ROWS, 
+                ROUND(((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024), 2) AS TOTAL_SIZE_MB
          FROM information_schema.TABLES 
          WHERE TABLE_SCHEMA = DATABASE() 
          ORDER BY TABLE_NAME"
@@ -274,6 +365,8 @@ if (strlen($_SESSION['alogin']) == "") {
     $totalCount = count($tableNames);
     $viewCount  = count(array_filter($allTables, fn($t) => $t['TABLE_TYPE'] === 'VIEW'));
     $baseCount  = $totalCount - $viewCount;
+    $innodbCount = count(array_filter($allTables, fn($t) => $t['TABLE_TYPE'] !== 'VIEW' && strtoupper($t['ENGINE'] ?? '') === 'INNODB'));
+    $nonInnodbCount = $baseCount - $innodbCount;
 
     $dashboard_url = isset($_SESSION['dashboard_page']) ? $_SESSION['dashboard_page'] : 'dashboard.php';
     ?>
@@ -295,7 +388,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 pointer-events: none;
                 opacity: 0.7;
             }
-            /* ดีไซน์พรีเมียมและเอฟเฟกต์สำหรับ Index Manager */
+            /* ดีไซน์พรีเมียมและเอฟเฟกต์สำหรับ Index & Engine Manager */
             .card {
                 border-radius: 12px;
                 border: none;
@@ -337,6 +430,12 @@ if (strlen($_SESSION['alogin']) == "") {
             .cursor-pointer {
                 cursor: pointer;
             }
+            .engine-tag {
+                font-size: 82%;
+                font-weight: 600;
+                padding: 3px 8px;
+                border-radius: 6px;
+            }
         </style>
     </head>
     <body id="page-top">
@@ -349,48 +448,62 @@ if (strlen($_SESSION['alogin']) == "") {
                 <?php include('includes/Top-Bar.php'); ?>
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h4 mb-0 text-gray-800">Database Optimization</h1>
+                        <h1 class="h4 mb-0 text-gray-800">Database Optimization & InnoDB Engine Converter</h1>
                     </div>
 
+                    <!-- CARD 1: MySQL Table Optimizer & Engine Converter -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card shadow mb-4">
+                            <div class="card shadow mb-4 border-left-primary">
                                 <div class="card-header py-3 bg-primary text-white d-flex justify-content-between align-items-center">
-                                    <h6 class="m-0 font-weight-bold">MySQL Table Optimizer</h6>
+                                    <h6 class="m-0 font-weight-bold"><i class="fas fa-database mr-2"></i>MySQL Table Optimizer & Engine Converter</h6>
                                     <a href="<?php echo $dashboard_url; ?>" class="btn btn-sm btn-light shadow-sm text-primary">
                                         <i class="fas fa-home fa-sm"></i> Home
                                     </a>
                                 </div>
                                 <div class="card-body">
-                                    <!-- Summary -->
+                                    <!-- Summary Statistics -->
                                     <div class="row text-center mb-4">
-                                        <div class="col-4 border-right">
-                                            <span class="text-muted small">ตารางทั้งหมด (BASE TABLE)</span>
-                                            <div class="h3 font-weight-bold"><?php echo $baseCount; ?></div>
+                                        <div class="col-md-2 col-6 border-right mb-2 mb-md-0">
+                                            <span class="text-muted small font-weight-bold">ตารางทั้งหมด (BASE)</span>
+                                            <div class="h4 font-weight-bold text-dark mb-0"><?php echo $baseCount; ?></div>
                                         </div>
-                                        <div class="col-4 border-right">
-                                            <span class="text-muted small">VIEW (ข้ามทั้งหมด)</span>
-                                            <div class="h3 font-weight-bold text-warning"><?php echo $viewCount; ?></div>
+                                        <div class="col-md-2 col-6 border-right mb-2 mb-md-0">
+                                            <span class="text-muted small font-weight-bold">InnoDB</span>
+                                            <div class="h4 font-weight-bold text-success mb-0"><span id="innodb-count"><?php echo $innodbCount; ?></span></div>
                                         </div>
-                                        <div class="col-4">
-                                            <span class="text-muted small">Total Space Saved</span>
-                                            <div class="h3 font-weight-bold text-success"><span id="total-saved">0.00</span> MB</div>
+                                        <div class="col-md-3 col-6 border-right mb-2 mb-md-0">
+                                            <span class="text-muted small font-weight-bold">Non-InnoDB (เช่น MyISAM)</span>
+                                            <div class="h4 font-weight-bold <?php echo $nonInnodbCount > 0 ? 'text-warning' : 'text-muted'; ?> mb-0"><span id="non-innodb-count"><?php echo $nonInnodbCount; ?></span></div>
+                                        </div>
+                                        <div class="col-md-2 col-6 border-right mb-2 mb-md-0">
+                                            <span class="text-muted small font-weight-bold">VIEW (ข้าม)</span>
+                                            <div class="h4 font-weight-bold text-secondary mb-0"><?php echo $viewCount; ?></div>
+                                        </div>
+                                        <div class="col-md-3 col-12">
+                                            <span class="text-muted small font-weight-bold">Total Space Saved</span>
+                                            <div class="h4 font-weight-bold text-info mb-0"><span id="total-saved">0.00</span> MB</div>
                                         </div>
                                     </div>
 
-                                    <!-- Buttons -->
+                                    <!-- Action Buttons -->
                                     <div class="text-center mb-4">
-                                        <button id="start-btn" class="btn btn-primary btn-lg px-4">
-                                            <i class="fas fa-play mr-2"></i>เริ่มรัน Optimize
-                                        </button>
-                                        <div id="after-action-btns" class="d-none">
-                                            <button id="reset-btn" class="btn btn-warning btn-lg px-4">
+                                        <div id="main-action-buttons">
+                                            <button id="start-btn" class="btn btn-primary btn-lg px-4 mr-2 mb-2 btn-premium">
+                                                <i class="fas fa-magic mr-2"></i>แปลงเป็น InnoDB & Optimize ทุกตาราง
+                                            </button>
+                                            <button id="convert-only-btn" class="btn btn-info btn-lg px-4 mb-2 btn-premium">
+                                                <i class="fas fa-exchange-alt mr-2"></i>แปลงเป็น InnoDB ทุกตาราง (โหมดเร็ว)
+                                            </button>
+                                        </div>
+                                        <div id="after-action-btns" class="d-none mt-2">
+                                            <button id="reset-btn" class="btn btn-warning btn-lg px-4 mr-2 mb-2 btn-premium">
                                                 <i class="fas fa-undo mr-2"></i>Reset หน้าจอ
                                             </button>
-                                            <button id="download-btn" class="btn btn-outline-info btn-lg px-4">
+                                            <button id="download-btn" class="btn btn-outline-info btn-lg px-4 mr-2 mb-2 btn-premium">
                                                 <i class="fas fa-file-alt mr-2"></i>ดาวน์โหลดผลลัพธ์
                                             </button>
-                                            <a href="<?php echo $dashboard_url; ?>" class="btn btn-outline-secondary btn-lg px-4">
+                                            <a href="<?php echo $dashboard_url; ?>" class="btn btn-outline-secondary btn-lg px-4 mb-2 btn-premium">
                                                 <i class="fas fa-home mr-2"></i>กลับหน้าหลัก
                                             </a>
                                         </div>
@@ -414,31 +527,50 @@ if (strlen($_SESSION['alogin']) == "") {
                         </div>
                     </div>
 
-                    <!-- NEW CARD: Table Index Manager -->
+                    <!-- CARD 2: Table Index & Engine Manager -->
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card shadow mb-4 border-left-success">
                                 <div class="card-header py-3 bg-success text-white d-flex justify-content-between align-items-center">
-                                    <h6 class="m-0 font-weight-bold"><i class="fas fa-key mr-2"></i>ระบบจัดการ Index รายตาราง (Table Index Manager)</h6>
+                                    <h6 class="m-0 font-weight-bold"><i class="fas fa-key mr-2"></i>ระบบจัดการ Index & แปลง Engine รายตาราง (Table & Index Manager)</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-5">
                                             <label for="select-table" class="font-weight-bold text-dark">เลือกตารางที่ต้องการจัดการ:</label>
                                             <select id="select-table" class="form-control">
                                                 <option value="">-- กรุณาเลือกตาราง --</option>
-                                                <?php foreach ($tableNames as $tbl): ?>
-                                                    <option value="<?php echo htmlspecialchars($tbl); ?>"><?php echo htmlspecialchars($tbl); ?></option>
+                                                <?php foreach ($allTables as $tbl): 
+                                                    $isView = ($tbl['TABLE_TYPE'] === 'VIEW');
+                                                    $tblEng = strtoupper($tbl['ENGINE'] ?? '');
+                                                    $badgeText = $isView ? 'VIEW' : ($tblEng ?: 'TABLE');
+                                                ?>
+                                                    <option value="<?php echo htmlspecialchars($tbl['TABLE_NAME']); ?>" data-engine="<?php echo htmlspecialchars($tblEng); ?>" data-type="<?php echo htmlspecialchars($tbl['TABLE_TYPE']); ?>">
+                                                        <?php echo htmlspecialchars($tbl['TABLE_NAME']); ?> [<?php echo $badgeText; ?>]
+                                                    </option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
-                                        <div class="col-md-6 d-flex align-items-end justify-content-md-end mt-3 mt-md-0">
-                                            <button id="btn-analyze-table" class="btn btn-outline-primary mr-2 btn-premium" disabled>
+                                        <div class="col-md-7 d-flex flex-wrap align-items-end justify-content-md-end mt-3 mt-md-0">
+                                            <button id="btn-convert-single" class="btn btn-outline-warning mr-2 mb-2 btn-premium" disabled>
+                                                <i class="fas fa-exchange-alt mr-1"></i> แปลงเป็น InnoDB
+                                            </button>
+                                            <button id="btn-analyze-table" class="btn btn-outline-primary mr-2 mb-2 btn-premium" disabled>
                                                 <i class="fas fa-sync mr-1"></i> ปรับปรุงสถิติ Index (ANALYZE)
                                             </button>
-                                            <button id="btn-optimize-table" class="btn btn-outline-success btn-premium" disabled>
-                                                <i class="fas fa-tools mr-1"></i> Rebuild Index (OPTIMIZE)
+                                            <button id="btn-optimize-table" class="btn btn-outline-success mb-2 btn-premium" disabled>
+                                                <i class="fas fa-tools mr-1"></i> Rebuild & Optimize
                                             </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Table Info Box -->
+                                    <div id="table-info-box" class="d-none alert alert-light border mb-3 py-2 px-3">
+                                        <div class="row align-items-center small">
+                                            <div class="col-md-3"><strong>ตาราง:</strong> <span id="info-table-name" class="text-primary font-weight-bold">-</span></div>
+                                            <div class="col-md-3"><strong>Engine:</strong> <span id="info-engine-badge" class="badge badge-info">-</span></div>
+                                            <div class="col-md-3"><strong>จำนวนแถว:</strong> <span id="info-table-rows" class="text-dark font-weight-bold">-</span></div>
+                                            <div class="col-md-3"><strong>ขนาดรวม:</strong> <span id="info-table-size" class="text-success font-weight-bold">-</span> MB</div>
                                         </div>
                                     </div>
 
@@ -509,8 +641,10 @@ if (strlen($_SESSION['alogin']) == "") {
         document.addEventListener('DOMContentLoaded', function () {
             const tables        = <?php echo json_encode($tableNames); ?>;
             const startBtn      = document.getElementById('start-btn');
+            const convertOnlyBtn = document.getElementById('convert-only-btn');
             const resetBtn      = document.getElementById('reset-btn');
             const downloadBtn   = document.getElementById('download-btn');
+            const mainActionBtns = document.getElementById('main-action-buttons');
             const afterActionBtns = document.getElementById('after-action-btns');
             const progressBar   = document.getElementById('progress-bar');
             const uiSection     = document.getElementById('ui-section');
@@ -518,32 +652,58 @@ if (strlen($_SESSION['alogin']) == "") {
             const statusText    = document.getElementById('status-text');
             const countText     = document.getElementById('count-text');
             const totalSavedLabel = document.getElementById('total-saved');
+            const innodbCountLabel = document.getElementById('innodb-count');
+            const nonInnodbCountLabel = document.getElementById('non-innodb-count');
             const lockOverlay   = document.getElementById('lock-overlay');
             const sidebar       = document.getElementById('accordionSidebar');
 
-            // Elements ของ Index Manager
-            const selectTbl     = document.getElementById('select-table');
-            const btnAnalyze    = document.getElementById('btn-analyze-table');
-            const btnOptimizeTbl = document.getElementById('btn-optimize-table');
-            const idxManagerSec = document.getElementById('index-manager-section');
-            const indexesListBody = document.getElementById('indexes-list-body');
-            const colCheckboxList = document.getElementById('columns-checkbox-list');
-            const newIdxNameInput = document.getElementById('new-index-name');
-            const newIdxTypeSelect = document.getElementById('new-index-type');
-            const btnCreateIdx  = document.getElementById('btn-create-index');
+            // Elements ของ Index & Engine Manager
+            const selectTbl         = document.getElementById('select-table');
+            const btnConvertSingle  = document.getElementById('btn-convert-single');
+            const btnAnalyze        = document.getElementById('btn-analyze-table');
+            const btnOptimizeTbl    = document.getElementById('btn-optimize-table');
+            const tableInfoBox      = document.getElementById('table-info-box');
+            const infoTableName     = document.getElementById('info-table-name');
+            const infoEngineBadge   = document.getElementById('info-engine-badge');
+            const infoTableRows     = document.getElementById('info-table-rows');
+            const infoTableSize     = document.getElementById('info-table-size');
+            const idxManagerSec     = document.getElementById('index-manager-section');
+            const indexesListBody   = document.getElementById('indexes-list-body');
+            const colCheckboxList   = document.getElementById('columns-checkbox-list');
+            const newIdxNameInput   = document.getElementById('new-index-name');
+            const newIdxTypeSelect  = document.getElementById('new-index-type');
+            const btnCreateIdx      = document.getElementById('btn-create-index');
 
             let logContent = "";
             let totalSaved = 0;
+            let currentInnodbCount = parseInt(innodbCountLabel.innerText) || 0;
+            let currentNonInnodbCount = parseInt(nonInnodbCountLabel.innerText) || 0;
+
+            function updateEngineCounters(convertedCount) {
+                if (convertedCount > 0) {
+                    currentInnodbCount += convertedCount;
+                    currentNonInnodbCount = Math.max(0, currentNonInnodbCount - convertedCount);
+                    innodbCountLabel.innerText = currentInnodbCount;
+                    nonInnodbCountLabel.innerText = currentNonInnodbCount;
+                    if (currentNonInnodbCount === 0) {
+                        nonInnodbCountLabel.classList.remove('text-warning');
+                        nonInnodbCountLabel.classList.add('text-muted');
+                    }
+                }
+            }
 
             function setInterfaceLock(isLocked) {
                 lockOverlay.style.display = isLocked ? 'block' : 'none';
                 if (sidebar) sidebar.classList.toggle('working-overlay', isLocked);
                 
-                // ควบคุมปุ่มต่างๆ
                 startBtn.disabled = isLocked;
+                if (convertOnlyBtn) convertOnlyBtn.disabled = isLocked;
                 if (selectTbl) selectTbl.disabled = isLocked;
                 if (btnCreateIdx) btnCreateIdx.disabled = isLocked;
                 
+                if (btnConvertSingle) {
+                    btnConvertSingle.disabled = isLocked || !selectTbl.value;
+                }
                 if (btnAnalyze) {
                     btnAnalyze.disabled = isLocked || !selectTbl.value;
                 }
@@ -569,19 +729,21 @@ if (strlen($_SESSION['alogin']) == "") {
                 logContent            += logLine + "\n";
             }
 
+            // 1. ปุ่มเริ่มรัน แปลง Engine เป็น InnoDB & Optimize ทุกตาราง
             startBtn.addEventListener('click', async () => {
-                if (!confirm('ยืนยันการเริ่มทำงาน? ระบบจะระงับเมนูชั่วคราวจนกว่าจะเสร็จสิ้น')) return;
+                if (!confirm('ยืนยันการเริ่มทำงาน? ระบบจะแปลงทุกตารางเป็น InnoDB และทำการ Optimize & Reindex ข้อมูลทั้งหมด')) return;
 
                 setInterfaceLock(true);
+                mainActionBtns.classList.add('d-none');
                 afterActionBtns.classList.add('d-none');
-                startBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>กำลังดำเนินการ...';
                 uiSection.classList.remove('d-none');
                 logWindow.innerHTML = '';
                 totalSaved = 0;
                 totalSavedLabel.innerText = "0.00";
-                logContent = "Database Optimization Report\nDate: " + new Date().toLocaleString() + "\n" + "=".repeat(60) + "\n";
+                logContent = "Database Optimization & InnoDB Conversion Report\nDate: " + new Date().toLocaleString() + "\n" + "=".repeat(70) + "\n";
 
                 let completed = 0;
+                let convertedTotal = 0;
                 const total   = tables.length;
 
                 for (const table of tables) {
@@ -593,10 +755,18 @@ if (strlen($_SESSION['alogin']) == "") {
                         if (result.skipped) {
                             appendLog(result.message, '#888888', true);
                         } else if (result.success) {
-                            const saved = Math.max(0, result.before - result.after);
+                            const saved = Math.max(0, (result.before || 0) - (result.after || 0));
                             totalSaved += saved;
                             totalSavedLabel.innerText = totalSaved.toFixed(2);
-                            appendLog(result.message, '#8cf68c');
+                            
+                            if (result.converted) {
+                                convertedTotal++;
+                                updateEngineCounters(1);
+                                appendLog(result.message, '#ffc107'); // สีเหลืองทองเมื่อแปลง Engine สำเร็จ
+                                updateDropdownOptionEngine(table, 'INNODB');
+                            } else {
+                                appendLog(result.message, '#8cf68c'); // สีเขียวปกติ
+                            }
                         } else {
                             appendLog(result.message, '#ff6b6b');
                         }
@@ -612,21 +782,76 @@ if (strlen($_SESSION['alogin']) == "") {
                     countText.innerText      = `${completed} / ${total}`;
                 }
 
-                logContent += "=".repeat(60) + "\nTotal Space Saved: " + totalSaved.toFixed(2) + " MB\n";
-                statusText.innerText = "✅ เสร็จสมบูรณ์!";
-                startBtn.classList.add('d-none');
+                logContent += "=".repeat(70) + "\nTotal Space Saved: " + totalSaved.toFixed(2) + " MB\nTotal Tables Converted to InnoDB: " + convertedTotal + "\n";
+                statusText.innerText = `✅ เสร็จสมบูรณ์! (แปลงเป็น InnoDB: ${convertedTotal} ตาราง, คืนพื้นที่รวม: ${totalSaved.toFixed(2)} MB)`;
                 afterActionBtns.classList.remove('d-none');
                 setInterfaceLock(false);
 
-                // หากมีการเลือกตารางใน Index Manager ให้รีโหลดด้วย
                 if (selectTbl.value) {
-                    loadTableIndexes(selectTbl.value);
+                    loadTableDetails(selectTbl.value);
                 }
             });
 
+            // 2. ปุ่มแปลงเป็น InnoDB ทุกตาราง (โหมดเร็ว)
+            convertOnlyBtn.addEventListener('click', async () => {
+                if (!confirm('ยืนยันการแปลง Engine ของทุกตารางให้เป็น InnoDB (โหมดเร็ว)?')) return;
+
+                setInterfaceLock(true);
+                mainActionBtns.classList.add('d-none');
+                afterActionBtns.classList.add('d-none');
+                uiSection.classList.remove('d-none');
+                logWindow.innerHTML = '';
+                logContent = "Fast Engine Conversion to InnoDB Report\nDate: " + new Date().toLocaleString() + "\n" + "=".repeat(70) + "\n";
+
+                let completed = 0;
+                let convertedTotal = 0;
+                const total   = tables.length;
+
+                for (const table of tables) {
+                    statusText.innerText = `กำลังแปลงตาราง: ${table}...`;
+                    try {
+                        const res    = await fetch(`?action=convert_engine&table=${encodeURIComponent(table)}`);
+                        const result = await res.json();
+
+                        if (result.skipped) {
+                            appendLog(result.message, '#888888', true);
+                        } else if (result.success) {
+                            if (result.converted) {
+                                convertedTotal++;
+                                updateEngineCounters(1);
+                                appendLog(result.message, '#ffc107');
+                                updateDropdownOptionEngine(table, 'INNODB');
+                            } else {
+                                appendLog(result.message, '#8cf68c');
+                            }
+                        } else {
+                            appendLog(result.message, '#ff6b6b');
+                        }
+
+                    } catch (error) {
+                        appendLog(`❌ ไม่สามารถแปลง Engine ของตาราง: ${table}`, '#ff6b6b');
+                    }
+
+                    completed++;
+                    const percent = Math.round((completed / total) * 100);
+                    progressBar.style.width  = percent + '%';
+                    progressBar.innerText    = percent + '%';
+                    countText.innerText      = `${completed} / ${total}`;
+                }
+
+                logContent += "=".repeat(70) + "\nTotal Tables Converted to InnoDB: " + convertedTotal + "\n";
+                statusText.innerText = `✅ แปลง Engine เป็น InnoDB เสร็จสมบูรณ์! (${convertedTotal} ตาราง)`;
+                afterActionBtns.classList.remove('d-none');
+                setInterfaceLock(false);
+
+                if (selectTbl.value) {
+                    loadTableDetails(selectTbl.value);
+                }
+            });
+
+            // 3. Reset Button
             resetBtn.addEventListener('click', () => {
-                startBtn.classList.remove('d-none');
-                startBtn.innerHTML = '<i class="fas fa-play mr-2"></i>เริ่มรัน Optimize';
+                mainActionBtns.classList.remove('d-none');
                 afterActionBtns.classList.add('d-none');
                 uiSection.classList.add('d-none');
                 totalSavedLabel.innerText = "0.00";
@@ -635,15 +860,83 @@ if (strlen($_SESSION['alogin']) == "") {
                 logWindow.innerHTML       = '<div style="color: #666;">--- กดปุ่มด้านบนเพื่อเริ่มกระบวนการ ---</div>';
             });
 
+            // 4. Download Report Button
             downloadBtn.addEventListener('click', () => {
-                const blob = new Blob([logContent], { type: 'text/plain' });
+                const blob = new Blob([logContent], { type: 'text/plain;charset=utf-8' });
                 const url  = window.URL.createObjectURL(blob);
                 const a    = document.createElement('a');
                 a.href     = url;
-                a.download = `db_optimize_report_${new Date().toISOString().slice(0,10)}.txt`;
+                a.download = `db_innodb_optimize_report_${new Date().toISOString().slice(0,10)}.txt`;
                 a.click();
                 window.URL.revokeObjectURL(url);
             });
+
+            // อัปเดตข้อความใน Dropdown option เมื่อ Engine เปลี่ยน
+            function updateDropdownOptionEngine(tableName, newEngine) {
+                const opt = selectTbl.querySelector(`option[value="${tableName}"]`);
+                if (opt) {
+                    opt.setAttribute('data-engine', newEngine);
+                    opt.textContent = `${tableName} [${newEngine}]`;
+                }
+            }
+
+            // โหลดข้อมูลรวมของตาราง
+            async function loadTableDetails(tableName) {
+                if (!tableName) {
+                    tableInfoBox.classList.add('d-none');
+                    idxManagerSec.classList.add('d-none');
+                    btnConvertSingle.disabled = true;
+                    btnAnalyze.disabled = true;
+                    btnOptimizeTbl.disabled = true;
+                    return;
+                }
+
+                tableInfoBox.classList.remove('d-none');
+                idxManagerSec.classList.remove('d-none');
+                infoTableName.innerText = tableName;
+                infoEngineBadge.className = 'badge badge-secondary';
+                infoEngineBadge.innerText = 'กำลังโหลด...';
+
+                try {
+                    const res = await fetch(`?action=get_table_info&table=${encodeURIComponent(tableName)}`);
+                    const result = await res.json();
+                    if (result.success && result.data) {
+                        const d = result.data;
+                        const eng = (d.ENGINE || '').toUpperCase();
+                        const isView = (d.TABLE_TYPE === 'VIEW');
+
+                        if (isView) {
+                            infoEngineBadge.className = 'badge badge-secondary';
+                            infoEngineBadge.innerText = 'VIEW';
+                            btnConvertSingle.disabled = true;
+                            btnAnalyze.disabled = true;
+                            btnOptimizeTbl.disabled = true;
+                        } else {
+                            if (eng === 'INNODB') {
+                                infoEngineBadge.className = 'badge badge-success';
+                                infoEngineBadge.innerHTML = '<i class="fas fa-check-circle mr-1"></i>InnoDB';
+                                btnConvertSingle.disabled = true;
+                                btnConvertSingle.innerHTML = '<i class="fas fa-check mr-1"></i> เป็น InnoDB แล้ว';
+                            } else {
+                                infoEngineBadge.className = 'badge badge-warning text-dark';
+                                infoEngineBadge.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${eng || 'NON-INNODB'}`;
+                                btnConvertSingle.disabled = false;
+                                btnConvertSingle.innerHTML = '<i class="fas fa-exchange-alt mr-1"></i> แปลงเป็น InnoDB';
+                            }
+                            btnAnalyze.disabled = false;
+                            btnOptimizeTbl.disabled = false;
+                        }
+
+                        infoTableRows.innerText = d.TABLE_ROWS ? Number(d.TABLE_ROWS).toLocaleString() : '0';
+                        infoTableSize.innerText = d.TOTAL_SIZE_MB || '0.00';
+                    }
+                } catch (e) {
+                    infoEngineBadge.innerText = 'Error';
+                }
+
+                loadTableIndexes(tableName);
+                loadTableColumns(tableName);
+            }
 
             // ฟังก์ชันโหลด Index ของตาราง
             async function loadTableIndexes(tableName) {
@@ -703,8 +996,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                     const result = await res.json();
                                     alert(result.message);
                                     if (result.success) {
-                                        loadTableIndexes(tableName);
-                                        loadTableColumns(tableName);
+                                        loadTableDetails(tableName);
                                     }
                                 } catch (err) {
                                     alert('เกิดข้อผิดพลาดในการลบ Index');
@@ -762,17 +1054,35 @@ if (strlen($_SESSION['alogin']) == "") {
 
             // เมื่อเปลี่ยนตารางที่เลือก
             selectTbl.addEventListener('change', () => {
+                loadTableDetails(selectTbl.value);
+            });
+
+            // ปุ่มแปลง Engine เป็น InnoDB สำหรับตารางที่เลือก
+            btnConvertSingle.addEventListener('click', async () => {
                 const tableName = selectTbl.value;
-                if (tableName) {
-                    btnAnalyze.disabled = false;
-                    btnOptimizeTbl.disabled = false;
-                    idxManagerSec.classList.remove('d-none');
-                    loadTableIndexes(tableName);
-                    loadTableColumns(tableName);
-                } else {
-                    btnAnalyze.disabled = true;
-                    btnOptimizeTbl.disabled = true;
-                    idxManagerSec.classList.add('d-none');
+                if (!tableName) return;
+
+                if (!confirm(`ยืนยันการแปลง Engine ของตาราง '${tableName}' ให้เป็น InnoDB?`)) return;
+
+                setInterfaceLock(true);
+                btnConvertSingle.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> กำลังแปลง...';
+
+                try {
+                    const res = await fetch(`?action=convert_engine&table=${encodeURIComponent(tableName)}`);
+                    const result = await res.json();
+                    alert(result.message);
+                    if (result.success) {
+                        if (result.converted) {
+                            updateEngineCounters(1);
+                            updateDropdownOptionEngine(tableName, 'INNODB');
+                        }
+                        loadTableDetails(tableName);
+                    }
+                } catch (error) {
+                    alert('เกิดข้อผิดพลาดในการส่งคำสั่งแปลง Engine');
+                } finally {
+                    btnConvertSingle.innerHTML = '<i class="fas fa-exchange-alt mr-1"></i> แปลงเป็น InnoDB';
+                    setInterfaceLock(false);
                 }
             });
 
@@ -789,7 +1099,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     const result = await res.json();
                     alert(result.message);
                     if (result.success) {
-                        loadTableIndexes(tableName);
+                        loadTableDetails(tableName);
                     }
                 } catch (error) {
                     alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
@@ -804,7 +1114,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 const tableName = selectTbl.value;
                 if (!tableName) return;
                 
-                if (!confirm(`ต้องการ Rebuild และจัดระเบียบ Index ของตาราง '${tableName}' ใช่หรือไม่?`)) return;
+                if (!confirm(`ต้องการ Rebuild และ Optimize ตาราง '${tableName}' ใช่หรือไม่?`)) return;
 
                 setInterfaceLock(true);
                 btnOptimizeTbl.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> กำลังปรับปรุง...';
@@ -814,12 +1124,16 @@ if (strlen($_SESSION['alogin']) == "") {
                     const result = await res.json();
                     alert(result.message);
                     if (result.success) {
-                        loadTableIndexes(tableName);
+                        if (result.converted) {
+                            updateEngineCounters(1);
+                            updateDropdownOptionEngine(tableName, 'INNODB');
+                        }
+                        loadTableDetails(tableName);
                     }
                 } catch (error) {
                     alert('เกิดข้อผิดพลาดในการส่งคำสั่ง OPTIMIZE');
                 } finally {
-                    btnOptimizeTbl.innerHTML = '<i class="fas fa-tools mr-1"></i> Rebuild Index (OPTIMIZE)';
+                    btnOptimizeTbl.innerHTML = '<i class="fas fa-tools mr-1"></i> Rebuild & Optimize';
                     setInterfaceLock(false);
                 }
             });
@@ -858,8 +1172,7 @@ if (strlen($_SESSION['alogin']) == "") {
                     alert(result.message);
                     if (result.success) {
                         newIdxNameInput.value = '';
-                        loadTableIndexes(tableName);
-                        loadTableColumns(tableName);
+                        loadTableDetails(tableName);
                     }
                 } catch (error) {
                     alert('เกิดข้อผิดพลาดในการสร้าง Index');
