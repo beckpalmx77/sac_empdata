@@ -677,6 +677,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                 $('#save').attr('disabled', 'disabled'); // ปิดการใช้งานปุ่ม Save เพื่อไม่ให้กดหลายครั้ง
 
                 let formData = new FormData(this);
+                formData.delete("image_upload[]");
                 selectedFiles.forEach(file => {
                     formData.append("image_upload[]", file);
                 });

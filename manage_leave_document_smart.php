@@ -755,6 +755,7 @@ if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "
                         let l_before = $('#leave_before').val();
 
                         let formData = new FormData(this);
+                        formData.delete("image_upload[]");
                         selectedFiles.forEach(file => {
                             formData.append("image_upload[]", file);
                         });
