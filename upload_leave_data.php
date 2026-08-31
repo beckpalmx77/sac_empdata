@@ -16,6 +16,8 @@ if (strlen($_SESSION['alogin']) == "") {
         <script type="text/javascript" src="js/script.js"></script>
         <script type="text/javascript" src="js/alertify/alertify.js"></script>
         <link rel="stylesheet" href="js/alertify/css/alertify.css">
+        <script src="js/heic2any.min.js"></script>
+        <script src="js/heic_handler.js"></script>
         <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -125,10 +127,10 @@ if (strlen($_SESSION['alogin']) == "") {
                                     <div class="col-sm-10">
                                         <label for="uploadImage"
                                                class="control-label">เลือกไฟล์รูปภาพที่ต้องการ Upload</label>
-                                        <input class="form-control" type="file" id="uploadImage" accept="image/*,.pdf,.doc,.docx"
+                                        <input class="form-control" type="file" id="uploadImage" accept="image/*,.heic,.heif,.pdf,.doc,.docx"
                                                name="image[]"
                                                onchange="previewImages(event)" multiple/>
-                                        <div>Upload File (ไฟล์ .jpg , .png , .pdf , .doc , .docx) ชี้ที่รูปเพื่อขยาย หรือ Click
+                                        <div>Upload File (ไฟล์ .jpg , .png , .heic , .pdf , .doc , .docx) ชี้ที่รูปเพื่อขยาย หรือ Click
                                             เพื่อเปิดดูภาพ
                                         </div>
                                     </div>
@@ -238,13 +240,14 @@ if (strlen($_SESSION['alogin']) == "") {
     <script>
         let selectedFiles = [];
         
-        function previewImages(event) {
+        async function previewImages(event) {
             const container = document.getElementById('preview-container');
             
             const newFiles = Array.from(event.target.files);
             if (newFiles.length === 0) return;
             
-            newFiles.forEach((file) => {
+            const processedFiles = await convertFileList(newFiles);
+            processedFiles.forEach((file) => {
                 selectedFiles.push(file);
             });
             
@@ -256,59 +259,67 @@ if (strlen($_SESSION['alogin']) == "") {
             container.innerHTML = '';
             
             selectedFiles.forEach((file, index) => {
-                let reader = new FileReader();
+                const ext = file.name.split('.').pop().toLowerCase();
+                let div = document.createElement('div');
+                div.style.position = 'relative';
+                div.style.display = 'inline-block';
+                div.style.textAlign = 'center';
+                div.style.margin = '5px';
                 
-                reader.onload = function (e) {
-                    let div = document.createElement('div');
-                    div.style.position = 'relative';
-                    div.style.display = 'inline-block';
-                    div.style.textAlign = 'center';
-                    div.style.margin = '5px';
-                    
-                    let img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.maxWidth = '100px';
-                    img.style.maxHeight = '100px';
-                    img.style.cursor = 'pointer';
+                let img = document.createElement('img');
+                img.style.maxWidth = '100px';
+                img.style.maxHeight = '100px';
+                img.style.cursor = 'pointer';
+                
+                if (['pdf', 'doc', 'docx'].includes(ext)) {
+                    img.src = 'img_doc/image_doc.png';
+                    img.onclick = function() {
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL, '_blank');
+                    };
+                } else {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
                     img.onclick = function() {
                         window.open(this.src, '_blank');
                     };
-                    
-                    let filename = document.createElement('div');
-                    filename.textContent = file.name;
-                    filename.style.fontSize = '10px';
-                    filename.style.maxWidth = '100px';
-                    filename.style.overflow = 'hidden';
-                    filename.style.textOverflow = 'ellipsis';
-                    filename.style.whiteSpace = 'nowrap';
-                    
-                    let removeBtn = document.createElement('span');
-                    removeBtn.innerHTML = '&times;';
-                    removeBtn.style.position = 'absolute';
-                    removeBtn.style.top = '-5px';
-                    removeBtn.style.right = '-5px';
-                    removeBtn.style.background = 'red';
-                    removeBtn.style.color = 'white';
-                    removeBtn.style.borderRadius = '50%';
-                    removeBtn.style.width = '20px';
-                    removeBtn.style.height = '20px';
-                    removeBtn.style.display = 'flex';
-                    removeBtn.style.alignItems = 'center';
-                    removeBtn.style.justifyContent = 'center';
-                    removeBtn.style.cursor = 'pointer';
-                    removeBtn.style.fontSize = '14px';
-                    removeBtn.onclick = function() {
-                        selectedFiles.splice(index, 1);
-                        renderPreview();
-                    };
-                    
-                    div.appendChild(img);
-                    div.appendChild(filename);
-                    div.appendChild(removeBtn);
-                    container.appendChild(div);
+                }
+                
+                let filename = document.createElement('div');
+                filename.textContent = file.name;
+                filename.style.fontSize = '10px';
+                filename.style.maxWidth = '100px';
+                filename.style.overflow = 'hidden';
+                filename.style.textOverflow = 'ellipsis';
+                filename.style.whiteSpace = 'nowrap';
+                
+                let removeBtn = document.createElement('span');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.style.position = 'absolute';
+                removeBtn.style.top = '-5px';
+                removeBtn.style.right = '-5px';
+                removeBtn.style.background = 'red';
+                removeBtn.style.color = 'white';
+                removeBtn.style.borderRadius = '50%';
+                removeBtn.style.width = '20px';
+                removeBtn.style.height = '20px';
+                removeBtn.style.display = 'flex';
+                removeBtn.style.alignItems = 'center';
+                removeBtn.style.justifyContent = 'center';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.style.fontSize = '14px';
+                removeBtn.onclick = function() {
+                    selectedFiles.splice(index, 1);
+                    renderPreview();
                 };
                 
-                reader.readAsDataURL(file);
+                div.appendChild(img);
+                div.appendChild(filename);
+                div.appendChild(removeBtn);
+                container.appendChild(div);
             });
             
             updateFileInput();
@@ -497,4 +508,3 @@ if (strlen($_SESSION['alogin']) == "") {
     <?php
 }
 ?>
-

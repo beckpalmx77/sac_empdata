@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "bootbox": "^6.0.0",
-    "chartjs-plugin-doughnutlabel": "^2.0.3"
+    "chartjs-plugin-doughnutlabel": "^2.0.3",
+    "heic2any": "^0.0.4"
   }
 }
