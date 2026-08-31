@@ -343,3 +343,5 @@ $("#btnAdd").click(function () {
 16. **model/manage_sick_leave_document_process.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
 17. **model/manage_holiday_process.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
 18. **model/update_leave_doc.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
+19. **test_heic_upload.php** - หน้าจอ UI ทดสอบการเลือก/แปลงไฟล์ HEIC เป็น JPG, ปรับ Quality, Preview รูปภาพ และ Upload ขึ้น Server
+20. **test_heic_process.php** - Backend API สำหรับรับไฟล์จากหน้าทดสอบและดึงรายการไฟล์ล่าสุดใน `img_doc/`
