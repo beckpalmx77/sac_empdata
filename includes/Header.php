@@ -44,6 +44,8 @@ error_reporting(0);
     <script type="text/javascript" charset="utf8" src="../js/datatables1115.js"></script>
 
     <script type="text/javascript" charset="utf8" src="../js/clock_time.js"></script>
+    <script type="text/javascript" src="js/heic2any.min.js"></script>
+    <script type="text/javascript" src="js/heic_handler.js"></script>
 
     <style>
         body, h1, h2, h3, h4, h5, h6 {

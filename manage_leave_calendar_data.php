@@ -182,7 +182,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <input type="hidden" name="payment_id" id="payment_id">
                                 <div class="form-group">
                                     <label>เลือกสลิปใหม่ (ไฟล์ภาพ)</label>
-                                    <input type="file" name="new_slip" id="new_slip" accept="image/*"
+                                    <input type="file" name="new_slip" id="new_slip" accept="image/*,.heic,.heif"
                                            class="form-control" required>
                                 </div>
                                 <div class="text-center">
@@ -425,22 +425,35 @@ if (strlen($_SESSION['alogin']) == "") {
     </script>
 
     <script>
+        let currentSlipFile = null;
+
         // คลิกปุ่ม แก้ไขสลิป
         $("#TableRecordList").on('click', '.slip_update', function () {
             let id = $(this).attr("id");
             $("#payment_id").val(id);
             $("#new_slip").val("");
+            currentSlipFile = null;
             $("#previewSlip").hide();
             $("#editSlipModal").modal('show');
         });
 
         // Preview รูปทันทีที่เลือกไฟล์
-        $("#new_slip").change(function () {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                $("#previewSlip").attr("src", e.target.result).show();
+        $("#new_slip").change(async function () {
+            if (this.files && this.files[0]) {
+                let file = this.files[0];
+                if (typeof isHeicFile === 'function' && isHeicFile(file)) {
+                    if (typeof alertify !== 'undefined' && alertify.message) {
+                        alertify.message('กำลังแปลงไฟล์ HEIC เป็น JPG...');
+                    }
+                    file = await convertHeicToJpg(file);
+                }
+                currentSlipFile = file;
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewSlip").attr("src", e.target.result).show();
+                };
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(this.files[0]);
         });
     </script>
 
@@ -449,6 +462,9 @@ if (strlen($_SESSION['alogin']) == "") {
             e.preventDefault();
 
             let formData = new FormData(this);
+            if (currentSlipFile) {
+                formData.set("new_slip", currentSlipFile);
+            }
             formData.append("action", "UPDATE_SLIP");
 
             $.ajax({

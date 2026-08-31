@@ -313,6 +313,33 @@ $("#btnAdd").click(function () {
 ---
 
 ## 8. หมายเหตุ
-- ไฟล์ที่รองรับ: image/*, .pdf, .doc, .docx
+- ไฟล์ที่รองรับ: image/*, .heic, .heif, .pdf, .doc, .docx
 - การบันทึกชื่อไฟล์ในฐานข้อมูล: คั่นด้วยเครื่องหมาย comma (,)
 - การแสดงผล: แยกชื่อไฟล์ด้วย explode() และ loop แสดงรูปทั้งหมด
+
+---
+
+## 9. ระบบแปลงไฟล์ HEIC เป็น JPG อัตโนมัติ (HEIC to JPG Auto Conversion)
+
+### 9.1 ภาพรวม
+ไฟล์ภาพที่ถ่ายจากอุปกรณ์ iOS (iPhone, iPad) มักบันทึกเป็นนามสกุล `.heic` / `.heif` ซึ่งเว็บบราวเซอร์ทั่วไปไม่สามารถแสดงผลรูปภาพได้โดยตรง ระบบจึงทำการแปลงไฟล์นามสกุล `.heic` และ `.heif` ให้เป็น `.jpg` อัตโนมัติทันทีตั้งแต่ขั้นตอนการเลือกไฟล์บนหน้าจอ พร้อมทั้งรองรับการแปลงที่ฝั่งเซิร์ฟเวอร์ (PHP) เพื่อความสมบูรณ์และถูกต้องของข้อมูล
+
+### 9.2 ไฟล์ที่พัฒนาและแก้ไข
+1. **js/heic2any.min.js** - ไลบรารี JavaScript สำหรับแปลงไฟล์ HEIC เป็น JPG บน WebAssembly/Client-side
+2. **js/heic_handler.js** - ฟังก์ชันตัวช่วย `isHeicFile()`, `convertHeicToJpg()`, `convertFileList()`
+3. **includes/Header.php** - โหลด `js/heic2any.min.js` และ `js/heic_handler.js`
+4. **manage_leave_document.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+5. **manage_leave_document_smart.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+6. **manage_sick_leave_document.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+7. **manage_sick_leave_document_smart.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+8. **upload_leave_data.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+9. **manage_holiday_document_emp.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+10. **manage_holiday_document_emp_smart.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+11. **upload_holiday_data.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` ใน `previewImages`
+12. **manage_leave_calendar_data.php** - รองรับ `.heic,.heif` และแปลงเป็น `.jpg` สำหรับสลิป
+13. **upload_ajax.php** - Backend API รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
+14. **upload_holiday_ajax.php** - Backend API รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
+15. **model/manage_leave_document_process.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
+16. **model/manage_sick_leave_document_process.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
+17. **model/manage_holiday_process.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`
+18. **model/update_leave_doc.php** - Backend รองรับ HEIC และแปลง/บันทึกเป็น `.jpg`

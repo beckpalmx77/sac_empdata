@@ -2,10 +2,10 @@
 
 include('config/connect_db.php');
 
-$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'doc', 'docx');
+$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'doc', 'docx', 'heic', 'heif');
 $path = 'img_doc/';
 
-if(!empty($_POST['id']) || $_FILES['image'])
+if(!empty($_POST['id']) || !empty($_FILES['image']))
 {
     $id = $_POST['id'];
     $filenames = [];
@@ -17,11 +17,39 @@ if(!empty($_POST['id']) || $_FILES['image'])
                 $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
                 
                 if(in_array($ext, $valid_extensions)) {
-                    $final_image = time() . "_" . $key . "_" . basename($img);
-                    $uploadPath = $path . strtolower($final_image);
-                    
-                    if(move_uploaded_file($tmp, $uploadPath)) {
-                        $filenames[] = strtolower($final_image);
+                    if ($ext === 'heic' || $ext === 'heif') {
+                        $base_no_ext = pathinfo($img, PATHINFO_FILENAME);
+                        $final_image = time() . "_" . $key . "_" . $base_no_ext . ".jpg";
+                        $uploadPath = $path . strtolower($final_image);
+                        
+                        $converted = false;
+                        if (extension_loaded('imagick')) {
+                            try {
+                                $imagick = new Imagick();
+                                $imagick->readImage($tmp);
+                                $imagick->setImageFormat('jpeg');
+                                $imagick->writeImage($uploadPath);
+                                $imagick->clear();
+                                $imagick->destroy();
+                                $filenames[] = strtolower($final_image);
+                                $converted = true;
+                            } catch (Exception $e) {
+                                error_log("Imagick error: " . $e->getMessage());
+                            }
+                        }
+                        
+                        if (!$converted) {
+                            if(move_uploaded_file($tmp, $uploadPath)) {
+                                $filenames[] = strtolower($final_image);
+                            }
+                        }
+                    } else {
+                        $final_image = time() . "_" . $key . "_" . basename($img);
+                        $uploadPath = $path . strtolower($final_image);
+                        
+                        if(move_uploaded_file($tmp, $uploadPath)) {
+                            $filenames[] = strtolower($final_image);
+                        }
                     }
                 }
             }

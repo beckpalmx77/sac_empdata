@@ -171,11 +171,42 @@ if ($_POST["action"] === 'ADD') {
             
             foreach ($_FILES['image_upload']['name'] as $key => $name) {
                 if (!empty($name)) {
-                    $filename = time() . "_" . $key . "_" . basename($name);
-                    $uploadFile = $uploadDir . $filename;
+                    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                    $tmp = $_FILES['image_upload']['tmp_name'][$key];
                     
-                    if (move_uploaded_file($_FILES['image_upload']['tmp_name'][$key], $uploadFile)) {
-                        $filenames[] = $filename;
+                    if ($ext === 'heic' || $ext === 'heif') {
+                        $base_no_ext = pathinfo($name, PATHINFO_FILENAME);
+                        $filename = time() . "_" . $key . "_" . $base_no_ext . ".jpg";
+                        $uploadFile = $uploadDir . $filename;
+                        
+                        $converted = false;
+                        if (extension_loaded('imagick')) {
+                            try {
+                                $imagick = new Imagick();
+                                $imagick->readImage($tmp);
+                                $imagick->setImageFormat('jpeg');
+                                $imagick->writeImage($uploadFile);
+                                $imagick->clear();
+                                $imagick->destroy();
+                                $filenames[] = $filename;
+                                $converted = true;
+                            } catch (Exception $e) {
+                                error_log("Imagick error: " . $e->getMessage());
+                            }
+                        }
+                        
+                        if (!$converted) {
+                            if (move_uploaded_file($tmp, $uploadFile)) {
+                                $filenames[] = $filename;
+                            }
+                        }
+                    } else {
+                        $filename = time() . "_" . $key . "_" . basename($name);
+                        $uploadFile = $uploadDir . $filename;
+                        
+                        if (move_uploaded_file($tmp, $uploadFile)) {
+                            $filenames[] = $filename;
+                        }
                     }
                 }
             }
