@@ -69,9 +69,12 @@ $queryParams = array(
 );
 
 // Role-based security
-if ($_SESSION['role'] === "SUPERVISOR") {
-    $whereClauses[] = "e.dept_id_approve = :session_dept_approve";
+$is_supervisor = (isset($_SESSION['role']) && strtoupper($_SESSION['role']) === 'SUPERVISOR') ||
+                 (isset($_SESSION['account_type']) && strtolower($_SESSION['account_type']) === 'supervisor');
+if ($is_supervisor) {
+    $whereClauses[] = "(e.dept_id_approve = :session_dept_approve OR c.emp_id = :session_emp_id)";
     $queryParams['session_dept_approve'] = $_SESSION['dept_id_approve'];
+    $queryParams['session_emp_id'] = $_SESSION['emp_id'];
 } else if ($_SESSION['role'] !== "HR" && $_SESSION['role'] !== "ADMIN") {
     $whereClauses[] = "c.emp_id = :session_emp_id";
     $queryParams['session_emp_id'] = $_SESSION['emp_id'];
@@ -355,7 +358,7 @@ SELECT
 FROM combined_all c
 LEFT JOIN memployee e ON e.emp_id = c.emp_id
 WHERE $whereSql
-ORDER BY c.work_date DESC, c.emp_id DESC
+ORDER BY c.work_date DESC, c.start_time DESC, c.emp_id DESC
 ";
 
 // Title row

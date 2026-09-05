@@ -6,6 +6,10 @@ if (strlen($_SESSION['alogin']) == "") {
     $current_first_date = date('01-m-Y');
     $current_last_date = date('d-m-Y'); // วันที่ปัจจุบัน
     $page_title = !empty($_GET['s']) ? urldecode($_GET['s']) : "รายงานการ เข้า - ออก และการลาประจำวัน";
+    $is_supervisor = (isset($_SESSION['role']) && strtoupper($_SESSION['role']) === 'SUPERVISOR') ||
+                     (isset($_SESSION['account_type']) && strtolower($_SESSION['account_type']) === 'supervisor');
+    $my_emp_id = $_SESSION['emp_id'] ?? '';
+    $my_emp_name = trim(($_SESSION['first_name'] ?? '') . ' ' . ($_SESSION['last_name'] ?? ''));
     ?>
 
     <!DOCTYPE html>
@@ -51,11 +55,16 @@ if (strlen($_SESSION['alogin']) == "") {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-end mb-2">
-                                        <button type="button" id="btnSearch" class="btn btn-primary btn-sm mr-2">
+                                    <div class="d-flex justify-content-end mb-2 flex-wrap">
+                                        <?php if ($is_supervisor) { ?>
+                                            <button type="button" id="btnMyData" class="btn btn-info btn-sm mr-2 mb-1">
+                                                <i class="fa fa-user"></i> ข้อมูลตนเอง
+                                            </button>
+                                        <?php } ?>
+                                        <button type="button" id="btnSearch" class="btn btn-primary btn-sm mr-2 mb-1">
                                             <i class="fa fa-search"></i> ค้นหา
                                         </button>
-                                        <button type="button" id="btnReset" class="btn btn-secondary btn-sm">
+                                        <button type="button" id="btnReset" class="btn btn-secondary btn-sm mb-1">
                                             <i class="fa fa-refresh"></i> รีเซ็ต
                                         </button>
                                     </div>
@@ -170,7 +179,7 @@ if (strlen($_SESSION['alogin']) == "") {
 
             let dataRecords = $('#TableRecordList').DataTable({
                 'searchDelay': 500,
-                'order': [[1, 'desc']],
+                'order': [[1, 'desc'], [2, 'desc']],
                 'lengthMenu': [[10, 20, 50], [10, 20, 50]],
                 'language': {
                     search: 'ค้นหา:',
@@ -202,6 +211,22 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
+            let myEmpId = '<?php echo $my_emp_id; ?>';
+            let myEmpName = '<?php echo htmlspecialchars($my_emp_name); ?>';
+
+            $('#btnMyData').click(function () {
+                if (!myEmpId) return;
+                if ($('#employeeSelect option[value="' + myEmpId + '"]').length === 0) {
+                    $('#employeeSelect').append($('<option>', {
+                        value: myEmpId,
+                        text: myEmpId + (myEmpName ? ' ' + myEmpName : '')
+                    }));
+                }
+                $('#employeeSelect').val(myEmpId);
+                dataRecords.search('').draw();
+                dataRecords.ajax.reload();
+            });
+
             $('#btnSearch').click(function () { dataRecords.ajax.reload(); });
             $('#employeeSelect').change(function () { dataRecords.ajax.reload(); });
             $('#btnReset').click(function () {
@@ -209,6 +234,7 @@ if (strlen($_SESSION['alogin']) == "") {
                 $('#doc_date_to').val('<?php echo $current_last_date; ?>');
                 $('#employeeSelect').val('-');
                 dataRecords.search('').draw();
+                dataRecords.ajax.reload();
             });
 
             $("#TableRecordList").on('click', '.detail', function () {

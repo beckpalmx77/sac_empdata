@@ -7,6 +7,10 @@ if (strlen($_SESSION['alogin']) == "") {
     $current_last_date = date('d-m-Y'); // วันที่ปัจจุบัน
     $page_title = !empty($_GET['s']) ? urldecode($_GET['s']) : "รายงานการ เข้า - ออก และการลาประจำวัน";
     $menu_title = !empty($_GET['m']) ? urldecode($_GET['m']) : "รายงานและบันทึกเวลา";
+    $is_supervisor = (isset($_SESSION['role']) && strtoupper($_SESSION['role']) === 'SUPERVISOR') ||
+                     (isset($_SESSION['account_type']) && strtolower($_SESSION['account_type']) === 'supervisor');
+    $my_emp_id = $_SESSION['emp_id'] ?? '';
+    $my_emp_name = trim(($_SESSION['first_name'] ?? '') . ' ' . ($_SESSION['last_name'] ?? ''));
     ?>
 
     <!DOCTYPE html>
@@ -49,7 +53,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                 <div class="card-body">
                                     <form id="filterForm" method="post" action="export_process/export_time_attendance_leave.php">
                                         <div class="form-row align-items-end">
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-2 col-md-3 col-sm-6">
                                                 <label for="doc_date_start" class="font-weight-bold text-gray-700">จากวันที่ :</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control datepicker" id="doc_date_start" name="doc_date_start"
@@ -60,7 +64,7 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-2 col-md-3 col-sm-6">
                                                 <label for="doc_date_to" class="font-weight-bold text-gray-700">ถึงวันที่ :</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control datepicker" id="doc_date_to" name="doc_date_to"
@@ -71,22 +75,27 @@ if (strlen($_SESSION['alogin']) == "") {
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-3 col-md-6 col-sm-12">
                                                 <label for="employeeSelect" class="font-weight-bold text-gray-700">เลือกพนักงาน :</label>
                                                 <select id="employeeSelect" name="employeeSelect" class="form-control">
                                                     <option value="-">-- พนักงานทุกคน --</option>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group col-md-3 d-flex justify-content-end">
+                                            <div class="form-group col-lg-5 col-md-12 col-sm-12 d-flex justify-content-end align-items-end flex-wrap">
                                                 <input type="hidden" name="search_keyword" id="search_keyword" value="">
-                                                <button type="button" id="btnSearch" class="btn btn-primary mr-2 shadow-sm">
+                                                <?php if ($is_supervisor) { ?>
+                                                    <button type="button" id="btnMyData" class="btn btn-info mr-2 mb-1 shadow-sm" title="แสดงข้อมูลตนเอง (รหัสพนักงาน: <?php echo htmlspecialchars($my_emp_id); ?>)">
+                                                        <i class="fa fa-user"></i> ข้อมูลตนเอง
+                                                    </button>
+                                                <?php } ?>
+                                                <button type="button" id="btnSearch" class="btn btn-primary mr-2 mb-1 shadow-sm">
                                                     <i class="fa fa-search"></i> ค้นหา
                                                 </button>
-                                                <button type="button" id="btnReset" class="btn btn-secondary mr-2 shadow-sm">
+                                                <button type="button" id="btnReset" class="btn btn-secondary mr-2 mb-1 shadow-sm">
                                                     <i class="fa fa-refresh"></i> รีเซ็ต
                                                 </button>
-                                                <button type="submit" id="btnExport" class="btn btn-success shadow-sm">
+                                                <button type="submit" id="btnExport" class="btn btn-success mb-1 shadow-sm">
                                                     <i class="fa fa-file-excel-o"></i> Excel
                                                 </button>
                                             </div>
@@ -313,7 +322,7 @@ if (strlen($_SESSION['alogin']) == "") {
             // Initialize DataTable
             let dataRecords = $('#TableRecordList').DataTable({
                 'searchDelay': 500,
-                'order': [[4, 'desc'], [0, 'desc']],
+                'order': [[4, 'desc'], [5, 'desc']],
                 'lengthMenu': [[10, 25, 50, 100], [10, 25, 50, 100]],
                 'language': {
                     search: 'ค้นหาด่วน:',
@@ -357,9 +366,16 @@ if (strlen($_SESSION['alogin']) == "") {
                 ]
             });
 
+            let myEmpId = '<?php echo $my_emp_id; ?>';
+            let myEmpName = '<?php echo htmlspecialchars($my_emp_name); ?>';
+
             // Update badge info
             function updateBadge() {
-                let empText = ($('#employeeSelect').val() && $('#employeeSelect').val() !== '-') ? $('#employeeSelect option:selected').text() : 'พนักงานทุกคน';
+                let currentVal = $('#employeeSelect').val();
+                let empText = (currentVal && currentVal !== '-') ? $('#employeeSelect option:selected').text() : 'พนักงานทุกคน';
+                if (myEmpId && currentVal === myEmpId) {
+                    empText += ' <span class="badge badge-info ml-1"><i class="fa fa-user"></i> ข้อมูลตนเอง</span>';
+                }
                 let dateRange = $('#doc_date_start').val() + ' ถึง ' + $('#doc_date_to').val();
                 $('#filterInfoBadge').html('ช่วงวันที่: <strong>' + dateRange + '</strong> | พนักงาน: <strong>' + empText + '</strong>');
             }
@@ -368,6 +384,25 @@ if (strlen($_SESSION['alogin']) == "") {
             // Employee select change
             $('#employeeSelect').change(function () {
                 updateBadge();
+                dataRecords.ajax.reload();
+            });
+
+            // My Data Button (for SUPERVISOR)
+            $('#btnMyData').click(function () {
+                if (!myEmpId) {
+                    alertify.error('ไม่พบรหัสพนักงานของคุณ');
+                    return;
+                }
+                // Ensure option exists in #employeeSelect
+                if ($('#employeeSelect option[value="' + myEmpId + '"]').length === 0) {
+                    $('#employeeSelect').append($('<option>', {
+                        value: myEmpId,
+                        text: myEmpId + (myEmpName ? ' ' + myEmpName : '')
+                    }));
+                }
+                $('#employeeSelect').val(myEmpId);
+                updateBadge();
+                dataRecords.search('').draw();
                 dataRecords.ajax.reload();
             });
 

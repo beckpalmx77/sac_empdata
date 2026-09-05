@@ -154,9 +154,12 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
     try {
         $whereRole = "1=1";
         $params = [];
-        if ($_SESSION['role'] === "SUPERVISOR") {
-            $whereRole = "dept_id_approve = :dept_id_approve";
+        $is_supervisor = (isset($_SESSION['role']) && strtoupper($_SESSION['role']) === 'SUPERVISOR') ||
+                         (isset($_SESSION['account_type']) && strtolower($_SESSION['account_type']) === 'supervisor');
+        if ($is_supervisor) {
+            $whereRole = "(dept_id_approve = :dept_id_approve OR emp_id = :session_emp_id)";
             $params['dept_id_approve'] = $_SESSION['dept_id_approve'];
+            $params['session_emp_id'] = $_SESSION['emp_id'];
         } else if ($_SESSION['role'] !== "HR" && $_SESSION['role'] !== "ADMIN") {
             $whereRole = "emp_id = :session_emp_id";
             $params['session_emp_id'] = $_SESSION['emp_id'];
@@ -229,9 +232,12 @@ if ($_POST["action"] === 'GET_ATTENDANCE_LEAVE') {
     );
 
     // Role-based filtering
-    if ($_SESSION['role'] === "SUPERVISOR") {
-        $whereClauses[] = "e.dept_id_approve = :session_dept_approve";
+    $is_supervisor = (isset($_SESSION['role']) && strtoupper($_SESSION['role']) === 'SUPERVISOR') ||
+                     (isset($_SESSION['account_type']) && strtolower($_SESSION['account_type']) === 'supervisor');
+    if ($is_supervisor) {
+        $whereClauses[] = "(e.dept_id_approve = :session_dept_approve OR c.emp_id = :session_emp_id)";
         $queryParams['session_dept_approve'] = $_SESSION['dept_id_approve'];
+        $queryParams['session_emp_id'] = $_SESSION['emp_id'];
     } else if ($_SESSION['role'] !== "HR" && $_SESSION['role'] !== "ADMIN") {
         $whereClauses[] = "c.emp_id = :session_emp_id";
         $queryParams['session_emp_id'] = $_SESSION['emp_id'];
@@ -278,8 +284,22 @@ if ($_POST["action"] === 'GET_ATTENDANCE_LEAVE') {
 
     $whereSql = implode(" AND ", $whereClauses);
 
-    // Sorting
-    $columns = array(
+    // Sorting: เรียงตามวันที่ และ เวลาเข้า จากมากไปหาน้อย
+    $fieldMap = array(
+        'emp_id' => 'c.emp_id',
+        'f_name' => 'e.f_name',
+        'l_name' => 'e.l_name',
+        'full_name' => 'e.f_name',
+        'department_id' => 'e.department_id',
+        'work_date' => 'c.work_date',
+        'start_time' => 'c.start_time',
+        'end_time' => 'c.end_time',
+        'leave_type_detail' => 'c.leave_type_detail',
+        'remark' => 'c.remark',
+        'doc_id' => 'c.doc_id'
+    );
+
+    $indexMap = array(
         0 => 'c.emp_id',
         1 => 'e.f_name',
         2 => 'e.l_name',
@@ -290,9 +310,47 @@ if ($_POST["action"] === 'GET_ATTENDANCE_LEAVE') {
         7 => 'c.leave_type_detail',
         8 => 'c.doc_id'
     );
-    $orderColIndex = (int)($_POST['order'][0]['column'] ?? 4);
-    $orderDir = (strtolower($_POST['order'][0]['dir'] ?? 'desc') === 'asc') ? 'ASC' : 'DESC';
-    $orderCol = $columns[$orderColIndex] ?? 'c.work_date';
+
+    $orderClauses = array();
+    if (!empty($_POST['order']) && is_array($_POST['order'])) {
+        foreach ($_POST['order'] as $ord) {
+            $colIdx = (int)($ord['column'] ?? -1);
+            $dir = (strtolower($ord['dir'] ?? 'desc') === 'asc') ? 'ASC' : 'DESC';
+            $colData = trim($_POST['columns'][$colIdx]['data'] ?? '');
+            
+            $dbCol = null;
+            if (!empty($colData) && isset($fieldMap[$colData])) {
+                $dbCol = $fieldMap[$colData];
+            } else if (isset($indexMap[$colIdx])) {
+                $dbCol = $indexMap[$colIdx];
+            }
+
+            if ($dbCol && !in_array("$dbCol $dir", $orderClauses)) {
+                $orderClauses[] = "$dbCol $dir";
+            }
+        }
+    }
+
+    // Default sorting: work_date DESC, start_time DESC
+    if (empty($orderClauses)) {
+        $orderClauses[] = "c.work_date DESC";
+        $orderClauses[] = "c.start_time DESC";
+        $orderClauses[] = "c.emp_id DESC";
+    } else {
+        $hasStartTime = false;
+        foreach ($orderClauses as $oc) {
+            if (strpos($oc, 'c.start_time') !== false) {
+                $hasStartTime = true;
+                break;
+            }
+        }
+        if (!$hasStartTime && strpos($orderClauses[0], 'c.work_date') !== false) {
+            $orderClauses[] = "c.start_time DESC";
+        }
+        $orderClauses[] = "c.emp_id DESC";
+    }
+
+    $orderBySql = implode(", ", $orderClauses);
 
     // Base CTE definition
     $cte_sql = "
@@ -546,7 +604,7 @@ if ($_POST["action"] === 'GET_ATTENDANCE_LEAVE') {
     FROM combined_all c
     LEFT JOIN memployee e ON e.emp_id = c.emp_id
     WHERE $whereSql
-    ORDER BY $orderCol $orderDir, c.emp_id DESC
+    ORDER BY $orderBySql
     LIMIT :limit_start, :limit_length
     ";
 
