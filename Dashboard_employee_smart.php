@@ -98,6 +98,10 @@
             <img src="img/icon_app/time_attendance.png" alt="เวลา เข้า-ออก พนักงาน">
             <span>เวลา เข้า-ออก</span>
         </a>
+        <a href="report-time-attendance-leave_smart?m=รายงาน&s=รายงานเวลา+เข้า+-+ออก+และการลาประจำวัน" class="icon-box">
+            <img src="img/icon_app/time_attendance.png" alt="เวลา เข้า-ออก และการลา">
+            <span>เวลาเข้า-ออก/การลา</span>
+        </a>
         <a href="manage_employee_self_smart?m=ทะเบียนหลัก&s=ประวัติพนักงาน" class="icon-box">
             <img src="img/icon_app/emp_info.png" alt="ประวัติพนักงาน">
             <span>ประวัติพนักงาน</span>

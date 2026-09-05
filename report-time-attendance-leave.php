@@ -1,6 +1,6 @@
 <?php
 include('includes/Header.php');
-if (strlen($_SESSION['alogin']) == "" || strlen($_SESSION['department_id']) == "") {
+if (strlen($_SESSION['alogin']) == "") {
     header("Location: index.php");
 } else {
     $current_first_date = date('01-m-Y');
