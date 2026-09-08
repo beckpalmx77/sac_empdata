@@ -164,7 +164,7 @@ if ($_POST["action"] === 'GET_EMPLOYEE') {
             $whereRole = "emp_id = :session_emp_id";
             $params['session_emp_id'] = $_SESSION['emp_id'];
         }
-        $stmt = $conn->prepare("SELECT emp_id, f_name, l_name, department_id FROM memployee WHERE $whereRole ORDER BY emp_id ASC");
+        $stmt = $conn->prepare("SELECT emp_id, f_name, l_name, department_id FROM memployee WHERE status = 'Y' AND $whereRole ORDER BY emp_id ASC");
         $stmt->execute($params);
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $employees[] = [
@@ -225,7 +225,7 @@ if ($_POST["action"] === 'GET_ATTENDANCE_LEAVE') {
     $emp_filter = trim($_POST['emp_id'] ?? '');
     $filter_status = trim($_POST['filter_status'] ?? 'ALL');
 
-    $whereClauses = array("1=1", "c.work_date <= CURDATE()");
+    $whereClauses = array("1=1", "c.work_date <= CURDATE()", "e.status = 'Y'");
     $queryParams = array(
         'start_date' => $start_date,
         'end_date' => $end_date
