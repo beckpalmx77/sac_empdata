@@ -62,7 +62,7 @@ $emp_filter = trim($_POST['employeeSelect'] ?? ($_POST['emp_id'] ?? ''));
 $filter_status = trim($_POST['filter_status'] ?? 'ALL');
 $searchValue = trim($_POST['search_keyword'] ?? '');
 
-$whereClauses = array("1=1", "c.work_date <= CURDATE()");
+$whereClauses = array("1=1", "c.work_date <= CURDATE()", "e.status = 'Y'");
 $queryParams = array(
     'start_date' => $start_date,
     'end_date' => $end_date
