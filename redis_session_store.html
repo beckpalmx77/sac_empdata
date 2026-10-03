@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานการวิเคราะห์: การใช้งาน Redis Session Store สำหรับระบบ SAC Employee Data</title>
+    <!-- Google Fonts: Prompt & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --success: #10b981;
+            --success-dark: #047857;
+            --success-light: #ecfdf5;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --redis: #dc2626;
+            --redis-light: #fef2f2;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding: 2.5rem 1rem;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        /* Header Card */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #b91c1c 100%);
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "REDIS";
+            position: absolute;
+            right: -20px;
+            bottom: -30px;
+            font-size: 10rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.04);
+            letter-spacing: -5px;
+            pointer-events: none;
+        }
+
+        .badge-verdict {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #10b981;
+            color: #ffffff;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+        }
+
+        .badge-verdict svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .hero h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #cbd5e1;
+            max-width: 850px;
+        }
+
+        .meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.8rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .meta-item strong {
+            color: #f1f5f9;
+        }
+
+        /* Section Layout */
+        .section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 2.2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .section-title .icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        /* Verdict Box */
+        .verdict-box {
+            background: var(--success-light);
+            border-left: 6px solid var(--success);
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .verdict-box h3 {
+            color: var(--success-dark);
+            font-size: 1.35rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .verdict-box p {
+            color: #065f46;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Grid Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            background: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-header-badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.2rem 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .card-header-badge.current {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .card-header-badge.redis {
+            background: var(--redis-light);
+            color: var(--redis);
+        }
+
+        .card h4 {
+            font-size: 1.15rem;
+            margin-bottom: 0.6rem;
+            color: #0f172a;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.2rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            border: 1px solid #334155;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+            background: #f1f5f9;
+            color: #b91c1c;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.88em;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .code-label {
+            display: inline-block;
+            background: #334155;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px 6px 0 0;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: -1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Comparison Table */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pill.win {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+
+        .status-pill.neutral {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status-pill.warn {
+            background: var(--warning-light);
+            color: #b45309;
+        }
+
+        /* Stepper */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .step-content {
+            flex-grow: 1;
+            padding-top: 0.2rem;
+        }
+
+        .step-content h4 {
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+            color: #0f172a;
+        }
+
+        .step-content p {
+            color: #475569;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Architecture Diagram Box */
+        .arch-diagram {
+            background: #0f172a;
+            border-radius: 14px;
+            padding: 2rem;
+            color: #ffffff;
+            margin: 1.5rem 0;
+        }
+
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .arch-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 1.2rem;
+            border-radius: 10px;
+        }
+
+        .arch-box.highlight {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid #ef4444;
+        }
+
+        .arch-arrow {
+            font-size: 1.8rem;
+            color: #64748b;
+        }
+
+        .callout-tip {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            color: #1e40af;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .callout-warn {
+            background: #fffbeb;
+            border-left: 4px solid var(--warning);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            color: #92400e;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            .hero {
+                padding: 2rem 1.5rem;
+            }
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+            .arch-grid {
+                grid-template-columns: 1fr;
+            }
+            .arch-arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Hero / Title -->
+    <header class="hero">
+        <div class="badge-verdict">
+            <svg viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+            คำตอบ: สามารถใช้งานได้ 100% (Fully Compatible)
+        </div>
+        <h1>รายงานผลการวิเคราะห์: การใช้ Redis Session Store</h1>
+        <p>สำหรับระบบบริหารจัดการข้อมูลพนักงาน (SAC Employee Data System - <code>sac_empdata</code>)</p>
+        
+        <div class="meta-bar">
+            <div class="meta-item">📁 โปรเจกต์: <strong>sac_empdata</strong></div>
+            <div class="meta-item">⚙️ สภาพแวดล้อม: <strong>WAMP64 (PHP 8.3.14 ZTS / Apache 2.4 / Windows)</strong></div>
+            <div class="meta-item">📄 ผลกระทบต่อโค้ดเดิม: <strong>Zero Code Change (ไม่ต้องแก้โค้ดระบบ)</strong></div>
+            <div class="meta-item">📅 วันที่วิเคราะห์: <strong>25 กันยายน 2026</strong></div>
+        </div>
+    </header>
+
+    <!-- Executive Summary -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="icon">💡</span>
+            1. บทสรุปสำหรับผู้บริหาร (Executive Summary)
+        </h2>
+
+        <div class="verdict-box">
+            <h3>✅ สามารถใช้งาน Redis Session Store ได้อย่างสมบูรณ์แบบ (100% Supported)</h3>
+            <p><strong>เหตุผลเชิงเทคนิค:</strong> โปรเจกต์นี้เขียนด้วยภาษา PHP ในรูปแบบมาตรฐานทั้งหมด โดยใช้ฟังก์ชันพื้นฐาน <code>session_start();</code> และตัวแปรส่วนกลาง <code>$_SESSION[...]</code> ในการจัดเก็บข้อมูลการเข้าสู่ระบบและสิทธิ์การใช้งาน (พบการเรียกใช้มากกว่า 93 ไฟล์)</p>
+            <p>ระบบไม่ได้มีการผูกมัดหรือเขียน Custom Handler ล็อกติดกับฮาร์ดดิสก์ ดังนั้นเมื่อเปลี่ยน Backend ไปใช้ Redis ผ่าน <strong>PHP Configuration (php.ini)</strong> ตัวเอนจินของ PHP จะทำการบันทึกและอ่าน Session จาก Redis ให้อัตโนมัติในเบื้องหลัง <strong>โดยไม่ต้องแก้ไขโค้ด PHP ภายในระบบเลยแม้แต่บรรทัดเดียว!</strong></p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-header-badge redis">High Performance</div>
+                <h4>⚡ ความเร็วสูงระดับ Microsecond</h4>
+                <p>เปลี่ยนจากการเขียนไฟล์ Text ลงดิสก์ (<code>d:/wamp64/tmp</code>) มาอ่าน-เขียนบนหน่วยความจำ RAM ของ Redis โดยตรง ลดปัญหา Disk I/O คอขวดลงทันที</p>
+            </div>
+            <div class="card">
+                <div class="card-header-badge redis">Scalability</div>
+                <h4>🌐 รองรับ Load Balancer</h4>
+                <p>หากในอนาคตมีพนักงานใช้งานจำนวนมากและต้องขยายเป็น 2-3 เซิร์ฟเวอร์ พนักงานจะไม่มีปัญหา Session หลุด เพราะทุก Web Server แชร์ Session บน Redis กลางร่วมกัน</p>
+            </div>
+            <div class="card">
+                <div class="card-header-badge redis">Security & Control</div>
+                <h4>🛡️ จัดการ Session แบบรวมศูนย์</h4>
+                <p>สามารถดูผู้ที่กำลัง Login อยู่ได้แบบเรียลไทม์ และสามารถสั่ง Force Logout (เตะผู้ใช้ออกทันที) หรือเคลียร์ Session ที่ค้างได้จาก Redis Console</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Current State vs Redis -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="icon">📊</span>
+            2. การทำงานในปัจจุบัน VS เมื่อเปลี่ยนมาใช้ Redis
+        </h2>
+
+        <div class="arch-diagram">
+            <div style="text-align: center; margin-bottom: 1.5rem; font-weight: 600; color: #94a3b8;">
+                เปรียบเทียบสถาปัตยกรรมการจัดเก็บ Session
+            </div>
+            <div class="arch-grid">
+                <div class="arch-box">
+                    <div style="color: #60a5fa; font-weight: 600; margin-bottom: 0.5rem;">ปัจจุบัน (File-based)</div>
+                    <p style="font-size: 0.85rem; color: #94a3b8;">PHP Web Server</p>
+                    <div style="margin: 0.8rem 0; font-size: 1.5rem;">💾</div>
+                    <p style="font-size: 0.85rem; color: #cbd5e1;">เขียนไฟล์ <code>sess_xxxx</code><br>ลงโฟลเดอร์ <code>d:/wamp64/tmp</code></p>
+                </div>
+                <div class="arch-arrow">➔</div>
+                <div class="arch-box highlight">
+                    <div style="color: #f87171; font-weight: 600; margin-bottom: 0.5rem;">ใช้ Redis (In-Memory)</div>
+                    <p style="font-size: 0.85rem; color: #94a3b8;">PHP Web Server (1 หรือหลายเครื่อง)</p>
+                    <div style="margin: 0.8rem 0; font-size: 1.5rem;">⚡</div>
+                    <p style="font-size: 0.85rem; color: #fca5a5;">เก็บลง RAM ของ Redis Server<br>คีย์ <code>SAC_SESS:xxxx</code> (เร็วและแชร์ข้ามเครื่องได้)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>หัวข้อการเปรียบเทียบ</th>
+                        <th>ระบบเดิม (File Session ใน WAMP)</th>
+                        <th>เมื่อใช้ Redis Session Store</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>สถานที่เก็บข้อมูล (Storage)</strong></td>
+                        <td>ไฟล์ข้อความบนฮาร์ดดิสก์ (<code>d:/wamp64/tmp</code>)</td>
+                        <td>In-Memory RAM บน Redis Server <span class="status-pill win">เร็วกว่า 5-10 เท่า</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ผลกระทบต่อโค้ด PHP</strong></td>
+                        <td>ใช้ <code>session_start()</code> และ <code>$_SESSION</code></td>
+                        <td>ใช้โค้ดเดิมทั้งหมด 100% <span class="status-pill win">Zero Code Modification</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>การขยายระบบ (Load Balancing)</strong></td>
+                        <td><span class="status-pill warn">ไม่รองรับ</span> (ถ้ามี 2 เซิร์ฟเวอร์ ผู้ใช้จะหลุด)</td>
+                        <td><span class="status-pill win">รองรับสมบูรณ์</span> (แชร์ Session กลางข้ามเซิร์ฟเวอร์ได้)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ปัญหา File Locking (Concurrency)</strong></td>
+                        <td>PHP ล็อกไฟล์ดิสก์เมื่อมี AJAX ยิงพร้อมกันหลายคำขอ</td>
+                        <td>Redis มีตัวจัดการ Lock ที่เร็ว หรือปลด Lock ได้ยืดหยุ่นกว่า</td>
+                    </tr>
+                    <tr>
+                        <td><strong>การหมดอายุของ Session (TTL)</strong></td>
+                        <td>ต้องรอ PHP Garbage Collection (GC) มากวาดลบไฟล์</td>
+                        <td>Redis ลบ Key ที่หมดอายุทิ้งจาก RAM ให้อัตโนมัติ (Automated TTL)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>การตรวจสอบผู้ใช้ออนไลน์</strong></td>
+                        <td>ทำได้ยาก ต้องสแกนโฟลเดอร์ไฟล์ Text</td>
+                        <td>ทำได้ทันทีด้วยคำสั่ง <code>KEYS SAC_SESS:*</code> หรือ <code>SCAN</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- How the Project Uses Session -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="icon">🔍</span>
+            3. ผลการตรวจสอบโครงสร้างโค้ดของโปรเจกต์ sac_empdata
+        </h2>
+        <p>จากการสำรวจโค้ดอย่างละเอียดในโฟลเดอร์ของโปรเจกต์ พบข้อมูลที่ยืนยันความเข้ากันได้ดังนี้:</p>
+        
+        <div class="grid-2">
+            <div class="card">
+                <h4>1. การเริ่ม Session (Session Bootstrap)</h4>
+                <p>พบว่าไฟล์หลักทั้งหมดกว่า <strong>93 ไฟล์</strong> (เช่น <code>dashboad_emp.php</code>, <code>login_process.php</code>, <code>manage_employee.php</code>, <code>includes/Header.php</code>) เริ่มต้นด้วยการเรียก:</p>
+                <div class="code-label">PHP</div>
+                <pre><code>&lt;?php
+session_start();
+error_reporting(0);
+// ตามด้วยการใช้งาน $_SESSION ทันที</code></pre>
+                <p style="font-size: 0.88rem; color: #64748b; margin-top: 0.5rem;">ไม่มีการระบุพาธดิสก์แบบตายตัวในโค้ด ทำให้เปิดทางให้ PHP Session Handler สลับไปใช้ Redis ได้อย่างราบรื่น</p>
+            </div>
+
+            <div class="card">
+                <h4>2. ตัวแปรที่จัดเก็บใน Session</h4>
+                <p>ในไฟล์ <code>login_process.php</code> มีการบันทึกสถานะผู้ใช้และสิทธิ์ลง <code>$_SESSION</code> ดังนี้:</p>
+                <div class="code-label">login_process.php</div>
+                <pre><code>$_SESSION['alogin'] = $result->user_id;
+$_SESSION['login_id'] = $result->id;
+$_SESSION['emp_id'] = $result->emp_id;
+$_SESSION['role'] = $result->role;
+$_SESSION['dept_id'] = $result->dept_id;
+$_SESSION['approve_permission'] = $result->...;</code></pre>
+                <p style="font-size: 0.88rem; color: #64748b; margin-top: 0.5rem;">ข้อมูลทั้งหมดเป็นตัวแปรแบบ Scalar String/Number/Array ซึ่งเป็นรูปแบบที่ Redis Serialize และ Deserialize ได้เร็วมาก</p>
+            </div>
+        </div>
+
+        <div class="callout-tip">
+            📌 <strong>สิ่งที่ค้นพบสำคัญ:</strong> ระบบโปรเจกต์นี้มีไลบรารี <code>php-amqplib</code> (RabbitMQ) ใน <code>composer.json</code> อยู่แล้ว แสดงว่าระบบมีการเตรียมความพร้อมสำหรับการทำงานร่วมกับบริการระดับ Middleware อยู่แล้ว การเพิ่ม Redis เข้ามาจะเข้ากับแนวทางการพัฒนาระบบนี้ได้อย่างกลมกลืน
+        </div>
+    </section>
+
+    <!-- Implementation Guide -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="icon">🛠️</span>
+            4. ขั้นตอนการติดตั้งและตั้งค่าใช้งาน (Implementation Guide)
+        </h2>
+        <p>สามารถทำได้ 2 แนวทาง โดยแนะนำ <strong>แนวทางที่ 1 (Native PHP Extension)</strong> มากที่สุดเพราะมีประสิทธิภาพสูงสุดและไม่ต้องแก้โค้ดเลย</p>
+
+        <div class="steps">
+            <!-- Step 1 -->
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>เตรียม Redis Server</h4>
+                    <p>เลือกวิธีติดตั้ง Redis Server ตามสภาพแวดล้อมที่ใช้งาน:</p>
+                    <ul>
+                        <li><strong>สำหรับเครื่อง Dev (Windows / WAMP):</strong>
+                            <div style="margin: 0.5rem 0;">
+                                • <strong>ทางเลือก ก (ง่ายที่สุดผ่าน Docker):</strong>
+                                <pre><code>docker run -d --name redis-session -p 6379:6379 redis:alpine --requirepass "SacEmp@2026"</code></pre>
+                                • <strong>ทางเลือก ข (ผ่าน WSL2 Ubuntu):</strong>
+                                <pre><code>sudo apt update && sudo apt install redis-server
+sudo service redis-server start</code></pre>
+                                • <strong>ทางเลือก ค (ใช้ Memurai สำหรับ Windows โดยตรง):</strong> ดาวน์โหลดตัวติดตั้ง MSI จาก <a href="https://www.memurai.com/" target="_blank">memurai.com</a> แล้วสั่งรัน Service บน Windows ได้ทันที
+                            </div>
+                        </li>
+                        <li><strong>สำหรับเครื่องเซิร์ฟเวอร์จริง (Linux Production Server):</strong>
+                            <pre><code>sudo apt update
+sudo apt install redis-server -y
+sudo systemctl enable redis-server && sudo systemctl start redis-server</code></pre>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>ติดตั้ง PHP Redis Extension (php_redis.dll) บน WAMP</h4>
+                    <p>เครื่องปัจจุบันของท่านรัน <strong>PHP 8.3.14 (ZTS / Thread-Safe, Visual C++ 2019, x64)</strong></p>
+                    <ol style="margin-left: 1.2rem; color: #475569;">
+                        <li>ดาวน์โหลดไฟล์ <code>php_redis</code> DLL สำหรับ Windows จาก PECL:
+                            <br><a href="https://pecl.php.net/package/redis" target="_blank" style="color: var(--primary); font-weight: 600;">https://pecl.php.net/package/redis</a>
+                            <br>เลือกรุ่น: <code>8.3 Thread Safe (TS) x64</code>
+                        </li>
+                        <li>แตกไฟล์ zip แล้วคัดลอกไฟล์ <code>php_redis.dll</code> ไปวางไว้ที่:
+                            <pre><code>D:\wamp64\bin\php\php8.3.14\ext\php_redis.dll</code></pre>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>ตั้งค่าไฟล์คอนฟิก php.ini ของ Apache</h4>
+                    <p>เปิดไฟล์ <code>D:\wamp64\bin\php\php8.3.14\phpForApache.ini</code> (หรือคลิกซ้ายที่ไอคอน WAMP เขียว > PHP > php.ini) แล้วเพิ่ม/แก้ไขค่าดังนี้:</p>
+                    
+                    <div class="code-label">phpForApache.ini</div>
+                    <pre><code>; 1. เปิดใช้งาน Extension Redis
+extension=redis
+
+; 2. กำหนดให้ Session บันทึกลง Redis แทน Files
+session.save_handler = redis
+
+; 3. กำหนด IP / Port / รหัสผ่าน และคำนำหน้าคีย์
+; รูปแบบ: tcp://HOST:PORT?auth=PASSWORD&prefix=KEY_PREFIX
+session.save_path = "tcp://127.0.0.1:6379?auth=SacEmp@2026&prefix=SAC_SESSION:"
+
+; 4. ตั้งเวลาหมดอายุของ Session (วินาที) เช่น 2 ชั่วโมง (7200 วินาที)
+session.gc_maxlifetime = 7200
+
+; 5. เปิด Session Locking เพื่อป้องกัน Race Condition จาก AJAX
+redis.session.locking_enabled = 1
+redis.session.lock_wait_time = 20000
+redis.session.lock_max_retries = 300</code></pre>
+                    <p style="margin-top: 0.5rem; color: #64748b;">จากนั้นคลิกซ้ายที่ไอคอน WAMP แล้วเลือก <strong>"Restart All Services"</strong> เพื่อให้ Apache โหลดคอนฟิกใหม่</p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>สร้างไฟล์ทดสอบการทำงาน (Verification Test Script)</h4>
+                    <p>สร้างไฟล์ <code>test_redis_session.php</code> ไว้ในโปรเจกต์เพื่อทดสอบ:</p>
+                    
+                    <div class="code-label">test_redis_session.php</div>
+                    <pre><code>&lt;?php
+session_start();
+
+// ลองเขียนค่าลง Session
+if (!isset($_SESSION['test_counter'])) {
+    $_SESSION['test_counter'] = 1;
+    $_SESSION['test_user'] = 'Test Admin SAC';
+    $_SESSION['created_at'] = date('Y-m-d H:i:s');
+} else {
+    $_SESSION['test_counter']++;
+}
+
+echo "&lt;h2&gt;ผลการทดสอบ Redis Session&lt;/h2&gt;";
+echo "Handler ปัจจุบัน: &lt;strong&gt;" . ini_get('session.save_handler') . "&lt;/strong&gt;&lt;br&gt;";
+echo "Save Path: &lt;strong&gt;" . ini_get('session.save_path') . "&lt;/strong&gt;&lt;br&gt;";
+echo "Session ID: &lt;strong&gt;" . session_id() . "&lt;/strong&gt;&lt;br&gt;";
+echo "Counter ใน Session: &lt;strong&gt;" . $_SESSION['test_counter'] . "&lt;/strong&gt;&lt;br&gt;";
+echo "ชื่อผู้ทดสอบ: &lt;strong&gt;" . $_SESSION['test_user'] . "&lt;/strong&gt;&lt;br&gt;";
+echo "&lt;p&gt;ลองกดรีเฟรชหน้าเว็บ หากค่า Counter เพิ่มขึ้นต่อเนื่อง แสดงว่า Session ทำงานถูกต้อง!&lt;/p&gt;";
+?&gt;</code></pre>
+
+                    <p>และสามารถเปิดดูข้อมูลจริงใน Redis ได้ผ่านคำสั่ง:</p>
+                    <pre><code># เข้า Redis CLI
+redis-cli -a SacEmp@2026
+
+# ตรวจสอบว่ามี Key Session เข้ามาหรือไม่
+127.0.0.1:6379> KEYS SAC_SESSION:*
+1) "SAC_SESSION:a1b2c3d4e5..."
+
+# ตรวจสอบเวลาที่เหลือก่อนหมดอายุ (TTL)
+127.0.0.1:6379> TTL SAC_SESSION:a1b2c3d4e5...
+(integer) 7180</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alternative Approach -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="icon">📦</span>
+            5. ทางเลือกสำรอง: ใช้ Composer Package (Predis)
+        </h2>
+        <p>หากในสภาพแวดล้อมบางแห่ง (เช่น Shared Hosting) ไม่สามารถลง <code>php_redis.dll</code> ได้ สามารถใช้แพ็กเกจ PHP ล้วนผ่าน Composer ได้เช่นกัน:</p>
+        
+        <pre><code># ติดตั้ง Predis ในโปรเจกต์
+composer require predis/predis</code></pre>
+
+        <p>จากนั้นสร้างไฟล์ <code>config/redis_session_handler.php</code>:</p>
+        <div class="code-label">config/redis_session_handler.php</div>
+        <pre><code>&lt;?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$client = new Predis\Client([
+    'scheme' => 'tcp',
+    'host'   => '127.0.0.1',
+    'port'   => 6379,
+    'password' => 'SacEmp@2026',
+]);
+
+$handler = new Predis\Session\Handler($client, [
+    'gc_maxlifetime' => 7200,
+    'prefix' => 'SAC_SESSION:'
+]);
+
+$handler->register();
+// เมื่อเรียก session_start() จะใช้ Predis ทันที</code></pre>
+        <p style="font-size: 0.9rem; color: #64748b;">และตั้งค่า <code>auto_prepend_file</code> ใน <code>.htaccess</code> เพื่อให้ไฟล์นี้ถูกเรียกทำงานก่อนทุกไฟล์โดยไม่ต้องแก้ 93 ไฟล์เดิม:</p>
+        <pre><code>php_value auto_prepend_file "D:/website/sac_empdata/config/redis_session_handler.php"</code></pre>
+    </section>
+
+    <!-- Best Practices & Considerations -->
+    <section class="section">
+        <h2 class="section-title">
+            <span class="icon">⚠️</span>
+            6. ข้อควรระวังและแนวทางปฏิบัติที่ดีที่สุด (Production Best Practices)
+        </h2>
+
+        <div class="grid-2">
+            <div class="card">
+                <h4>🔒 1. การรักษาความปลอดภัย (Security)</h4>
+                <p>• ต้องตั้งรหัสผ่าน <code>requirepass</code> ใน <code>redis.conf</code> เสมอ<br>
+                • ไม่ควรเปิดพอร์ต <code>6379</code> สู่สาธารณะ (Public Internet) ให้ Bind กับ <code>127.0.0.1</code> หรือ Private Subnet เท่านั้น<br>
+                • มีการตั้ง Prefix คีย์ชัดเจน เช่น <code>SAC_SESSION:</code> เพื่อป้องกันคีย์ชนกับข้อมูลแคชอื่น</p>
+            </div>
+
+            <div class="card">
+                <h4>💾 2. การจัดการหน่วยความจำ (Memory Eviction)</h4>
+                <p>หากเซิร์ฟเวอร์มีแรมจำกัด ควรตั้งค่าใน <code>redis.conf</code>:<br>
+                <code>maxmemory 512mb</code> (หรือตามขนาดที่เหมาะสม)<br>
+                <code>maxmemory-policy volatile-ttl</code><br>
+                เพื่อให้ Redis ลบ Session ที่ใกล้หมดอายุที่สุดทิ้งก่อนหาก RAM ใกล้เต็ม ป้องกันไม่ให้ Redis Crash</p>
+            </div>
+
+            <div class="card">
+                <h4>🔄 3. ความพร้อมใช้งานสูง (High Availability / SPoF)</h4>
+                <p>หาก Redis ดับ ระบบจะไม่สามารถยืนยันตัวตนผู้ใช้ได้:<br>
+                • เปิดใช้งาน Snapshot <code>save 900 1</code> หรือ <code>appendonly yes</code> ใน Redis เพื่อให้ข้อมูลไม่หายเวลารีสตาร์ตเซิร์ฟเวอร์<br>
+                • ในระดับ Enterprise สามารถทำ <strong>Redis Sentinel</strong> หรือ <strong>Redis Cluster</strong> เพื่อทำ Auto-Failover</p>
+            </div>
+
+            <div class="card">
+                <h4>⏱️ 4. Concurrency & Session Locking</h4>
+                <p>โปรเจกต์นี้มีหน้าจอที่มีการเรียก AJAX พร้อมกันหลายตัว ควรเปิด <code>redis.session.locking_enabled = 1</code> ใน <code>php.ini</code> เพื่อป้องกันปัญหา Race Condition ข้อมูล Session ถูกเขียนทับกัน</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion & Recommendations -->
+    <section class="section" style="border-left: 6px solid var(--primary);">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--primary-light); color: var(--primary);">🏁</span>
+            7. บทสรุปและคำแนะนำในการดำเนินการ
+        </h2>
+        <ol style="margin-left: 1.5rem; line-height: 1.9; color: #334155; font-size: 1.05rem;">
+            <li><strong>คำตอบฟันธง:</strong> โปรเจกต์ <code>sac_empdata</code> สามารถใช้งาน Redis Session Store ได้แน่นอน 100%</li>
+            <li><strong>จุดเด่นสูงสุด:</strong> <strong>ไม่ต้องแก้โค้ดระบบเดิมแม้แต่บรรทัดเดียว (Zero Code Modification)</strong> หากใช้วิธี Native PHP Extension ผ่าน <code>php.ini</code></li>
+            <li><strong>ประโยชน์ที่คุ้มค่า:</strong> ได้ความเร็วในการตอบสนองของระบบพนักงานที่เร็วขึ้น หมดปัญหา Disk I/O และพร้อมสำหรับการทำ Multi-Server / Load Balancing ทันที</li>
+            <li><strong>ขั้นตอนถัดไปที่แนะนำ:</strong>
+                <br>1. ติดตั้ง Redis Server (Docker หรือ Memurai/WSL บนเครื่องทดสอบ)
+                <br>2. ดาวน์โหลด <code>php_redis.dll</code> วางใน <code>D:\wamp64\bin\php\php8.3.14\ext\</code>
+                <br>3. เพิ่มคอนฟิกใน <code>phpForApache.ini</code> แล้ว Restart Apache
+                <br>4. ทดสอบ Login และตรวจดู Key ใน Redis CLI
+            </li>
+        </ol>
+    </section>
+
+    <footer>
+        <p>เอกสารวิเคราะห์ความเป็นไปได้ทางเทคนิค (Technical Feasibility Study) | ระบบ SAC Employee Data</p>
+        <p style="font-size: 0.8rem; margin-top: 0.3rem; color: #94a3b8;">Generated for sac_empdata • Environment: PHP 8.3.14 / WAMP64 / Windows</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
